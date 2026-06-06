@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MADHABAHU – Mahali pa Kukutana na Mungu</title>
+    <!-- Embedded Fonts for standalone rendering -->
+    <style>
+        /* CSS Reset & Variables */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        :root {
+            --primary-orange: #ff7b00;
+            --primary-orange-hover: #e06c00;
+            --royal-blue: #0d47a1;
+            --royal-blue-light: #1565c0;
+            --royal-blue-dark: #0a2f6c;
+            --white: #ffffff;
+            --light-bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-main: #2b2b2b;
+            --text-muted: #555555;
+            --border-color: #e0e0e0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 24px rgba(0,0,0,0.15);
+            --transition: all 0.3s ease;
+            /* Base font size configuration for scaling */
+            --base-font-size: 16px;
+        }
+
+        /* Dark Mode Overrides */
+        body.dark-theme {
+            --light-bg: #121824;
+            --card-bg: #1e2638;
+            --text-main: #f5f5f5;
+            --text-muted: #b0bec5;
+            --border-color: #37474f;
+            --shadow-md: 0 8px 16px rgba(0,0,0,0.3);
+            background-color: var(--light-bg);
+            color: var(--text-main);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-main);
+            font-size: var(--base-font-size);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        h1, h2, h3, h4, .heading-font {
+            font-family: 'Arial Black', Gadget, sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Utility Components */
+        .section-padding {
+            padding: 80px 0;
+        }
+        @media (max-width: 768px) {
+            .section-padding { padding: 50px 0; }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        body.dark-theme .section-header h2 {
+            color: var(--primary-orange);
+        }
+        .section-header::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-orange);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            cursor: pointer;
+            border: none;
+            text-align: center;
+        }
+        .btn-orange {
+            background-color: var(--primary-orange);
+            color: var(--white);
+        }
+        .btn-orange:hover {
+            background-color: var(--primary-orange-hover);
+            transform: translateY(-2px);
+        }
+        .btn-blue {
+            background-color: var(--royal-blue);
+            color: var(--white);
+        }
+        .btn-blue:hover {
+            background-color: var(--royal-blue-light);
+            transform: translateY(-2px);
+        }
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+        .btn-outline:hover {
+            background-color: var(--white);
+            color: var(--royal-blue);
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: var(--royal-blue);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        .nav-container {
+            display: table;
+            width: 100%;
+        }
+        .nav-logo {
+            display: table-cell;
+            vertical-align: middle;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+        }
+        .nav-logo span {
+            color: var(--primary-orange);
+        }
+        .nav-actions {
+            display: table-cell;
+            text-align: right;
+            vertical-align: middle;
+        }
+        .theme-toggle {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: var(--transition);
+            margin-right: 10px;
+        }
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Font Size Control Styling */
+        .font-controls {
+            display: inline-block;
+            vertical-align: middle;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .font-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 2px 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .font-btn:hover {
+            color: var(--primary-orange);
+        }
+
+        /* Hero Section Styling */
+        .hero {
+            position: relative;
+            background: linear-gradient(rgba(13, 71, 161, 0.85), rgba(0, 0, 0, 0.9)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%23ffffff" stroke-width="0.5" fill="none" opacity="0.1"/></svg>');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            text-align: center;
+            padding: 140px 0 120px 0;
+        }
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,123,0,0.3) 0%, rgba(13,71,161,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            color: var(--primary-orange);
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .hero .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+        .hero .tagline {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin-bottom: 35px;
+            font-style: italic;
+        }
+        .hero-buttons {
+            margin-bottom: 40px;
+        }
+        .hero-buttons .btn {
+            margin: 0 10px 15px 10px;
+        }
+        .quote-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 4px solid var(--primary-orange);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+            display: inline-block;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .quote-box p {
+            font-style: italic;
+            font-size: 1.15rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.8rem; }
+            .hero .subtitle { font-size: 1.4rem; }
+            .nav-actions { text-align: center; margin-top: 10px; display: block; width: 100%; }
+            .nav-logo { display: block; text-align: center; width: 100%; }
+        }
+
+        /* Modern Flexible Layout blocks */
+        .flex-container {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 20px;
+        }
+        .flex-col {
+            display: table-cell;
+            vertical-align: top;
+        }
+        @media (max-width: 768px) {
+            .flex-container { display: block; }
+            .flex-col { display: block; width: 100% !important; margin-bottom: 20px; }
+        }
+
+        /* Card Component Styling */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-orange);
+        }
+        .card-accent-orange {
+            border-top: 4px solid var(--primary-orange);
+        }
+        .card-accent-blue {
+            border-top: 4px solid var(--royal-blue);
+        }
+        
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-orange);
+        }
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--royal-blue);
+        }
+        body.dark-theme .card h3 {
+            color: var(--white);
+        }
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Case Studies specific styles */
+        .case-tag {
+            background-color: #ffe6d1;
+            color: var(--primary-orange);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        body.dark-theme .case-tag {
+            background-color: #4a2c11;
+        }
+
+        /* Bible Verse Styling */
+        .bible-verse {
+            background: rgba(13, 71, 161, 0.04);
+            border-left: 4px solid var(--royal-blue);
+            padding: 15px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 6px 6px 0;
+        }
+        body.dark-theme .bible-verse {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--primary-orange);
+        }
+        .verse-ref {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+            color: var(--primary-orange);
+            font-style: normal;
+            font-size: 0.9rem;
+        }
+
+        /* Timeline Components */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            width: 4px;
+            background-color: var(--royal-blue);
+            border-radius: 2px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            padding-left: 70px;
+        }
+        .timeline-badge {
+            position: absolute;
+            left: 18px;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--primary-orange);
+            border: 4px solid var(--card-bg);
+            z-index: 10;
+        }
+        .timeline-content {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+        .timeline-content h3 {
+            color: var(--royal-blue);
+            margin-bottom: 10px;
+        }
+        body.dark-theme .timeline-content h3 {
+            color: var(--primary-orange);
+        }
+
+        /* Infographic Steps */
+        .step-container {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 15px;
+        }
+        .step-card {
+            display: table-cell;
+            background-color: var(--card-bg);
+            padding: 25px 20px;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 4px solid var(--royal-blue);
+            vertical-align: top;
+            position: relative;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-orange);
+            color: var(--white);
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 15px auto;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        @media (max-width: 768px) {
+            .step-container { display: block; }
+            .step-card { display: block; width: 100%; margin-bottom: 15px; }
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+        }
+        .profile-layout {
+            display: table;
+            width: 100%;
+        }
+        .profile-img-side {
+            display: table-cell;
+            width: 40%;
+            background: linear-gradient(135deg, var(--royal-blue-dark), var(--royal-blue));
+            color: var(--white);
+            vertical-align: middle;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background-color: rgba(255,255,255,0.1);
+            border: 3px solid var(--primary-orange);
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            line-height: 94px;
+            font-size: 3rem;
+        }
+        .profile-info-side {
+            display: table-cell;
+            width: 60%;
+            padding: 40px;
+            vertical-align: top;
+        }
+        .profile-info-side h3 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--royal-blue);
+        }
+        .profile-info-side .title-sub {
+            color: var(--primary-orange);
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        .profile-bullets {
+            list-style: none;
+        }
+        .profile-bullets li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+        .profile-bullets li::before {
+            content: '✕';
+            position: absolute;
+            left: 0;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .profile-layout { display: block; }
+            .profile-img-side, .profile-info-side { display: block; width: 100%; }
+        }
+
+        /* Counter Section */
+        .counter-section {
+            background: linear-gradient(rgba(13, 71, 161, 0.92), rgba(13, 71, 161, 0.95)),
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60"><path d="M0 0h30v30H0zm30 30h30v30H30z" fill="%23ffffff" fill-opacity=".02"/></svg>');
+            color: var(--white);
+            text-align: center;
+            padding: 80px 0;
+            border-radius: 16px;
+            margin: 40px 0;
+            box-shadow: var(--shadow-lg);
+        }
+        .counter-number {
+            font-size: 5rem;
+            font-family: 'Arial Black', sans-serif;
+            color: var(--primary-orange);
+            line-height: 1;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .counter-label {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .victory-points {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+            display: inline-block;
+        }
+        .victory-points p {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 35px;
+        }
+        .victory-points p::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        /* Call To Action Section */
+        .cta-section {
+            background-color: #fff3e0;
+            border-radius: 12px;
+            padding: 50px;
+            text-align: center;
+            margin-top: 60px;
+            border: 2px dashed var(--primary-orange);
+        }
+        body.dark-theme .cta-section {
+            background-color: #24211c;
+        }
+        .cta-section h2 {
+            color: var(--royal-blue);
+            margin-bottom: 15px;
+            font-size: 2rem;
+        }
+        body.dark-theme .cta-section h2 {
+            color: var(--white);
+        }
+        .cta-section p {
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* Footer Section */
+        .footer {
+            background-color: var(--royal-blue-dark);
+            color: #cfd8dc;
+            padding: 60px 0 30px 0;
+            margin-top: 80px;
+            font-size: 0.95rem;
+        }
+        .footer-layout {
+            display: table;
+            width: 100%;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 40px;
+            margin-bottom: 20px;
+        }
+        .footer-col {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+        .footer-col-right {
+            text-align: right;
+        }
+        .footer h3 {
+            color: var(--white);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        .footer h4 {
+            color: var(--primary-orange);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+        .footer p {
+            margin-bottom: 6px;
+        }
+        .copyright {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #90a4ae;
+        }
+        @media (max-width: 600px) {
+            .footer-layout { display: block; }
+            .footer-col { display: block; width: 100%; text-align: center; margin-bottom: 25px; }
+            .footer-col-right { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-container">
+                <a href="#" class="nav-logo">MADHABAHU<span>.</span></a>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">Badili Mwonekano (Giza/Nuru)</button>
+                    <div class="font-controls">
+                        <button class="font-btn" onclick="changeFontSize(-2)" title="Punguza Maandishi">A-</button>
+                        <button class="font-btn" onclick="changeFontSize(2)" title="Ongeza Maandishi">A+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Banner Section -->
+    <header class="hero">
+        <div class="hero-glow"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>MADHABAHU</h1>
+                <div class="subtitle">Mahali pa Kukutana na Mungu</div>
+                <div class="tagline">Mafundisho ya Kina kuhusu Madhabahu katika Biblia na Kanisa la Leo</div>
+                <div class="hero-buttons">
+                    <a href="#mafundisho" class="btn btn-orange">Soma Mafundisho</a>
+                    <a href="#wasiliana" class="btn btn-outline">Wasiliana na Pastor</a>
+                </div>
+                <div class="quote-box">
+                    <p>"Madhabahu ni lango la kiroho ambapo Mungu na mwanadamu hukutana."</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Kwanini Somo Hili? -->
+    <section class="section-padding" style="background-color: var(--card-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Kwanini Somo Hili?</h2>
+            </div>
+            
+            <div style="max-width: 850px; margin: 0 auto 40px auto; text-align: center; font-size: 1.1rem; color: var(--text-muted);">
+                <p>Watu wengi hawajui maana halisi ya madhabahu, mamlaka yake, na jinsi Mungu anavyofanya kazi kupitia madhabahu. Hali hii inasababisha upotevu mkubwa wa nguvu za kiroho.</p>
+            </div>
+
+            <div class="flex-container">
+                <div class="flex-col card card-accent-orange">
+                    <span class="case-tag">Mfano wa 1</span>
+                    <h3>Malalamiko ya Kiroho</h3>
+                    <p>"Mtu mmoja alisema natoka kanisani kwa sababu madhabahu hainipi majibu na hainitendei haki."</p>
+                </div>
+                <div class="flex-col card card-accent-orange">
+                    <span class="case-tag">Mfano wa 2</span>
+                    <h3>Ujinga wa Mamlaka</h3>
+                    <p>Mtu aliyethubutu kuiba waya wa jenereta (generator) la kanisa, bila kujua madhara ya kiroho yanayomkabili.</p>
+                </div>
+                <div class="flex-col card card-accent-orange">
+                    <span class="case-tag">Mfano wa 3</span>
+                    <h3>Kugusa Kilicho Kitakatifu</h3>
+                    <p>Mtu aliyeiba fungu la kumi ambalo limetengwa maalum kwa ajili ya madhabahu takatifu ya Mungu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Maana Ya Madhabahu -->
+    <section id="mafundisho" class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2>Maana ya Madhabahu</h2>
+            </div>
+            
+            <div class="card" style="max-width: 800px; margin: 0 auto; padding: 40px; text-align: center;">
+                <div class="card-icon">🔥</div>
+                <h3 style="font-size: 2rem; margin-bottom: 10px; color: var(--royal-blue);">Neno la Kiebrania: <span style="color: var(--primary-orange);">MIZBEACH</span></h3>
+                <p style="font-size: 1.2rem; font-weight: bold; margin-bottom: 20px;">Maana: Mahali pa kuchinjia dhabihu au kutoa sadaka mbele za Mungu.</p>
+                
+                <div style="margin: 25px 0; background: rgba(255,123,0,0.05); padding: 20px; border-radius: 8px; border: 1px dashed var(--primary-orange);">
+                    <p style="color: var(--text-muted); font-size: 1.05rem;">
+                        Katika madhabahu, kuna muunganiko thabiti kati ya mambo makuu matatu: <strong>Altar (Madhabahu yenyewe)</strong>, <strong>Sadaka (Dhabihu)</strong>, na <strong>Moto wa Madhabahuni</strong> unaowakilisha uwepo na majibu ya Mungu.
+                    </p>
+                </div>
+
+                <div class="bible-verse" style="max-width: 600px; margin: 0 auto; text-align: left;">
+                    “Bwana akamtokea Abramu, akasema, Uzao wako nitawapa nchi hii. Naye huko akamjengea madhabahu Bwana aliyemtokea.”
+                    <span class="verse-ref">Mwanzo 12:7</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Madhabahu Ni Nini Hasa? -->
+    <section class="section-padding" style="background-color: var(--card-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Madhabahu ni Nini Hasa?</h2>
+            </div>
+
+            <div class="flex-container">
+                <div class="flex-col card card-accent-blue">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🤝</div>
+                    <h3>Mahali pa Kukutana na Mungu</h3>
+                    <p>Ni sehemu maalum ambapo ulimwengu wa roho na ulimwengu wa mwili hukutana. Ni lango la ushirika kati ya Muumba na mwanadamu.</p>
+                    <div class="bible-verse">
+                        “Bwana akamtokea Abramu...”
+                        <span class="verse-ref">Mwanzo 12:7</span>
+                    </div>
+                </div>
+                <div class="flex-col card card-accent-blue">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">🩸</div>
+                    <h3>Mahali pa Upatanisho na Ukombozi</h3>
+                    <p>Kihistoria na kiroho, damu ilitumika juu ya madhabahu kufanya upatanisho kwa ajili ya dhambi za wanadamu ili wapate ondoleo.</p>
+                    <div class="bible-verse">
+                        “Kwa kuwa uhai wa mwili u katika hiyo damu... kufanya upatanisho kwa ajili ya nafsi zenu...”
+                        <span class="verse-ref">Lawi 17:11</span>
+                    </div>
+                </div>
+                <div class="flex-col card card-accent-blue">
+                    <div style="font-size: 2rem; margin-bottom: 10px;">📜</div>
+                    <h3>Alama ya Agano na Ushuhuda</h3>
+                    <p>Madhabahu hutumika kama kumbukumbu imara ya kudumu ya matendo makuu, maagano, na ushindi ambao Mungu amewatendea watu wake.</p>
+                    <div class="bible-verse">
+                        “Musa akajenga madhabahu, akaiita jina lake, Bwana ni Bendera yangu.”
+                        <span class="verse-ref">Kutoka 17:15</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Madhabahu Ndani ya Kanisa -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2>Madhabahu Ndani ya Kanisa</h2>
+            </div>
+            
+            <div class="flex-container">
+                <div class="flex-col card">
+                    <h3>Sehemu Takatifu ya Mbele</h3>
+                    <p>Madhabahu ya kanisani ni sehemu maalum ya kuongozea ibada na kuwakilisha uwepo wa Mungu, ikileta utaratibu kamili wa kiungu.</p>
+                    <div class="bible-verse">
+                        “Lakini mambo yote na yatendeke kwa uzuri na kwa utaratibu.”
+                        <span class="verse-ref">1 Wakorintho 14:40</span>
+                    </div>
+                </div>
+                
+                <div class="flex-col card">
+                    <h3>Mahali pa Maombi na Toba</h3>
+                    <p>Katika historia yote ya kibiblia, madhabahu imekuwa kimbilio kuu la kupokea rehema, kufanya toba, na kuwasilisha maombi mazito:</p>
+                    <ul style="margin-top:10px; padding-left:20px; color:var(--text-muted); font-size:0.95rem;">
+                        <li><strong>Adonia</strong> alikimbilia pembe za madhabahu kupata salama wetu (1 Wafalme 1:49-50).</li>
+                        <li><strong>Sulemani</strong> aliomba mbele ya madhabahu wakati wa kuweka wakfu Hekalu (1 Wafalme 8:22 & 54).</li>
+                        <li><strong>Hezekia</strong> aliupeleka waraka wa vitisho mbele za Mungu hekaluni (Isaya 37:14).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Waraka wa Senakeribu -->
+    <section class="section-padding" style="background-color: var(--card-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Waraka wa Senakeribu (Timeline)</h2>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-content">
+                        <h3>1. Usidanganywe na Mungu Wako</h3>
+                        <p>Senakeribu alituma ujumbe akidai kuwa Mungu wa Hezekia hana nguvu za kuwaokoa mikononi mwake.</p>
+                        <span class="verse-ref" style="display:inline-block; margin-top:5px;">Isaya 37:10</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-content">
+                        <h3>2. Orodha ya Mataifa Niliyoyaangamiza</h3>
+                        <p>Alitamba kwa kuorodhesha falme zote kubwa zilizopita ambazo jeshi lake liliharibu kabisa.</p>
+                        <span class="verse-ref" style="display:inline-block; margin-top:5px;">Isaya 37:11</span>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-content">
+                        <h3>3. Iko Wapi Miungu ya Mataifa Mengine?</h3>
+                        <p>Alihoji kwa kejeli kuhusu miungu ya mataifa mengine ikiwa iliweza kuwaokoa wafalme wao.</p>
+                        <span class="verse-ref" style="display:inline-block; margin-top:5px;">Isaya 37:12-13</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Senakeribu Alikuwa Nani? -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2>Senakeribu Alikuwa Nani?</h2>
+            </div>
+            
+            <div class="profile-card">
+                <div class="profile-layout">
+                    <div class="profile-img-side">
+                        <div class="profile-avatar">👑</div>
+                        <h4>SENAKERIBU</h4>
+                        <p style="font-size:0.85rem; opacity:0.8;">Mfalme wa Ashuru</p>
+                    </div>
+                    <div class="profile-info-side">
+                        <h3>Sifa na Historia Kikuu</h3>
+                        <div class="title-sub">Dola ya Ashuru</div>
+                        <ul class="profile-bullets">
+                            <li>Alitawala kati ya miaka ya 705 KK – 681 KK.</li>
+                            <li>Alikuwa ni mtoto wa mfalme Sargoni II.</li>
+                            <li>Alisababisha mji wa Yerusalemu kuzingirwa kwa muda mrefu.</li>
+                            <li>Alivamia na kuteka mji 46 yenye ngome ya Yuda.</li>
+                            <li>Alihamisha rasmi mji mkuu wa dola kwenda Ninawi.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7: Hezekia Kwenye Madhabahu -->
+    <section class="section-padding" style="background-color: var(--card-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Hatua za Hezekia Kwenye Madhabahu</h2>
+            </div>
+            
+            <div class="step-container">
+                <div class="step-card">
+                    <span class="step-number">1</span>
+                    <h3>Alipokea</h3>
+                    <p>Alipokea barua/waraka wa vitisho kutoka kwa wajumbe.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">2</span>
+                    <h3>Aliingia</h3>
+                    <p>Alipanda moja kwa moja kuelekea Hekalu la BWANA.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">3</span>
+                    <h3>Alikunjua</h3>
+                    <p>Aliukunjua ule waraka wazi mbele za Mungu hekaluni.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">4</span>
+                    <h3>Aliomba</h3>
+                    <p>Akaomba kwa dhati mbele za Mungu wa majeshi.</p>
+                </div>
+                <div class="step-card">
+                    <span class="step-number">5</span>
+                    <h3>Majibu</h3>
+                    <p>Mungu akajibu maombi yake usiku huohuo kwa ushindi.</p>
+                </div>
+            </div>
+            
+            <div class="bible-verse" style="max-width:800px; margin:30px auto 0 auto; text-align:center;">
+                “Ee Bwana wa majeshi, Mungu wa Israeli... tega sikio lako, Ee Bwana, ukasikie; fumbua macho yako, Ee Bwana, ukaone; ukayasikie maneno yote ya Senakeribu...”
+                <span class="verse-ref">Isaya 37:16-17</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8: Kuhani wa Madhabahu -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="section-header">
+                <h2>Kuhani wa Madhabahu</h2>
+            </div>
+            
+            <div class="card" style="max-width: 750px; margin: 0 auto; text-align: center; border-left: 5px solid var(--primary-orange);">
+                <div style="font-size:3rem; margin-bottom:10px;">📜</div>
+                <h3 style="font-size:1.8rem; color:var(--royal-blue); margin-bottom:10px;">Azaria – Mkuu wa Nyumba ya Sadoki</h3>
+                <p style="font-size:1.1rem; color:var(--text-muted); max-width:600px; margin:0 auto 15px auto;">
+                    Alikuwa kiongozi mkuu wa makuhani na mshirika mkubwa wa Mfalme Hezekia katika kuendesha matengenezo makubwa ya kiroho na kurejesha ibada sahihi ya hekaluni.
+                </p>
+                <div class="bible-verse" style="max-width:500px; margin:0 auto; text-align:left;">
+                    “Azaria, mkuu wa nyumba ya Sadoki, akamjibu, akasema, Tangu watu walipoanza kuleta matoleo nyumbani kwa Bwana, tumepata chakula cha kutosha...”
+                    <span class="verse-ref">2 Mambo ya Nyakati 31:10</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 9: Majibu ya Mungu -->
+    <section class="section-padding" style="background-color: var(--card-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Majibu ya Mungu</h2>
+            </div>
+            
+            <div class="counter-section">
+                <div class="counter-number">185,000</div>
+                <div class="counter-label">Askari wa Ashuru waliouawa na Malaika wa Bwana</div>
+                
+                <div class="victory-points">
+                    <p><strong>Yerusalemu iliokolewa:</strong> Hakuna mshale hata mmoja ulioingia jijini.</p>
+                    <p><strong>Senakeribu alikimbia:</strong> Alirudi Ninawi kwa aibu kubwa akiwa ameshindwa.</p>
+                    <p><strong>Senakeribu aliuawa:</strong> Aliuawa na wanawe mwenyewe akiwa anasujudu kwa miungu yake.</p>
+                </div>
+                
+                <div class="bible-verse" style="max-width:700px; margin:30px auto 0 auto; background:rgba(0,0,0,0.2); border-left-color:var(--primary-orange); color:#fff; text-align:left;">
+                    “Malaika wa Bwana akatoka, akapiga katika kambi ya Waashuru watu laki moja na themanini na tano elfu...”
+                    <span class="verse-ref">Isaya 37:36-38</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Hitimisho -->
+    <section class="section-padding">
+        <div class="container" style="text-align: center; max-width: 800px;">
+            <h2 style="color: var(--royal-blue); margin-bottom: 20px; font-size: 2.2rem;">NGUVU YA MADHABAHU</h2>
+            <p style="font-size: 1.2rem; color: var(--text-muted); line-height: 1.8;">
+                Madhabahu si jukwaa la kawaida la mbao au simenti; bali ni mahali patakatifu pa kukutana rasmi na Mungu wetu aliye hai. Ni lango la kiroho la kutoa dhabihu, kuwasilisha changamoto zetu zote ngumu, na kupokea majibu ya uhakika kutoka mbinguni.
+            </p>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="wasiliana" class="container">
+        <div class="cta-section">
+            <h2>Je, unahitaji maombi au ushauri?</h2>
+            <p>Wasiliana na Pastor Aloyce kwa maombi, maswali, au ushirika zaidi wa neno la Mungu leo.</p>
+            <a href="tel:0757344860" class="btn btn-orange">Piga Simu Sasa: 0757 344 860</a>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-layout">
+                <div class="footer-col">
+                    <h3>Disciples Community Church (DCC)</h3>
+                    <p>Kisesa, Mwanza - Tanzania</p>
+                    <p>Mahali pa kukuza wanafunzi wa kweli wa Kristo.</p>
+                </div>
+                <div class="footer-col footer-col-right">
+                    <h4>Mhudumu Kiongozi</h4>
+                    <p><strong>Pastor Aloyce</strong></p>
+                    <p>Mchungaji Kiongozi</p>
+                    <p>Simu: 0757 344 860</p>
+                </div>
+            </div>
+            <div class="copyright">
+                Copyright © 2026 Disciples Community Church. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Actions (Theme + Font Size) -->
+    <script>
+        // Mfumo wa kubadili mwonekano wa giza
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+
+        // Mfumo mpya wa kudhibiti ukubwa wa maandishi (Font Size)
+        let currentFontSize = 16; // Ukubwa wa msingi wa mwanzo (16px)
+        const minSize = 12;      // Kiwango cha chini kabisa cha kupunguza
+        const maxSize = 26;      // Kiwango cha juu kabisa cha kuongeza
+
+        function changeFontSize(action) {
+            currentFontSize += action;
+            
+            // Hakikisha haivuki viwango salama vilivyowekwa juu
+            if (currentFontSize < minSize) currentFontSize = minSize;
+            if (currentFontSize > maxSize) currentFontSize = maxSize;
+            
+            // Weka ukubwa mpya kwenye CSS Variable ya body
+            document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disciples Community Church Kisesa Mwanza – Kumjua Kristo na Kuwafanya Wanafunzi</title>
+    
+    <!-- Poppins Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
+    <!-- SweetAlert2 kwa notification nzuri -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- CSS ya Kipekee ya Mfumo -->
+    <style>
+        :root {
+            --primary-blue: #0D47A1;
+            --primary-blue-rgb: 13, 71, 161;
+            --primary-orange: #FF6F00;
+            --primary-orange-rgb: 255, 111, 0;
+            --bg-white: #FFFFFF;
+            --bg-light: #F5F7FA;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --card-border-radius: 20px;
+            --soft-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --gradient-blue-orange: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-orange) 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-white: #0F172A;
+            --bg-light: #1E293B;
+            --text-dark: #F8FAFC;
+            --text-muted: #94A3B8;
+            --soft-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        /* Vitufe Maalum */
+        .btn-custom-blue {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-custom-blue:hover {
+            background-color: #0a3a82;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 71, 161, 0.3);
+        }
+
+        .btn-custom-orange {
+            background-color: var(--primary-orange);
+            color: #ffffff;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-custom-orange:hover {
+            background-color: #e66400;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 111, 0, 0.3);
+        }
+
+        .btn-outline-custom {
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 600;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-custom:hover {
+            background-color: #ffffff;
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Header & Nav */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--bg-white);
+            box-shadow: var(--soft-shadow);
+            transition: background-color 0.3s;
+        }
+
+        .navbar-brand img {
+            max-height: 50px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-dark) !important;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--primary-orange);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-orange) !important;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(13, 71, 161, 0.85), rgba(255, 111, 0, 0.75)), url('https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            position: relative;
+            padding: 100px 0;
+        }
+
+        /* Cards zenye mvuto */
+        .custom-card {
+            background-color: var(--bg-white);
+            border-radius: var(--card-border-radius);
+            border: none;
+            box-shadow: var(--soft-shadow);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .custom-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Floating Widgets */
+        .floating-whatsapp {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 999;
+            transition: transform 0.3s;
+        }
+        .floating-whatsapp:hover {
+            transform: scale(1.1);
+            color: white;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background-color: var(--primary-blue);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 998;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .back-to-top:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        /* Custom Audio Radio Player Widget */
+        .radio-player-card {
+            background: linear-gradient(135deg, var(--primary-blue), #0d3880);
+            border-radius: var(--card-border-radius);
+            color: white;
+            padding: 20px;
+            box-shadow: var(--soft-shadow);
+        }
+
+        /* Lightbox CSS */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .lightbox-content {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 10px;
+        }
+        .close-lightbox {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        /* Timeline ya matoleo */
+        .progress-bar-orange {
+            background-color: var(--primary-orange);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Header na Navigation -->
+    <header class="sticky-header">
+        <nav class="navbar navbar-expand-lg navbar-light py-3">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; background: var(--gradient-blue-orange) !important;">
+                        <i class="fa-solid fa-church"></i>
+                    </div>
+                    <div>
+                        <span class="fw-extrabold text-uppercase tracking-tighter d-block fs-6 mb-0 text-primary" style="color: var(--primary-blue) !important;">DCC Kisesa</span>
+                        <small class="text-muted d-block uppercase fs-10" style="font-size: 8px; letter-spacing: 1px;">Mwanza, Tanzania</small>
+                    </div>
+                </a>
+                
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                        <li class="nav-item"><a class="nav-link active" href="#home">Nyumbani</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#kuhusu">Kuhusu Sisi</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ibada">Ibada</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#mahubiri">Mahubiri</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#ufuasi">Ufuasi</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#matukio">Matukio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#huduma">Huduma</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#sadaka">Sadaka</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#blogu">Mafundisho</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#mawasiliano">Mawasiliano</a></li>
+                        
+                        <!-- Light/Dark Mode Toggle -->
+                        <li class="nav-item ms-lg-2">
+                            <button onclick="toggleTheme()" class="btn btn-sm btn-outline-secondary rounded-circle" id="theme-toggle" title="Badili Muonekano">
+                                <i class="fa-solid fa-moon"></i>
+                            </button>
+                        </li>
+                        
+                        <!-- Action Button -->
+                        <li class="nav-item ms-lg-2">
+                            <button class="btn btn-custom-orange shadow-sm text-xs" data-bs-toggle="modal" data-bs-target="#joinUsModal">
+                                <i class="fa-solid fa-user-plus me-1"></i> Jiunge Nasi
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 2. Hero Section -->
+    <section id="home" class="hero-section text-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10" data-aos="fade-up" data-aos-duration="1000">
+                    <span class="badge bg-warning text-dark uppercase mb-3 px-3 py-2 rounded-pill fw-bold text-xs tracking-wider">Disciples Community Church Kisesa</span>
+                    <h1 class="display-3 fw-extrabold mb-4" style="letter-spacing: -1px;">Kumjua Kristo na Kuwafanya Wanafunzi</h1>
+                    <p class="lead mb-5 px-md-5">Karibu kwenye madhabahu ya mabadiliko ya maisha na malezi ya kiroho. 
+                        DCC Kisesa Mwanza imejitolea kujenga jamii imara yenye misingi thabiti ya ufuasi, upendo, na kumtumikia Mungu.</p>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="#mahubiri" class="btn btn-custom-orange btn-lg shadow"><i class="fa-solid fa-play-circle me-2"></i>Tazama Mahubiri</a>
+                        <a href="#sadaka" class="btn btn-outline-custom btn-lg"><i class="fa-solid fa-hand-holding-dollar me-2"></i>Toa Sadaka</a>
+                        <button class="btn btn-light text-primary btn-lg rounded-pill" data-bs-toggle="modal" data-bs-target="#prayerModal"><i class="fa-solid fa-hands-praying me-2 text-warning"></i>Tuma mahitaji yako</button>
+                    </div>
+
+                    <!-- Bible Verse of the Day Widget -->
+                    <div class="mt-5 p-4 rounded-4 bg-white bg-opacity-10 backdrop-blur border border-white border-opacity-25 max-w-700 mx-auto" data-aos="zoom-in" data-aos-delay="200">
+                        <h6 class="text-warning text-uppercase fw-bold text-xs tracking-widest"><i class="fa-solid fa-book-bible me-2"></i>Andiko la Leo</h6>
+                        <p class="italic fs-5 mb-2" id="daily-verse-text">"Enendeni basi, mkawafanye mataifa yote kuwa wanafunzi, mkiwabatiza kwa jina la Baba, na la Mwana, na la Roho Mtakatifu."</p>
+                        <span class="badge bg-dark rounded-pill" id="daily-verse-citation">Mathayo 28:19</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Bar -->
+    <section class="py-5" style="background: var(--bg-white); margin-top: -50px; position: relative; z-index: 10; border-radius: 30px 30px 0 0;">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-4 rounded-4 shadow-sm bg-light">
+                        <i class="fa-solid fa-users text-primary fs-1 mb-2"></i>
+                        <h3 class="fw-bold text-primary mb-1">80+</h3>
+                        <p class="text-muted text-xs uppercase mb-0 font-weight-bold">Waumini</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-4 rounded-4 shadow-sm bg-light">
+                        <i class="fa-solid fa-sitemap text-warning fs-1 mb-2"></i>
+                        <h3 class="fw-bold text-warning mb-1">3+</h3>
+                        <p class="text-muted text-xs uppercase mb-0 font-weight-bold">Vikundi vya Ufuasi</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="p-4 rounded-4 shadow-sm bg-light">
+                        <i class="fa-solid fa-microphone text-danger fs-1 mb-2"></i>
+                        <h3 class="fw-bold text-danger mb-1">50+</h3>
+                        <p class="text-muted text-xs uppercase mb-0 font-weight-bold">Mahubiri</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="400">
+                    <div class="p-4 rounded-4 shadow-sm bg-light">
+                        <i class="fa-solid fa-calendar-check text-success fs-1 mb-2"></i>
+                        <h3 class="fw-bold text-success mb-1">3+</h3>
+                        <p class="text-muted text-xs uppercase mb-0 font-weight-bold">Miaka ya Huduma</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Kuhusu Kanisa -->
+    <section id="kuhusu" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs tracking-wider">Sisi ni Nani?</span>
+                <h2 class="fw-extrabold display-5 mt-2">Kuhusu DCC Kisesa</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+            </div>
+
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <img src="https://i.ibb.co/QF059DKV/557734549-3677023592434142-3907489865228671955-n.jpg" alt="DCC Kisesa" class="img-fluid rounded-4 shadow-lg">
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <h3 class="fw-bold text-primary mb-3">Historia yetu & Maono ya Kimungu</h3>
+                    <p class="text-muted mb-4">Kanisa la Disciples Community Church (DCC) Kisesa lilianza kama huduma ndogo yenye lengo thabiti la kurejesha mioyo ya waumini kuwa wanafunzi kamili wa Kristo. Kupitia mahubiri thabiti ya ki-Biblia na maisha ya ufuasi wa kweli, kanisa limekuwa kitovu cha upendo na kimbilio salama kwa jamii ya Mwanza.</p>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="bg-primary text-white p-2 rounded-3"><i class="fa-solid fa-eye"></i></div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Maono (Vision)</h5>
+                                    <p class="text-muted text-sm mb-0">Kuona kila mwanadamu anabadilishwa na kuwa mwanafunzi kamili wa Yesu Kristo.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="bg-warning text-white p-2 rounded-3"><i class="fa-solid fa-bullseye"></i></div>
+                                <div>
+                                    <h5 class="fw-bold mb-1">Utume (Mission)</h5>
+                                    <p class="text-muted text-sm mb-0">Kuishi maisha ya Injili, kuwafunza wengine na kujenga jamii yenye upendo.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-4 bg-light border-start border-5 border-warning shadow-sm">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://i.ibb.co/XZWGTRXG/Pastor-Aloyce-Logo-removebg-1.png" alt="Mchungaji Aloyce" class="rounded-circle" style="width: 60px; height: 60px; object-fit: cover;">
+                            <div>
+                                <h6 class="fw-bold mb-0">Mchungaji Kiongozi Aloyce</h6>
+                                <small class="text-muted text-xs">Mwasisi & Mchungaji, DCC Kisesa</small>
+                                <p class="text-sm italic mb-0 mt-1">"Mungu anataka uwe zaidi ya muumini; Anataka uwe mwanafunzi anayezalisha wanafunzi wengine."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<section id="ibada" class="py-5" style="background-color: #f8fa9c3; background: linear-gradient(180deg, #fff 0%, #f4f7fa 100%);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-xs tracking-wider" style="letter-spacing: 2px; color: #fd7e14; font-size: 0.9rem;">✨ Kutana na Mungu ✨</span>
+            <h2 class="fw-extrabold display-5 mt-2" style="font-weight: 800; color: #0d47a1;">Ratiba za Ibada Zetu</h2>
+            <div class="mx-auto" style="height: 4px; width: 80px; border-radius: 2px; background-color: #fd7e14;"></div>
+            <p class="text-muted mt-3" style="font-size: 1.1rem;">⛪ Karibu sana ushiriki nasi katika ibada zetu thabiti za kila wiki.</p>
+        </div>
+
+        <div id="ibadaCarousel" class="carousel slide pb-5" data-bs-ride="carousel" data-bs-interval="5000">
+            
+            <div class="carousel-indicators" style="bottom: -10px;">
+                <button type="button" data-bs-target="#ibadaCarousel" data-bs-slide-to="0" class="active custom-indicator" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#ibadaCarousel" data-bs-slide-to="1" class="custom-indicator" aria-label="Slide 2"></button>
+            </div>
+
+            <div class="carousel-inner">
+                
+                <div class="carousel-item active">
+                    <div class="row g-4 justify-content-center">
+                        
+                        <div class="col-12 col-md-4">
+                            <div class="card custom-card h-100 p-4 text-center shadow-sm">
+                                <div class="mx-auto icon-box-blue mb-4">
+                                    <i class="fa-solid fa-user-gear fs-2"></i>
+                                </div>
+                                <h4 class="fw-bold section-card-title">Jumapili</h4>
+                                <span class="badge badge-orange mx-auto mb-3 px-3 py-2">Saa 2:00 Asubuhi - Saa 2:40 Asubuhi</span>
+                                <p class="text-muted text-sm mb-0">Darasa maalum la maandalizi, maelekezo na ukuzaji wa Viongozi wetu.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4 d-none d-md-block">
+                            <div class="card custom-card h-100 p-4 text-center shadow-sm">
+                                <div class="mx-auto icon-box-blue mb-4">
+                                    <i class="fa-solid fa-cloud-sun fs-2"></i>
+                                </div>
+                                <h4 class="fw-bold section-card-title">Jumapili</h4>
+                                <span class="badge badge-orange mx-auto mb-3 px-3 py-2">Saa 2:40 Asubuhi - Saa 3:20 Asubuhi</span>
+                                <p class="text-muted text-sm mb-0"><strong style="color: #0d47a1;">Morning Glory:</strong> Ibada thabiti kwa washirika na watu wote. Karibu sana tuombee asubuhi yetu ya leo.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4 d-none d-md-block">
+                            <div class="card custom-card h-100 p-4 text-center shadow-sm">
+                                <div class="mx-auto icon-box-blue mb-4">
+                                    <i class="fa-solid fa-book-open fs-2"></i>
+                                </div>
+                                <h4 class="fw-bold section-card-title">Jumapili</h4>
+                                <span class="badge badge-orange mx-auto mb-3 px-3 py-2">Saa 3:20 Asubuhi - Saa 4:20 Asubuhi</span>
+                                <p class="text-muted text-sm mb-0">Madarasa ya Bible Study. Kujifunza na kulichambua neno la Mungu kwa kina na utaratibu mzuri.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="row g-4 justify-content-center">
+                        
+                        <div class="col-12 col-md-4">
+                            <div class="card custom-card featured-card h-100 p-4 text-center shadow">
+                                <div class="mx-auto icon-box-orange mb-4">
+                                    <i class="fa-solid fa-fire-flame-curved fs-2"></i>
+                                </div>
+                                <h4 class="fw-bold text-uppercase tracking-wide" style="color: #fd7e14; font-size: 1.35rem; font-weight: 700;">🔥 Ibada Kuu</h4>
+                                <span class="badge badge-blue mx-auto mb-3 px-3 py-2">Saa 4:20 Asubuhi - Saa 6:30 Mchana</span>
+                                <p class="text-dark text-sm mb-0" style="font-weight: 500;">Ibada yetu kubwa ya familia. Ibada yenye sifa za juu sana, miujiza, uwepo wa Roho Mtakatifu na mafundisho mazito.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4 d-none d-md-block">
+                            <div class="card custom-card h-100 p-4 text-center shadow-sm">
+                                <div class="mx-auto icon-box-blue mb-4">
+                                    <i class="fa-solid fa-house-chimney-window fs-2"></i>
+                                </div>
+                                <h4 class="fw-bold section-card-title">Jumatano (CGN)</h4>
+                                <span class="badge badge-orange mx-auto mb-3 px-3 py-2">Saa 11:00 Jioni - Saa 12:00 Jioni</span>
+                                <p class="text-muted text-sm mb-0">Vikundi vya nyumbani: <span class="fw-bold" style="color: #0d47a1;">Kituo kwa Mama Bhoke, Kituo kwa Mama Gift, Kituo cha Kanisani, na Online.</span></p>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-4 d-none d-md-block">
+                            <div class="card custom-card h-100 p-4 text-center shadow-sm">
+                                <div class="mx-auto icon-box-blue mb-4">
+                                    <i class="fa-solid fa-hands-praying fs-2"></i>
+                                </div>
+                                <h4 class="fw-bold section-card-title">Ijumaa Maombi</h4>
+                                <span class="badge badge-orange mx-auto mb-3 px-3 py-2">Saa 11:00 Jioni - Saa 12:00 Jioni</span>
+                                <p class="text-muted text-sm mb-0">Tunakutana pamoja kama mwili wa Kristo hapa Kanisani kwa ajili ya Maombi mazito na Vita vya Kiroho.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#ibadaCarousel" data-bs-slide="prev" style="width: 5%;">
+                <span class="custom-carousel-icon d-flex align-items-center justify-content-center" aria-hidden="true">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#ibadaCarousel" data-bs-slide="next" style="width: 5%;">
+                <span class="custom-carousel-icon d-flex align-items-center justify-content-center" aria-hidden="true">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </span>
+                <span class="visually-hidden">Next</span>
+            </button>
+
+        </div> </div>
+</section>
+
+<style>
+    /* Muundo wa Kadi za Kawaida */
+    .custom-card {
+        transition: all 0.3s ease; 
+        border: none;
+        border-top: 4px solid #0d47a1; 
+        border-radius: 16px; 
+        background-color: #f8fafd;
+    }
+    
+    /* Muundo wa Kadi Maalum (Featured Card - Ibada Kuu) */
+    .featured-card {
+        border-top: 4px solid #fd7e14 !important;
+        background-color: #ffffff !important;
+        transform: scale(1.02);
+    }
+
+    .section-card-title {
+        color: #0d47a1;
+    }
+
+    /* Maboksi ya Icons */
+    .icon-box-blue {
+        width: 70px; 
+        height: 70px; 
+        background-color: #0d47a1; 
+        color: #ffffff; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(13, 71, 161, 0.3);
+    }
+
+    .icon-box-orange {
+        width: 75px; 
+        height: 75px; 
+        background-color: #fd7e14; 
+        color: #ffffff; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(253, 126, 20, 0.4);
+    }
+
+    /* Badges za Muda */
+    .badge-orange {
+        background-color: #fd7e14;
+        color: white;
+        font-size: 0.85rem; 
+        border-radius: 20px;
+    }
+
+    .badge-blue {
+        background-color: #0d47a1;
+        color: white;
+        font-size: 0.9rem; 
+        border-radius: 20px;
+    }
+
+    /* Efekti ya kuweka mouse juu ya kadi (Hover) */
+    .custom-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 15px 30px rgba(13, 71, 161, 0.15) !important;
+    }
+
+    /* Muundo wa Mishale (Controls) */
+    .custom-carousel-icon {
+        background-color: #0d47a1;
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+    .custom-carousel-icon:hover {
+        background-color: #fd7e14;
+        transform: scale(1.1);
+    }
+
+    /* Muundo wa Vitufe vya chini (Indicators/Dots) */
+    .custom-indicator {
+        width: 12px !important; 
+        height: 12px !important; 
+        border-radius: 50% !important;
+        background-color: #0d47a1 !important;
+        opacity: 0.5;
+    }
+    .custom-indicator.active {
+        background-color: #fd7e14 !important;
+        width: 30px !important; /* Inajivuta kidogo kuonyesha kuwa ipo active */
+        border-radius: 10px !important;
+        opacity: 1;
+    }
+
+    /* Responsive kwa ajili ya Simu */
+    @media (max-width: 767px) {
+        .carousel-inner .carousel-item > .row > :not(:first-child) {
+            display: block !important; 
+        }
+        .carousel-control-prev, .carousel-control-next {
+            display: none; 
+        }
+        .featured-card {
+            transform: scale(1);
+        }
+    }
+</style>
+
+    <!-- 5. Mahubiri -->
+<section id="mahubiri" class="py-5" style="background-color: #ffffff;">
+    <div class="container">
+        <!-- Kichwa cha Sehemu ya Mahubiri -->
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-xs tracking-wider" style="letter-spacing: 2px; color: #fd7e14; font-size: 0.9rem;">✨ Chakula cha Kiroho ✨</span>
+            <h2 class="fw-extrabold display-5 mt-2" style="font-weight: 800; color: #0d47a1;">Maktaba ya Neno la Mungu</h2>
+            <div class="mx-auto" style="height: 4px; width: 80px; border-radius: 2px; background-color: #fd7e14;"></div>
+            <p class="text-muted mt-3" style="font-size: 1.1rem;">📺 Tazama na usikilize mahubiri yatakayojenga na kukuza imani yako wakati wowote.</p>
+        </div>
+
+        <!-- Chujio la Mahubiri (Filter/Search) -->
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8">
+                <div class="input-group shadow-sm custom-search-group">
+                    <input type="text" id="sermon-search" onkeyup="filterSermons()" class="form-control rounded-start-pill py-3 px-4" placeholder="Tafuta mahubiri kwa mada au mnenaji..." style="border: 1px solid #0d47a1;">
+                    <button class="btn text-white rounded-end-pill px-4" style="background-color: #0d47a1; transition: all 0.3s;" onmouseover="this.style.backgroundColor='#fd7e14'" onmouseout="this.style.backgroundColor='#0d47a1'"><i class="fa-solid fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4" id="sermons-container">
+            <!-- Sermon 1: Kuyakamata Malango ya Mwezi wa Sita -->
+            <div class="col-md-4 sermon-item" data-category="maombi">
+                <div class="card sermon-card h-100 shadow-sm border-0">
+                    <div class="ratio ratio-16x9 card-video-top">
+                        <iframe src="https://www.youtube.com/embed/jiNfSRa0Ag8" title="KUFUNGA NA KUOMBA ILI KUYAKAMATA MALANGO YA MWEZI WA SITA" allowfullscreen style="border-radius: 16px 16px 0 0;"></iframe>
+                    </div>
+                    <div class="p-4 flex-grow-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <span class="badge text-white mb-2 px-3 py-1 text-xs" style="background-color: #fd7e14; border-radius: 20px;">Maombi & Kufunga</span>
+                            <h5 class="fw-bold sermon-card-title mb-2">KUFUNGA NA KUOMBA ILI KUYAKAMATA MALANGO YA MWEZI WA SITA</h5>
+                            <p class="text-muted text-sm mb-3"><i class="fa-solid fa-user me-1 text-primary"></i> Mnenaji: Pastor Aloyce (DCC Kisesa Mwanza)</p>
+                        </div>
+                        <small class="text-muted d-block mt-2 pt-2 border-top"><i class="fa-solid fa-calendar-day me-1"></i> June 2026</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sermon 2: Dalili za Kuwa Mgeni Kanisani -->
+            <div class="col-md-4 sermon-item" data-category="mafundisho">
+                <div class="card sermon-card h-100 shadow-sm border-0">
+                    <div class="ratio ratio-16x9 card-video-top">
+                        <iframe src="https://www.youtube.com/embed/k0Q8GZsNxb8" title="DALILI ZA KUWA WEWE NI MGENI KANISANI" allowfullscreen style="border-radius: 16px 16px 0 0;"></iframe>
+                    </div>
+                    <div class="p-4 flex-grow-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <span class="badge text-white mb-2 px-3 py-1 text-xs" style="background-color: #0d47a1; border-radius: 20px;">Mafundisho</span>
+                            <h5 class="fw-bold sermon-card-title mb-2">DALILI ZA KUWA WEWE NI MGENI KANISANI</h5>
+                            <p class="text-muted text-sm mb-3"><i class="fa-solid fa-user me-1 text-primary"></i> Mnenaji: Pastor Aloyce (DCC Church Kisesa)</p>
+                        </div>
+                        <small class="text-muted d-block mt-2 pt-2 border-top"><i class="fa-solid fa-calendar-day me-1"></i> May 2026</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sermon 3: Maombi ya Kufunga Day 03 -->
+            <div class="col-md-4 sermon-item" data-category="maombi">
+                <div class="card sermon-card h-100 shadow-sm border-0">
+                    <div class="ratio ratio-16x9 card-video-top">
+                        <iframe src="https://www.youtube.com/embed/715vVwa-Y1I" title="MAOMBI YA KUFUNGA DAY 03" allowfullscreen style="border-radius: 16px 16px 0 0;"></iframe>
+                    </div>
+                    <div class="p-4 flex-grow-1 d-flex flex-column justify-content-between">
+                        <div>
+                            <span class="badge text-white mb-2 px-3 py-1 text-xs" style="background-color: #fd7e14; border-radius: 20px;">Maombi</span>
+                            <h5 class="fw-bold sermon-card-title mb-2">MAOMBI YA KUFUNGA DAY 03</h5>
+                            <p class="text-muted text-sm mb-3"><i class="fa-solid fa-user me-1 text-primary"></i> Mnenaji: Pastor Aloyce (DCC Kisesa Mwanza)</p>
+                        </div>
+                        <small class="text-muted d-block mt-2 pt-2 border-top"><i class="fa-solid fa-calendar-day me-1"></i> May 2026</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CSS ya Kuboresha Muonekano wa Maktaba ya Mahubiri -->
+<style>
+    .sermon-card {
+        background-color: #f8fafd;
+        border-radius: 16px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        overflow: hidden;
+    }
+    
+    .sermon-card-title {
+        color: #0d47a1;
+        font-size: 1.15rem;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Inazuia herufi zisizidi mistari miwili kufanya kadi zilingane */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 2.8rem;
+    }
+
+    /* Wakati mtu anapoweka mouse juu ya kadi ya video */
+    .sermon-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(13, 71, 161, 0.15) !important;
+        background-color: #ffffff;
+    }
+
+    .custom-search-group input:focus {
+        border-color: #fd7e14 !important;
+        box-shadow: 0 0 0 0.25rem rgba(253, 126, 20, 0.25) !important;
+    }
+</style>
+
+<!-- JavaScript Rahisi ya Kufanya Sehemu ya Kutafuta (Search) Ifanye Kazi Hapo Hapo Tovutini -->
+<script>
+function filterSermons() {
+    let input = document.getElementById('sermon-search').value.toLowerCase();
+    let sermonItems = document.getElementsByClassName('sermon-item');
+
+    for (let i = 0; i < sermonItems.length; i++) {
+        let title = sermonItems[i].getElementsByClassName('sermon-card-title')[0].innerText.toLowerCase();
+        if (title.includes(input)) {
+            sermonItems[i].style.display = "";
+        } else {
+            sermonItems[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+    <!-- 6. Kozi za Ufuasi -->
+    <section id="ufuasi" class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs tracking-wider">Kuwa Mwanafunzi</span>
+                <h2 class="fw-extrabold display-5 mt-2">Kozi Zetu za Ufuasi (Discipleship)</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+                <p class="text-muted mt-2">Dhamira yetu kuu ni kukuza waumini kuwa wanafunzi wa kweli wa Kristo kupitia madarasa haya.</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Course 1 -->
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card custom-card h-100 p-4">
+                        <div class="bg-primary text-white rounded-3 p-3 d-inline-block mb-3" style="width: 60px;">
+                            <i class="fa-solid fa-graduation-cap fs-3"></i>
+                        </div>
+                        <h4 class="fw-bold">Ufuasi Hatua ya Kwanza: Misingi ya Imani</h4>
+                        <p class="text-muted text-sm mb-4">Inajumuisha kujifunza kuhusu wokovu, sala, kusoma neno la Mungu, na ubatizo wa maji mengi.</p>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between text-xs mb-1">
+                                <span class="text-muted">Maendeleo yako</span>
+                                <span class="fw-bold text-primary" id="course1-progress-val">0%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" id="course1-progress" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <button onclick="startCourse(1)" class="btn btn-custom-blue mt-auto w-full">Anza Kozi Sasa</button>
+                    </div>
+                </div>
+                <!-- Course 2 -->
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card custom-card h-100 p-4">
+                        <div class="bg-warning text-white rounded-3 p-3 d-inline-block mb-3" style="width: 60px;">
+                            <i class="fa-solid fa-heart-pulse fs-3"></i>
+                        </div>
+                        <h4 class="fw-bold">Ufuasi Hatua ya Pili: Tabia na Maisha ya Ukristo</h4>
+                        <p class="text-muted text-sm mb-4">Kukuza tabia ya Kristo ndani yako, uaminifu katika sadaka na matoleo, na uhusiano wa kijamii.</p>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between text-xs mb-1">
+                                <span class="text-muted">Maendeleo yako</span>
+                                <span class="fw-bold text-warning" id="course2-progress-val">0%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-warning" id="course2-progress" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <button onclick="startCourse(2)" class="btn btn-custom-orange mt-auto w-full">Anza Kozi Sasa</button>
+                    </div>
+                </div>
+                <!-- Course 3 -->
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card custom-card h-100 p-4">
+                        <div class="bg-danger text-white rounded-3 p-3 d-inline-block mb-3" style="width: 60px;">
+                            <i class="fa-solid fa-fire fs-3"></i>
+                        </div>
+                        <h4 class="fw-bold">Ufuasi Hatua ya Tatu: Karama na Huduma</h4>
+                        <p class="text-muted text-sm mb-4">Kutambua karama yako, huduma ya kiroho uliyoitiwa, na jinsi ya kuwafanya wengine kuwa wanafunzi.</p>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between text-xs mb-1">
+                                <span class="text-muted">Maendeleo yako</span>
+                                <span class="fw-bold text-danger" id="course3-progress-val">0%</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-danger" id="course3-progress" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <button onclick="startCourse(3)" class="btn btn-custom-blue mt-auto w-full" style="background-color: var(--primary-blue)">Anza Kozi Sasa</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Huduma za Kanisa -->
+    <section id="huduma" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs tracking-wider">Idara & Ushiriki</span>
+                <h2 class="fw-extrabold display-5 mt-2">Huduma Zetu za Kanisa</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="p-4 rounded-4 bg-white shadow-sm border-start border-5 border-primary">
+                        <h5 class="fw-bold text-primary"><i class="fa-solid fa-people-group me-2"></i>Idara ya Vijana</h5>
+                        <p class="text-muted text-sm">Kuandaa kizazi cha vijana wenye nguvu, maadili mema na ujasiri wa kusimamia Injili ya Yesu Kristo.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="p-4 rounded-4 bg-white shadow-sm border-start border-5 border-warning">
+                        <h5 class="fw-bold text-warning"><i class="fa-solid fa-person-breastfeeding me-2"></i>Idara ya Wamama</h5>
+                        <p class="text-muted text-sm">Kuwawezesha na kuwalea akina mama katika maombi na malezi bora ya familia yenye misingi ya ki-Mungu.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="p-4 rounded-4 bg-white shadow-sm border-start border-5 border-danger">
+                        <h5 class="fw-bold text-danger"><i class="fa-solid fa-children me-2"></i>Idara ya Watoto</h5>
+                        <p class="text-muted text-sm">Kulea mioyo ya watoto tangu wadogo kwa mafundisho mepesi ya ki-Biblia na upendo wa Kristo.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="p-4 rounded-4 bg-white shadow-sm border-start border-5 border-success">
+                        <h5 class="fw-bold text-success"><i class="fa-solid fa-person-military-to-person me-2"></i>Uinjilisti & Ufuasi</h5>
+                        <p class="text-muted text-sm">Kuhubiri Injili mitaani na majumbani, na kisha kuwasajili waumini wapya katika vikundi vya malezi thabiti.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                    <div class="p-4 rounded-4 bg-white shadow-sm border-start border-5 border-info">
+                        <h5 class="fw-bold text-info"><i class="fa-solid fa-hands-holding me-2"></i>Msaada wa Jamii</h5>
+                        <p class="text-muted text-sm">Kugusa jamii yetu ya Kisesa kwa kutoa misaada kwa wasiojiweza, wagonjwa, wajane na yatima.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                    <div class="p-4 rounded-4 bg-white shadow-sm border-start border-5 border-dark">
+                        <h5 class="fw-bold text-dark"><i class="fa-solid fa-hands-praying me-2"></i>Idara ya Maombi</h5>
+                        <p class="text-muted text-sm">Kusimama kama ngome ya maombi, kupokea mahitaji na kusimama katika zamu kwa ajili ya kanisa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Matukio -->
+    <section id="matukio" class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs tracking-wider">Nini Kinafuata?</span>
+                <h2 class="fw-extrabold display-5 mt-2">Matukio Yajayo</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+            </div>
+
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="p-5 rounded-5 bg-dark text-white shadow-lg relative overflow-hidden" style="background: var(--gradient-blue-orange) !important;">
+                        <span class="badge bg-light text-primary uppercase fw-bold mb-3">Tukio Kubwa Linalofuata</span>
+                        <h3 class="fw-extrabold display-6 mb-3">Semina Kubwa ya Ufuasi na Maisha ya Kiroho</h3>
+                        <p class="mb-4">Jiandae kwa ajili ya siku tatu za mabadiliko, kufundishwa na kupokea upako mpya wa utumishi na malezi.</p>
+                        
+                        <!-- Countdown Timer -->
+                        <div class="row g-2 text-center mb-4">
+                            <div class="col-3">
+                                <div class="bg-white bg-opacity-20 p-2 rounded-3">
+                                    <h3 class="fw-bold mb-0" id="days">00</h3>
+                                    <small class="text-xs uppercase opacity-75">Siku</small>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="bg-white bg-opacity-20 p-2 rounded-3">
+                                    <h3 class="fw-bold mb-0" id="hours">00</h3>
+                                    <small class="text-xs uppercase opacity-75">Saa</small>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="bg-white bg-opacity-20 p-2 rounded-3">
+                                    <h3 class="fw-bold mb-0" id="minutes">00</h3>
+                                    <small class="text-xs uppercase opacity-75">Daq</small>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="bg-white bg-opacity-20 p-2 rounded-3">
+                                    <h3 class="fw-bold mb-0" id="seconds">00</h3>
+                                    <small class="text-xs uppercase opacity-75">Sek</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <span><i class="fa-solid fa-location-dot text-warning me-1"></i> DCC Kisesa, Mwanza</span>
+                            <span><i class="fa-solid fa-calendar text-warning me-1"></i> 25 May 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="p-4 rounded-4 bg-light shadow-sm">
+                        <h4 class="fw-bold text-primary mb-3">Sajili Ushiriki Wako Sasa</h4>
+                        <form id="event-registration-form" onsubmit="registerEvent(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Majina Kamili</label>
+                                <input type="text" class="form-control" required placeholder="Mf. Joseph Emanuel">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Namba ya Simu</label>
+                                <input type="tel" class="form-control" required placeholder="07xxxxxxxx">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Kituo chako cha CGN / Idara</label>
+                                <select class="form-select">
+                                    <option>Idara ya Vijana</option>
+                                    <option>Idara ya Wamama</option>
+                                    <option>Idara ya Watoto</option>
+                                    <option>Kituo cha Mama Bhoke</option>
+                                    <option>Kituo cha Mama Gift</option>
+                                    <option>Kituo cha Kanisani</option>
+                                    <option>Mgeni / Mwingine</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-custom-blue w-full">Thibitisha Kushiriki Tukio</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Sadaka na Matoleo -->
+    <section id="sadaka" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs tracking-wider">Matoleo Yako ya Kiroho</span>
+                <h2 class="fw-extrabold display-5 mt-2">Sadaka na Usaidizi wa Miradi</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+                <p class="text-muted mt-2">"Mungu humpenda yeye atoaye kwa moyo wa ukunjufu." – 2 Wakorintho 9:7</p>
+            </div>
+
+            <div class="row g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="p-4 rounded-4 bg-white shadow-sm">
+                        <h4 class="fw-bold text-primary mb-3">Njia za Kuchangia (Tanzania)</h4>
+                        
+                        <div class="d-flex align-items-center gap-3 p-3 mb-3 rounded-3 bg-light border-start border-5 border-danger">
+                            <div class="bg-danger text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                <span class="fw-bold">M</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">M-Pesa (Vodacom)</h6>
+                                <p class="text-muted text-sm mb-0">Namba ya simu: <strong>0757 344 860</strong> (Aloyce)</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 p-3 mb-3 rounded-3 bg-light border-start border-5 border-warning">
+                            <div class="bg-warning text-dark rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                <span class="fw-bold">A</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Mpesa namba</h6>
+                                <p class="text-muted text-sm mb-0">Namba ya Simu: <strong>+255 757 344 860</strong> (Aloyce)</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 p-3 mb-3 rounded-3 bg-light border-start border-5 border-info">
+                            <div class="bg-info text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                <span class="fw-bold">T</span>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Mpesa Namba</h6>
+                                <p class="text-muted text-sm mb-0">Namba ya Simu: <strong>+255 757 344 860</strong> (Aloyce)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="p-4 rounded-4 bg-white shadow-sm">
+                        <h4 class="fw-bold text-warning mb-3">Miradi Yetu ya Sasa</h4>
+                        <p class="text-muted text-sm mb-4">Ununuzi wa Kiwanja cha Kanisa.</p>
+                        
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between text-sm mb-1">
+                                <span class="fw-bold">Mradi wa ununuzi wa Kiwanja cha kanisa</span>
+                                <span class="fw-bold text-primary">Tsh 30,000,000/=</span>
+                            </div>
+                            <div class="progress" style="height: 15px;">
+                                <div class="progress-bar progress-bar-orange" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25% Imekamilika</div>
+                            </div>
+                        </div>
+
+                        <form id="giving-form" onsubmit="simulateGiving(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Kiasi unachotaka kuchangia (Tsh)</label>
+                                <input type="number" class="form-control" required placeholder="Mf. 10000">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Aina ya Toleo</label>
+                                <select class="form-select">
+                                    <option>Sadaka ya Kawaida</option>
+                                    <option>Fungu la Kumi (Zaka)</option>
+                                    <option>Changia Mradi wa Ujenzi</option>
+                                    <option>Sadaka ya Shukrani</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-custom-orange w-full">Thibitisha Kutoa Sadaka</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. Ushuhuda na Live Radio -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <!-- Ushuhuda (Testimonials) -->
+                <div class="col-lg-7" data-aos="fade-right">
+                    <div class="text-start mb-4">
+                        <span class="text-primary text-uppercase fw-bold text-xs">Ushuhuda wetu</span>
+                        <h2 class="fw-extrabold mt-1">Nguvu ya Mungu Kazini</h2>
+                        <div class="bg-warning" style="height: 3px; width: 60px;"></div>
+                    </div>
+
+                    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="p-4 rounded-4 bg-light shadow-sm">
+                                    <p class="fs-5 italic mb-3">"Tangu nijiunge na kikundi cha ufuasi DCC Kisesa, maisha yangu yamepata mwelekeo wa ki-ungu. Sasa ninaelewa neno na ninaweza kuwafunza wengine."</p>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0">Mshirika</h6>
+                                            <small class="text-muted text-xs">Muumini, Kisesa</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="p-4 rounded-4 bg-light shadow-sm">
+                                    <p class="fs-5 italic mb-3">"Ibada kuu za Jumapili zimejaa nguvu na uponyaji. Nilikuwa mgonjwa kwa muda mrefu lakini baada ya maombi ya pamoja hapa, nilipokea uponyaji wa miujiza!"</p>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                            <i class="fa-solid fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold mb-0">Mshirika DCC</h6>
+                                            <small class="text-muted text-xs">Mshirika</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-3 justify-content-end">
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary rounded-circle" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Online Radio Player Embed/Simulator -->
+                <div class="col-lg-5" data-aos="fade-left">
+                    <div class="radio-player-card">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <span class="badge bg-warning text-dark uppercase fw-bold"><i class="fa-solid fa-tower-broadcast me-1"></i> Live Radio</span>
+                            <span class="badge bg-danger text-white uppercase fw-bold" id="radio-status">Online</span>
+                        </div>
+                        <h4 class="fw-bold mb-2 text-white">DCC Online Radio</h4>
+                        <p class="text-white opacity-75 text-sm mb-4">Sikiliza nyimbo za sifa na kuabudu, mahubiri, na vipindi vya ufuasi masaa 24.</p>
+                        
+                        <div class="d-flex align-items-center justify-content-center gap-4 py-3">
+                            <button class="btn btn-light rounded-circle p-3 shadow-lg" id="radio-play-btn" onclick="https://pastoraloyce.github.io/disciples-fm-radio/" style="width: 70px; height: 70px;">
+                                <i class="fa-solid fa-play text-primary fs-3"></i>
+                           
+                            </button>
+                            <a href  ="https://pastoraloyce.github.io/disciples-fm-radio/">
+                           
+                            </button>
+                            <div class="text-start">
+                                <span class="text-warning text-xs uppercase d-block">Sasa hivi</span>
+                                <strong class="text-white text-sm d-block" id="now-playing-title">Ibada ya Kutoa Sadaka na Shukrani</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="progress mt-4" style="height: 5px; background: rgba(255,255,255,0.2);">
+                            <div class="progress-bar bg-warning" role="progressbar" id="radio-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   <!-- 11. Blogu na Mafundisho -->
+<section id="blogu" class="py-5" style="background: linear-gradient(180deg, #ffffff 0%, #f4f7fa 100%);">
+    <div class="container">
+        <!-- Kichwa cha Sehemu ya Blogu -->
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-xs tracking-wider" style="letter-spacing: 2px; color: #fd7e14; font-size: 0.9rem;">✨ Mafundisho ya Neno la Mungu ✨</span>
+            <h2 class="fw-extrabold display-5 mt-2" style="font-weight: 800; color: #0d47a1;">Maktaba ya Mafundisho</h2>
+            <div class="mx-auto" style="height: 4px; width: 80px; border-radius: 2px; background-color: #fd7e14;"></div>
+            <p class="text-muted mt-3" style="font-size: 1.1rem;">📖 Chimbua maarifa ya kiroho kupitia makala na mafundisho yaliyotayarishwa kwa ajili yako.</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Blog 1 -->
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                <!-- Unaweza kuweka link ya kadi nzima hapa kwenye href -->
+                <div class="card blog-card h-100 shadow-sm border-0 overflow-hidden">
+                    <div class="blog-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1504052442567-8256c7890e5d?auto=format&fit=crop&w=600&q=80" alt="Bible Study" class="card-img-top blog-img">
+                    </div>
+                    <div class="p-4 d-flex flex-column h-100 justify-content-between">
+                        <div>
+                            <span class="text-uppercase fw-bold mb-2 d-block" style="color: #fd7e14; font-size: 0.8rem; tracking-spacing: 1px;">Imani</span>
+                            <h5 class="fw-bold blog-title mb-2">MADHABAHU Mahali pa Kukutana na Mungu</h5>
+                            <p class="text-muted text-sm mb-4">Watu wengi hawajui maana halisi ya madhabahu, mamlaka yake, na jinsi Mungu anavyofanya kazi kupitia madhabahu. Hali hii inasababisha upotevu mkubwa wa nguvu za kiroho....</p>
+                        </div>
+                        <div>
+                            <!-- WEKA LINK YAKO HAPA Kwenye href="..." -->
+                            <a href="madhabahu.html" class="btn btn-blog-read d-inline-flex align-items-center fw-bold text-decoration-none">
+                                Soma Zaidi <i class="fa-solid fa-arrow-right ms-2 animate-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 2 -->
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+                <div class="card blog-card h-100 shadow-sm border-0 overflow-hidden">
+                    <div class="blog-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=600&q=80" alt="Prayer" class="card-img-top blog-img">
+                    </div>
+                    <div class="p-4 d-flex flex-column h-100 justify-content-between">
+                        <div>
+                            <span class="text-uppercase fw-bold mb-2 d-block" style="color: #0d47a1; font-size: 0.8rem; tracking-spacing: 1px;">Ufuasi</span>
+                            <h5 class="fw-bold blog-title mb-2">Kwanini Kila Muumini Anapaswa Kuwa Mwanafunzi?</h5>
+                            <p class="text-muted text-sm mb-4">Yesu hakusema enendeni mkafanye watu waumini tu, bali alisema kawatengeneze kuwa wanafunzi...</p>
+                        </div>
+                        <div>
+                            <!-- WEKA LINK YAKO HAPA Kwenye href="..." -->
+                            <a href="WEKA_LINK_YAKO_HAPA" class="btn btn-blog-read d-inline-flex align-items-center fw-bold text-decoration-none">
+                                Soma Zaidi <i class="fa-solid fa-arrow-right ms-2 animate-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog 3 -->
+            <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+                <div class="card blog-card h-100 shadow-sm border-0 overflow-hidden">
+                    <div class="blog-img-wrapper">
+                        <img src="https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&w=600&q=80" alt="Church Group" class="card-img-top blog-img">
+                    </div>
+                    <div class="p-4 d-flex flex-column h-100 justify-content-between">
+                        <div>
+                            <span class="text-uppercase fw-bold mb-2 d-block" style="color: #fd7e14; font-size: 0.8rem; tracking-spacing: 1px;">Maombi</span>
+                            <h5 class="fw-bold blog-title mb-2">Maombi ya Asubuhi: Siri Kuu ya Ushindi</h5>
+                            <p class="text-muted text-sm mb-4">Kufungua siku yako kwa kumshukuru Mungu na kumkabidhi mambo yako huweka ulinzi usiotikiswa...</p>
+                        </div>
+                        <div>
+                            <!-- WEKA LINK YAKO HAPA Kwenye href="..." -->
+                            <a href="WEKA_LINK_YAKO_HAPA" class="btn btn-blog-read d-inline-flex align-items-center fw-bold text-decoration-none">
+                                Soma Zaidi <i class="fa-solid fa-arrow-right ms-2 animate-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CSS ya Kuboresha Sehemu ya Blogu na Mafundisho -->
+<style>
+    .blog-card {
+        background-color: #ffffff;
+        border-radius: 16px !important;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        border-top: 4px solid #0d47a1 !important; /* Mstari wa juu wa rangi ya bluu kuu */
+    }
+
+    .blog-img-wrapper {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .blog-img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .blog-title {
+        color: #0d47a1;
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 1.4;
+        transition: color 0.3s ease;
+    }
+
+    /* Kitufe cha Soma Zaidi */
+    .btn-blog-read {
+        color: #fd7e14; /* Rangi ya Orange */
+        padding: 0;
+        background: none;
+        border: none;
+        transition: color 0.3s ease;
+    }
+
+    /* Madoido wakati wa kuweka mouse juu ya kadi */
+    .blog-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(13, 71, 161, 0.12) !important;
+        border-top-color: #fd7e14 !important; /* Inabadilika kuwa orange juu */
+    }
+
+    .blog-card:hover .blog-img {
+        transform: scale(1.08); /* Picha inajivuta kwa mbali kurembesha */
+    }
+
+    .blog-card:hover .blog-title {
+        color: #fd7e14; /* Kichwa cha habari kinakuwa orange */
+    }
+
+    .blog-card:hover .btn-blog-read {
+        color: #0d47a1; /* Kitufe kinarudi kuwa cha bluu */
+    }
+
+    /* Kusogeza mshale mbele kidogo wakati wa hover */
+    .blog-card:hover .animate-arrow {
+        transform: translateX(5px);
+        transition: transform 0.3s ease;
+    }
+</style>
+
+    <!-- 12. Gallery -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs tracking-wider">Matukio kwa Picha</span>
+                <h2 class="fw-extrabold display-5 mt-2">Maktaba ya Picha (Gallery)</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1510531704581-5b2870972060?auto=format&fit=crop&w=500&q=80" alt="Ibada DCC Kisesa" class="img-fluid rounded-4 shadow-sm cursor-pointer gallery-img" onclick="openLightbox(this)">
+                </div>
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1438029071396-1e831a7fa6d8?auto=format&fit=crop&w=500&q=80" alt="Semina DCC Kisesa" class="img-fluid rounded-4 shadow-sm cursor-pointer gallery-img" onclick="openLightbox(this)">
+                </div>
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1504052442567-8256c7890e5d?auto=format&fit=crop&w=500&q=80" alt="Ufuasi DCC Kisesa" class="img-fluid rounded-4 shadow-sm cursor-pointer gallery-img" onclick="openLightbox(this)">
+                </div>
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="400">
+                    <img src="https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=500&q=80" alt="Maombi DCC Kisesa" class="img-fluid rounded-4 shadow-sm cursor-pointer gallery-img" onclick="openLightbox(this)">
+                </div>
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="500">
+                    <img src="https://images.unsplash.com/photo-1515162305285-0293e4767cc2?auto=format&fit=crop&w=500&q=80" alt="Kikundi DCC Kisesa" class="img-fluid rounded-4 shadow-sm cursor-pointer gallery-img" onclick="openLightbox(this)">
+                </div>
+                <div class="col-md-4 col-6" data-aos="zoom-in" data-aos-delay="600">
+                    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=500&q=80" alt="Ushirika DCC Kisesa" class="img-fluid rounded-4 shadow-sm cursor-pointer gallery-img" onclick="openLightbox(this)">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Popup Elements -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+    <!-- 13. Mawasiliano -->
+    <section id="mawasiliano" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-primary text-uppercase fw-bold text-xs">Wasiliana Nasi</span>
+                <h2 class="fw-extrabold display-5 mt-2">Tafadhali Wasiliana Nasi Leo</h2>
+                <div class="mx-auto bg-warning" style="height: 3px; width: 60px;"></div>
+            </div>
+
+            <div class="row g-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="p-4 rounded-4 bg-white shadow-sm">
+                        <h4 class="fw-bold text-primary mb-4">Njia za Mawasiliano</h4>
+                        
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="bg-primary text-white p-3 rounded-circle"><i class="fa-solid fa-phone fs-4"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Namba ya Simu</h6>
+                                <p class="text-muted text-sm mb-0">+255 757 344 860</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="bg-warning text-white p-3 rounded-circle"><i class="fa-solid fa-envelope fs-4"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Barua Pepe (Email)</h6>
+                                <p class="text-muted text-sm mb-0">aloyce0202@gmail.com</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 mb-4">
+                            <div class="bg-success text-white p-3 rounded-circle"><i class="fa-solid fa-location-dot fs-4"></i></div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Mahali Tulipo</h6>
+                                <p class="text-muted text-sm mb-0">Kisesa, Mwanza, Tanzania</p>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Ramani Simulator yenye usalama -->
+                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden shadow-sm mt-3">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15951.1235654!2d33.0012345!3d-2.5204212!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19c10427bc56cb71%3A0xe67cf052b6d194cf!2sKisesa%2C%20Mwanza!5e0!3m2!1sen!2stz!4v1700000000000!5m2!1sen!2stz" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="p-4 rounded-4 bg-white shadow-sm h-100">
+                        <h4 class="fw-bold text-warning mb-4">Tuma Ujumbe au Ombi</h4>
+                        <form id="contact-form" onsubmit="submitContact(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Majina yako</label>
+                                <input type="text" class="form-control" required placeholder="Mf. Aloyce Joseph">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Barua Pepe</label>
+                                <input type="email" class="form-control" placeholder="Optional">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-sm fw-bold">Ujumbe wako</label>
+                                <textarea class="form-control" rows="5" required placeholder="Andika ujumbe wako au ombi la maombi hapa..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-custom-orange w-full py-3"><i class="fa-solid fa-paper-plane me-2"></i>Tuma Ujumbe Sasa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <h5 class="fw-bold text-warning mb-3">DCC Kisesa</h5>
+                    <p class="text-sm text-white opacity-75 mb-4">Disciples Community Church Kisesa Mwanza imejitolea kujenga jamii imara yenye misingi thabiti ya ufuasi, upendo, na kumtumikia Mungu.</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://facebook.com" class="text-white fs-4"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://youtube.com" class="text-white fs-4"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://whatsapp.com" class="text-white fs-4"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="fw-bold text-warning mb-3">Vipengele vya Haraka</h5>
+                    <ul class="list-unstyled space-y-2 text-sm">
+                        <li><a href="#home" class="text-white text-decoration-none opacity-75 hover:opacity-100 d-block py-1">Nyumbani</a></li>
+                        <li><a href="#kuhusu" class="text-white text-decoration-none opacity-75 hover:opacity-100 d-block py-1">Kuhusu Sisi</a></li>
+                        <li><a href="#ibada" class="text-white text-decoration-none opacity-75 hover:opacity-100 d-block py-1">Ibada zetu</a></li>
+                        <li><a href="#ufuasi" class="text-white text-decoration-none opacity-75 hover:opacity-100 d-block py-1">Kozi za Ufuasi</a></li>
+                        <li><a href="#sadaka" class="text-white text-decoration-none opacity-75 hover:opacity-100 d-block py-1">Matoleo</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="fw-bold text-warning mb-3">Mawasiliano ya haraka</h5>
+                    <p class="text-sm opacity-75 mb-2"><i class="fa-solid fa-phone me-2"></i> +255 757 344 860</p>
+                    <p class="text-sm opacity-75 mb-2"><i class="fa-solid fa-envelope me-2"></i> aloyce0202@gmail.com</p>
+                    <p class="text-sm opacity-75 mb-2"><i class="fa-solid fa-location-dot me-2"></i> Kisesa, Mwanza, Tanzania</p>
+                    
+                    <div class="mt-4">
+                        <h6 class="text-sm text-warning mb-2 uppercase fw-bold">Newsletter</h6>
+                        <div class="input-group">
+                            <input type="email" class="form-control rounded-start-pill text-sm" placeholder="Email yako...">
+                            <button class="btn btn-custom-orange rounded-end-pill text-sm" onclick="subscribeNewsletter()"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-5 border-white border-opacity-25">
+
+            <div class="text-center text-xs opacity-75">
+                <p class="mb-0">© 2026 Disciples Community Church Kisesa Mwanza – Kumjua Kristo na Kuwafanya Wanafunzi. Haki zote zimehifadhiwa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Prayer Modal -->
+    <div class="modal fade" id="prayerModal" tabindex="-1" aria-labelledby="prayerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius: var(--card-border-radius); background-color: var(--bg-white); color: var(--text-dark);">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-primary" id="prayerModalLabel"><i class="fa-solid fa-hands-praying me-2 text-warning"></i>Tuma Ombi la Maombi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="submitPrayerRequest(event)">
+                        <div class="mb-3">
+                            <label class="form-label text-sm fw-bold">Jina lako</label>
+                            <input type="text" class="form-control" required placeholder="Aloyce Joseph">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-sm fw-bold">Siri au Hadharani?</label>
+                            <select class="form-select">
+                                <option>Siri (Mchungaji tu ndiye atakayeona)</option>
+                                <option>Ushirika wa Maombi ya Kanisani</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-sm fw-bold">Ombi lako la Maombi</label>
+                            <textarea class="form-control" rows="4" required placeholder="Andika hapa..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-custom-orange w-full">Wasilisha Maombi</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Us Modal -->
+    <div class="modal fade" id="joinUsModal" tabindex="-1" aria-labelledby="joinUsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="border-radius: var(--card-border-radius); background-color: var(--bg-white); color: var(--text-dark);">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-primary" id="joinUsModalLabel"><i class="fa-solid fa-user-plus me-2 text-warning"></i>Jiunge na DCC Kisesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form onsubmit="submitJoinRequest(event)">
+                        <div class="mb-3">
+                            <label class="form-label text-sm fw-bold">Majina Kamili</label>
+                            <input type="text" class="form-control" required placeholder="Emanuel Joseph">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-sm fw-bold">Namba ya Simu</label>
+                            <input type="tel" class="form-control" required placeholder="07xxxxxxxx">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-sm fw-bold">Kituo cha Karibu nawe (CGN)</label>
+                            <select class="form-select">
+                                <option>Kituo cha Mama Bhoke</option>
+                                <option>Kituo cha Mama Gift</option>
+                                <option>Kituo cha Kanisani</option>
+                                <option>Mimi ni Mgeni</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-custom-blue w-full">Thibitisha Ombi la Kujiunga</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Widgets -->
+    <a href="https://wa.me/255757344860" target="_blank" class="floating-whatsapp" title="Wasiliana nasi kwa WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation JS -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+
+        // Theme management (Light/Dark mode)
+        let theme = localStorage.getItem("theme") || "light";
+        if (theme === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+            document.getElementById("theme-toggle").innerHTML = '<i class="fa-solid fa-sun text-warning"></i>';
+        }
+
+        function toggleTheme() {
+            if (theme === "light") {
+                document.documentElement.setAttribute("data-theme", "dark");
+                theme = "dark";
+                document.getElementById("theme-toggle").innerHTML = '<i class="fa-solid fa-sun text-warning"></i>';
+            } else {
+                document.documentElement.removeAttribute("data-theme");
+                theme = "light";
+                document.getElementById("theme-toggle").innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+            localStorage.setItem("theme", theme);
+        }
+
+        // Countdown Timer logic
+        const countdownDate = new Date("May 25, 2026 09:00:00").getTime();
+        const updateCountdown = setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countdownDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+
+            if (distance < 0) {
+                clearInterval(updateCountdown);
+                document.getElementById("days").innerHTML = "00";
+                document.getElementById("hours").innerHTML = "00";
+                document.getElementById("minutes").innerHTML = "00";
+                document.getElementById("seconds").innerHTML = "00";
+            }
+        }, 1000);
+
+        // Course Progress Simulator
+        function startCourse(courseId) {
+            let progress = 0;
+            const progressInterval = setInterval(function() {
+                progress += 5;
+                document.getElementById(`course${courseId}-progress`).style.width = progress + "%";
+                document.getElementById(`course${courseId}-progress-val`).innerHTML = progress + "%";
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    Swal.fire({
+                        title: 'Hongera!',
+                        text: 'Umekamilisha darasa hili thabiti la Ufuasi. Mchungaji atawasiliana nawe kwa hatua inayofuata!',
+                        icon: 'success',
+                        confirmButtonText: 'Sawa'
+                    });
+                }
+            }, 100);
+        }
+
+        // Sermon Filter Search function
+        function filterSermons() {
+            const query = document.getElementById("sermon-search").value.toLowerCase();
+            const items = document.querySelectorAll(".sermon-item");
+
+            items.forEach(function(item) {
+                const title = item.querySelector(".sermon-title").innerText.toLowerCase();
+                if (title.includes(query)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+        // Simulate giving payment
+        function simulateGiving(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Malipo ya Sadaka',
+                text: 'Sadaka yako inafanyiwa kazi, tafadhali thibitisha muamala kwenye simu yako ya mkononi hivi punde.',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Thibitisha',
+                cancelButtonText: 'Ghairi'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Hongera!',
+                        'Sadaka yako imepokelewa kwa mafanikio. Barikiwa sana!',
+                        'success'
+                    );
+                    document.getElementById("giving-form").reset();
+                }
+            });
+        }
+
+        // Simulated Radio Player logic
+        let isPlaying = false;
+        let progressVal = 0;
+        let radioInterval;
+
+        function toggleRadioPlay() {
+            const btn = document.getElementById("radio-play-btn");
+            const status = document.getElementById("radio-status");
+            const progressBar = document.getElementById("radio-progress-bar");
+
+            if (!isPlaying) {
+                isPlaying = true;
+                btn.innerHTML = '<i class="fa-solid fa-pause text-primary fs-3"></i>';
+                status.innerHTML = "Live Now";
+                status.classList.remove("bg-danger");
+                status.classList.add("bg-success");
+                
+                radioInterval = setInterval(function() {
+                    progressVal += 1;
+                    if (progressVal > 100) progressVal = 0;
+                    progressBar.style.width = progressVal + "%";
+                }, 1000);
+            } else {
+                isPlaying = false;
+                btn.innerHTML = '<i class="fa-solid fa-play text-primary fs-3"></i>';
+                status.innerHTML = "Offline";
+                status.classList.remove("bg-success");
+                status.classList.add("bg-danger");
+                clearInterval(radioInterval);
+            }
+        }
+
+        // Lightbox popups for Gallery
+        function openLightbox(imgElement) {
+            const lightbox = document.getElementById("lightbox");
+            const lightboxImg = document.getElementById("lightbox-img");
+            lightbox.style.display = "block";
+            lightboxImg.src = imgElement.src;
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox").style.display = "none";
+        }
+
+        // Back to top scrolling
+        window.onscroll = function() {
+            const btt = document.getElementById("backToTop");
+            if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+                btt.style.display = "flex";
+            } else {
+                btt.style.display = "none";
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Register for event simulation
+        function registerEvent(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Imefanikiwa!',
+                text: 'Umesajiliwa kikamilifu kwenye Semina ya Ufuasi. Karibu sana!',
+                icon: 'success',
+                confirmButtonText: 'Sawa'
+            });
+            document.getElementById("event-registration-form").reset();
+        }
+
+        // Submit contact form simulation
+        function submitContact(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Asante sana!',
+                text: 'Ujumbe wako umefika kwa Mchungaji na Timu ya DCC Tech. Tutajibu hivi punde.',
+                icon: 'success',
+                confirmButtonText: 'Sawa'
+            });
+            document.getElementById("contact-form").reset();
+        }
+
+        // Submit prayer request simulation
+        function submitPrayerRequest(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Ombi Limewasilishwa!',
+                text: 'Mchungaji Aloyce amepokea ombi lako na tunaamini Mungu anajibu maombi ya wenye haki.',
+                icon: 'success',
+                confirmButtonText: 'Sawa'
+            });
+            bootstrap.Modal.getInstance(document.getElementById('prayerModal')).hide();
+        }
+
+        // Submit join DCC simulation
+        function submitJoinRequest(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Karibu DCC!',
+                text: 'Ombi lako limepokelewa. Kiongozi wa kituo cha CGN kilicho karibu nawe atawasiliana nawe kwa upendo mkubwa.',
+                icon: 'success',
+                confirmButtonText: 'Sawa'
+            });
+            bootstrap.Modal.getInstance(document.getElementById('joinUsModal')).hide();
+        }
+
+        // Newsletter subscription
+        function subscribeNewsletter() {
+            Swal.fire({
+                title: 'Asante!',
+                text: 'Umesajiliwa kupata makala na matangazo mapya kutoka DCC Kisesa.',
+                icon: 'success',
+                confirmButtonText: 'Sawa'
+            });
+        }
+
+        // Read article modal simulation
+        function readArticle(title) {
+            Swal.fire({
+                title: title,
+                text: "Makala hii inaeleza umuhimu mkubwa wa kukua kiroho kupitia ibada za sifa na ufuasi sahihi katika jamii yetu...",
+                icon: 'info',
+                confirmButtonText: 'Sawa'
+            });
+        }
+    </script>
+</body>
+</html>
