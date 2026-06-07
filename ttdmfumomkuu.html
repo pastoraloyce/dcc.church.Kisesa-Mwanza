@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Timothy Discipleship (TTD)</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #003366;
+            --accent-orange: #FF8C00;
+            --white: #ffffff;
+            --light-bg: #f4f7f6;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body { 
+            background: var(--white); 
+            color: #333; 
+            overflow-x: hidden; 
+            padding-top: 80px; /* Inazuia hero kupotea chini ya navbar */
+        }
+
+        /* --- NAVBAR MBWA --- */
+        header {
+            background: rgba(0, 51, 102, 0.95);
+            backdrop-filter: blur(10px);
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span { color: var(--accent-orange); }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links li { position: relative; }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 0;
+        }
+
+        /* Animated underline effect */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-orange);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--accent-orange); }
+
+        .btn-call {
+            background: var(--accent-orange);
+            color: var(--primary-blue) !important;
+            padding: 10px 22px !important;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        .btn-call:hover {
+            background: var(--white) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Hamburger Menu */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--white);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 75vh;
+            background: linear-gradient(rgba(0,51,102,0.85), rgba(0,51,102,0.85)), 
+                        url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.2rem, 7vw, 3.8rem);
+            line-height: 1.1;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        /* --- MODULES SECTION --- */
+        .modules-section {
+            padding: 80px 5%;
+            background-color: var(--light-bg);
+        }
+
+        .modules-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .modules-header h2 {
+            color: var(--primary-blue);
+            font-size: 32px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .modules-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--accent-orange);
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .module-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border-top: 5px solid var(--primary-blue);
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            border-top-color: var(--accent-orange);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .module-card span { font-size: 45px; margin-bottom: 15px; display: block; }
+        .module-card h3 { color: var(--primary-blue); margin-bottom: 12px; font-size: 20px; }
+        .module-card p { font-size: 14.5px; color: #555; margin-bottom: 20px; line-height: 1.6; }
+        
+        .module-link {
+            margin-top: auto;
+            background: var(--primary-blue);
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .module-link:hover {
+            background: var(--accent-orange);
+            color: var(--primary-blue);
+        }
+
+        /* --- CONTACT & FOOTER --- */
+        .contact-box {
+            background: var(--primary-blue);
+            color: white;
+            padding: 60px 5%;
+            text-align: center;
+            margin: 60px 5%;
+            border-radius: 25px;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 35px;
+        }
+
+        .contact-info a { color: white; text-decoration: none; font-weight: 600; font-size: 18px; transition: 0.3s; }
+        .contact-info a:hover { color: var(--accent-orange); }
+        .contact-info i { color: var(--accent-orange); margin-right: 10px; }
+
+        footer {
+            background: #001429;
+            color: white;
+            padding: 50px 5% 20px;
+            text-align: center;
+        }
+
+        .socials { margin-bottom: 20px; }
+        .socials a { color: white; font-size: 28px; margin: 0 15px; transition: 0.3s; }
+        .socials a:hover { color: var(--accent-orange); }
+
+        /* Floating WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+            z-index: 2000;
+            transition: 0.3s;
+        }
+
+        .whatsapp-float:hover { transform: scale(1.1); rotate: 10deg; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+
+            .nav-links {
+                position: absolute;
+                top: 80px;
+                right: -100%;
+                background: var(--primary-blue);
+                width: 100%;
+                height: 100vh;
+                flex-direction: column;
+                padding-top: 50px;
+                transition: 0.4s ease-in-out;
+            }
+
+            .nav-links.active { right: 0; }
+
+            .nav-links li { width: 80%; text-align: center; }
+            
+            .nav-links a { font-size: 18px; display: block; padding: 15px; }
+
+            .hero { height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">The Timothy <span> Discipleship.</span></a>
+    
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="#home">Nyumbani</a></li>
+            <li><a href="aboutus.html">About us</a></li>
+            <li><a href="loginmafunzo.html">Mafunzo</a></li>
+            <li><a href="loginworkersttd.html">Workers</a></li>
+            <li><a href="mkufunzimkuu.html">Wakufunzi</a></li>
+            <li><a href="loginwageni.html">Wageni</a></li>
+            <li><a href="tel:+255757344860" class="btn-call"><i class="fas fa-phone-alt"></i> +255 757 344 860</a></li>
+        </ul>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>The Timothy <br> Discipleship</h1>
+            <p>The Timothy Discipleship (TTD) ilianzishwa ikiwa na lengo moja kuu: 
+                Kulea viongozi kuanzia ngazi ya chini (grassroots) hadi kufikia ukomavu wa kiutendaji. 
+                Tukitokea Kisesa, Mwanza, tumejipanga kuhakikisha kila "Timothy" 
+                anapata muongozo sahihi wa kuongoza wengine kwa uadilifu.."Pastor Aloyce"</p>
+        </div>
+    </section>
+
+    <section class="modules-section" id="moduli">
+        <div class="modules-header">
+            <h2>Kozi ya kwanza: Uanafunzi wa Timotheo (moduli Saba)</h2>
+        </div>
+
+        <div class="modules-grid">
+            <div class="module-card">
+                <span>⛪</span>
+                <h3>Moduli ya Kwanza</h3>
+                <p>Ufuasi na Miundo ya Kanisa: Jifunze misingi imara ya ujenzi wa kanisa na uanafunzi.</p>
+                <a href="https://pastoraloyce.github.io/Moduli-ya-kwanza-Ufuasi-na-Miundo-ya-Kanisa-Moduli-ya-Kwanza/" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+
+            <div class="module-card">
+                <span>💡</span>
+                <h3>Moduli ya Pili</h3>
+                <p>Maana ya The Timothy Discipleship: Kuelewa chimbuko na maono ya TTD.</p>
+                <a href="https://github.com/pastoraloyce/Moduli-ya-Pili-Maana-ya-The-Timothy-Discipleship-" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+
+            <div class="module-card">
+                <span>🎯</span>
+                <h3>Moduli ya Tatu</h3>
+                <p>Malengo Matano ya TTD: Maelekezo mahususi ya kile tunacholenga kufikia.</p>
+                <a href="https://github.com/pastoraloyce/Moduli-ya-tatu-Malengo-Matano-ya" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+
+            <div class="module-card">
+                <span>🛠️</span>
+                <h3>Moduli ya Nne</h3>
+                <p>Mbinu na Zana za Ufundishaji: Kuwa mwalimu bora mwenye nyenzo sahihi.</p>
+                <a href="https://pastoraloyce.github.io/Moduli-ya-Nne-Mbinu-na-Zana-za-Ufundishaji/" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+
+            <div class="module-card">
+                <span>🏆</span>
+                <h3>Moduli ya Tano</h3>
+                <p>Changamoto na Ushindi: Namna ya kushinda vikwazo katika huduma ya ufuasi.</p>
+                <a href="https://pastoraloyce.github.io/Moduli-ya-Tano-Changamoto-na-Ushindi/" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+
+            <div class="module-card">
+                <span>🔭</span>
+                <h3>Moduli ya Sita</h3>
+                <p>Maono ya Mungu: Kujua na kutembea katika mpango mkamilifu wa Mungu.</p>
+                <a href="https://pastoraloyce.github.io/Moduli-ya-Sita-Maono-ya-Mungu/" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+
+            <div class="module-card">
+                <span>📊</span>
+                <h3>Moduli ya Saba</h3>
+                <p>Mfumo wa Utoaji wa Taarifa: Usimamizi na tathmini ya maendeleo ya kazi.</p>
+                <a href="https://pastoraloyce.github.io/Moduli-ya-Saba-Mfumo-wa-Utoaji-wa-Taarifa/" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+        </div>
+    </section>
+    
+    <section class="modules-section" id="moduli">
+        <div class="modules-header">
+            <h2>Kozi ya Pili: Mti usiozaa matunda hukatwa</h2>
+        </div>
+         <div class="module-card">
+                <span>📊</span>
+                <h3>Mti usiozaa matunda</h3>
+                <p>Mungu anataka tuzae matunda mazuri, ni shauku yake kuona ukizaa matunda bila kuchoka maana moyo wa Mungu ni kuona "Hakuna hata mmoja anayepotea", kuwa sehemu ya Mpango wa Mungu</p>
+                <a href="https://pastoraloyce.github.io/MTI-USIOZAA-MATUNDA-HUKATWA2/
+" class="module-link" target="_blank">Soma Moduli</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-box" id="contact">
+        <h2>Wasiliana Nasi Sasa</h2>
+        <div class="contact-info">
+            <a href="tel:+255757344860"><i class="fas fa-phone"></i> +255 757 344 860</a>
+            <a href="https://wa.me/255757344860" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a href="https://pastoraloyce.github.io/freecourses./"><i class="fas fa-graduation-cap"></i> Free Courses</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="socials">
+            <a href="https://www.facebook.com/share/1bwx7do3Fp/" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://youtube.com/@pastoraloyce" target="_blank"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p>&copy; 2026 The Timothy Discipleship (TTD). <br>Pastor Aloyce   0757 344 860</p>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/255757344860" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        const menuToggle = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            
+            // Hamburger animation
+            const spans = menuToggle.querySelectorAll('span');
+            spans[0].style.transform = navLinks.classList.contains('active') ? 'rotate(45deg) translate(5px, 5px)' : 'none';
+            spans[1].style.opacity = navLinks.classList.contains('active') ? '0' : '1';
+            spans[2].style.transform = navLinks.classList.contains('active') ? 'rotate(-45deg) translate(7px, -7px)' : 'none';
+        });
+
+        // Funga menu link ikibonyezwa
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const spans = menuToggle.querySelectorAll('span');
+                spans.forEach(s => s.style.transform = 'none');
+                spans[1].style.opacity = '1';
+            });
+        });
+    </script>
+
+</body>
+</html>
