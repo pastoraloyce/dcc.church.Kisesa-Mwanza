@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="sw" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGN Portal | Mfumo wa Mahudhurio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration iliyounganishwa na mradi wako
+        const firebaseConfig = {
+            apiKey: "AIzaSyAs-LshW57yYfX_M-u_S9Y-mU-n-Y", // Imetumika API Key ya mradi wako wa pastoraloyce
+            authDomain: "pastoraloyce-84f50.firebaseapp.com",
+            projectId: "pastoraloyce-84f50",
+            storageBucket: "pastoraloyce-84f50.appspot.com",
+            messagingSenderId: "542385472281",
+            appId: "1:542385472281:web:6e6f1f4c3a5d8e7b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Hifadhi Mwanafunzi
+        window.saveStudent = async () => {
+            const jina = document.getElementById('regName').value;
+            const jinsi = document.getElementById('regJinsi').value;
+            const simu = document.getElementById('regSimu').value;
+            const kituo = document.getElementById('kituoSelect').value;
+
+            if (!jina || !simu) { 
+                alert("Tafadhali jaza jina na namba ya simu!"); 
+                return; 
+            }
+
+            try {
+                await addDoc(collection(db, "wana_cgn"), {
+                    jina: jina, 
+                    jinsi: jinsi, 
+                    simu: simu, 
+                    kituo: kituo,
+                    tarehe_usajili: serverTimestamp()
+                });
+                
+                // Taarifa ya mafanikio yenye jina la mwanafunzi
+                alert("Hongera! Taarifa za " + jina + " zimehifadhiwa kikamilifu kwenye mfumo.");
+                
+                document.getElementById('usajiliForm').reset();
+                loadRegisteredList();
+            } catch (e) { 
+                alert("Hitilafu imetokea wakati wa kuhifadhi: " + e.message); 
+            }
+        };
+
+        // Futa Mwanafunzi
+        window.deleteStudent = async (id) => {
+            if(confirm("Je, una uhakika unataka kumfuta huyu mwanafunzi?")) {
+                await deleteDoc(doc(db, "wana_cgn", id));
+                loadRegisteredList();
+                if(document.getElementById('mahudhurio').classList.contains('active')) loadStudents();
+            }
+        };
+
+        // Orodha ya Waliosajiliwa
+        window.loadRegisteredList = async () => {
+            const list = document.getElementById('registeredList');
+            list.innerHTML = '<p class="text-center italic opacity-50 text-[10px]">Inapakia...</p>';
+            const q = query(collection(db, "wana_cgn"), orderBy("tarehe_usajili", "desc"));
+            const querySnapshot = await getDocs(q);
+            list.innerHTML = "";
+            querySnapshot.forEach((doc) => {
+                const s = doc.data();
+                list.innerHTML += `
+                    <div class="flex justify-between items-center p-3 bg-slate-50 dark:bg-slate-800 rounded-xl mb-2 border border-slate-100 dark:border-slate-700">
+                        <div>
+                            <p class="font-bold text-xs uppercase">${s.jina}</p>
+                            <p class="text-[9px] opacity-60">${s.kituo} | ${s.simu}</p>
+                        </div>
+                        <button onclick="deleteStudent('${doc.id}')" class="text-[10px] bg-red-100 text-red-600 px-3 py-1 rounded-lg font-bold">FUTA</button>
+                    </div>`;
+            });
+        };
+
+        // Pakia Mahudhurio
+        window.loadStudents = async () => {
+            const container = document.getElementById('studentsList');
+            container.innerHTML = '<p class="text-center italic opacity-50 text-[10px]">Inapakia...</p>';
+            const querySnapshot = await getDocs(collection(db, "wana_cgn"));
+            container.innerHTML = "";
+            let total = 0;
+            querySnapshot.forEach((doc) => {
+                const s = doc.data();
+                total++;
+                container.innerHTML += `
+                    <div class="flex flex-col p-4 bg-white dark:bg-slate-800 rounded-2xl border-l-4 border-brandBlue shadow-sm mb-3">
+                        <div class="mb-3">
+                            <p class="font-black text-sm uppercase">${s.jina}</p>
+                            <p class="text-[9px] font-bold text-slate-500 uppercase">${s.kituo} | ${s.jinsi}</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="mark(this, 'Yupo', '${doc.id}', '${s.jina}', '${s.jinsi}')" class="py-2 rounded-lg border-2 border-green-500 text-green-500 font-bold text-[9px] uppercase transition-all">Yupo</button>
+                            <button onclick="mark(this, 'Hayupo', '${doc.id}', '${s.jina}', '${s.jinsi}')" class="py-2 rounded-lg border-2 border-red-500 text-red-500 font-bold text-[9px] uppercase transition-all">Hayupo</button>
+                            <button onclick="mark(this, 'Amesafiri', '${doc.id}', '${s.jina}', '${s.jinsi}')" class="py-2 rounded-lg border-2 border-blue-500 text-blue-500 font-bold text-[9px] uppercase transition-all">Msafiri</button>
+                            <button onclick="mark(this, 'Anaumwa', '${doc.id}', '${s.jina}', '${s.jinsi}')" class="py-2 rounded-lg border-2 border-yellow-500 text-yellow-600 font-bold text-[9px] uppercase transition-all">Mgonjwa</button>
+                            <button onclick="mark(this, 'Dharura', '${doc.id}', '${s.jina}', '${s.jinsi}')" class="py-2 rounded-lg border-2 border-purple-500 text-purple-500 font-bold text-[9px] uppercase transition-all">Dharura</button>
+                        </div>
+                    </div>`;
+            });
+            document.getElementById('totalWanafunzi').innerText = total;
+        };
+
+        let stats = { m: 0, k: 0, totalMarked: 0 };
+        window.mark = async (btn, status, id, name, jinsi) => {
+            const chosenDate = document.getElementById('attendanceDate').value;
+            try {
+                await addDoc(collection(db, "mahudhurio_cgn"), {
+                    studentId: id, jina: name, hali: status, tarehe: chosenDate, jinsi: jinsi, timestamp: serverTimestamp()
+                });
+                
+                const parent = btn.parentElement;
+                parent.querySelectorAll('button').forEach(b => { b.style.backgroundColor = ''; b.style.color = ''; });
+                const colors = { 'Yupo': '#22c55e', 'Hayupo': '#ef4444', 'Amesafiri': '#3b82f6', 'Anaumwa': '#eab308', 'Dharura': '#a855f7' };
+                btn.style.backgroundColor = colors[status];
+                btn.style.color = 'white';
+                
+                if(status === 'Yupo') {
+                    stats.totalMarked++;
+                    if(jinsi === 'Mwanaume') stats.m++; else stats.k++;
+                    updateStatsDisplay();
+                }
+            } catch (e) { alert("Imeshindwa kuhifadhi mahudhurio!"); }
+        };
+
+        function updateStatsDisplay() {
+            const total = parseInt(document.getElementById('totalWanafunzi').innerText) || 1;
+            document.getElementById('statM').innerText = stats.m;
+            document.getElementById('statK').innerText = stats.k;
+            const percent = Math.round((stats.totalMarked / total) * 100);
+            document.getElementById('statPercent').innerText = percent + "%";
+        }
+
+        window.onload = () => {
+            document.getElementById('attendanceDate').valueAsDate = new Date();
+            loadRegisteredList();
+        };
+    </script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { brandBlue: '#1e40af', brandOrange: '#f97316' } } }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-active { background-color: #f97316 !important; color: white !important; }
+        .footer-link { transition: all 0.2s; }
+        .footer-link:hover { color: #f97316; transform: translateX(5px); }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col min-h-screen text-xs">
+
+    <nav class="fixed w-full z-50 bg-brandBlue text-white shadow-xl px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-brandOrange p-2 rounded-lg"><span class="text-white font-black">CGN</span></div>
+                <span class="font-black text-xl tracking-tighter uppercase">Portal</span>
+            </div>
+            <a href="index.html" class="text-xs font-bold bg-white/10 px-4 py-2 rounded-full hover:bg-brandOrange transition-all text-white uppercase">Rudi TTD</a>
+        </div>
+    </nav>
+
+    <main class="pt-28 pb-20 px-4 max-w-4xl mx-auto flex-grow w-full">
+        
+        <div class="flex flex-wrap gap-2 mb-8 bg-white dark:bg-slate-900 p-2 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-800">
+            <button onclick="openTab('usajili')" id="btn-usajili" class="flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase transition-all btn-active">1. Usajili</button>
+            <button onclick="openTab('mahudhurio')" id="btn-mahudhurio" class="flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase transition-all bg-slate-100 dark:bg-slate-800">2. Mahudhurio</button>
+            <button onclick="openTab('tathmini')" id="btn-tathmini" class="flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase transition-all bg-slate-100 dark:bg-slate-800">3. Ripoti</button>
+        </div>
+
+        <section id="usajili" class="tab-content active space-y-6">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-lg border-2 border-brandBlue">
+                <h2 class="text-lg font-black text-brandBlue uppercase mb-4 text-center">Sajili Mwana CGN</h2>
+                <form id="usajiliForm" class="space-y-4 mb-10">
+                    <div>
+                        <label class="text-[10px] font-black text-brandOrange uppercase">Jina Kamili</label>
+                        <input type="text" id="regName" class="w-full p-3 rounded-xl border-2 dark:bg-slate-800 dark:border-slate-700 focus:border-brandOrange outline-none">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] font-black text-brandOrange uppercase">Jinsi</label>
+                            <select id="regJinsi" class="w-full p-3 rounded-xl border-2 dark:bg-slate-800 dark:border-slate-700">
+                                <option>Mwanaume</option><option>Mwanamke</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-[10px] font-black text-brandOrange uppercase">Namba ya Simu</label>
+                            <input type="tel" id="regSimu" class="w-full p-3 rounded-xl border-2 dark:bg-slate-800 dark:border-slate-700" placeholder="07...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black text-brandOrange uppercase">Kituo</label>
+                        <select id="kituoSelect" class="w-full p-3 rounded-xl border-2 dark:bg-slate-800 dark:border-slate-700">
+                            <option>Mama Bhoke (Lazro & Mama Bhoke)</option>
+                            <option>Mama Gift (Michael & Mama Gift)</option>
+                            <option>Kanisani (Mama Martina & Madam Aponya)</option>
+                            <option>Online (Msukuma)</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="saveStudent()" class="w-full bg-brandBlue text-white font-black py-4 rounded-2xl shadow-lg uppercase transition-all hover:bg-brandOrange">Hifadhi Taarifa</button>
+                </form>
+
+                <div class="border-t-2 border-slate-100 pt-6">
+                    <h3 class="text-xs font-black text-slate-400 uppercase mb-4">Wana CGN Waliosajiliwa</h3>
+                    <div id="registeredList" class="max-h-60 overflow-y-auto"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mahudhurio" class="tab-content space-y-6">
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-lg border-2 border-brandOrange">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                    <h2 class="text-lg font-black text-brandBlue uppercase">Weka Mahudhurio</h2>
+                    <input type="date" id="attendanceDate" class="p-2 rounded-lg border-2 border-brandOrange font-bold text-[10px] dark:bg-slate-800 uppercase">
+                </div>
+                
+                <div id="studentsList" class="space-y-3 mb-8"></div>
+
+                <div class="bg-slate-900 text-white p-6 rounded-2xl">
+                    <h4 class="text-[10px] font-black uppercase text-brandOrange mb-4 border-b border-white/10 pb-2">Jumla ya Mahudhurio Leo</h4>
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div><p class="text-[9px] opacity-60 uppercase font-bold">Wanaume</p><p id="statM" class="text-xl font-black">0</p></div>
+                        <div><p class="text-[9px] opacity-60 uppercase font-bold">Wanawake</p><p id="statK" class="text-xl font-black">0</p></div>
+                        <div><p class="text-[9px] opacity-60 uppercase font-bold">Mahudhurio</p><p id="statPercent" class="text-xl font-black text-green-400">0%</p></div>
+                    </div>
+                    <p class="text-center text-[8px] opacity-40 mt-4 uppercase">Wanafunzi wote kwenye mfumo: <span id="totalWanafunzi">0</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="tathmini" class="tab-content space-y-6 text-center">
+            <div class="bg-white dark:bg-slate-900 p-10 rounded-3xl shadow-lg">
+                <div class="text-4xl mb-4">📊</div>
+                <h3 class="font-black text-brandBlue uppercase mb-6 text-lg">Ripoti za Mfumo</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-b-4 border-brandBlue">
+                        <p class="text-[10px] font-black opacity-50 uppercase tracking-widest">Kazi ya Wiki</p>
+                        <p class="font-black text-brandBlue">TAFUTA RIPOTI</p>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border-b-4 border-brandOrange">
+                        <p class="text-[10px] font-black opacity-50 uppercase tracking-widest">Kazi ya Mwezi</p>
+                        <p class="font-black text-brandOrange">PAKUA DATA</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-brandBlue text-white pt-10 pb-6 px-6 mt-10">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 border-b border-white/10 pb-8 text-left uppercase">
+            <div>
+                <h4 class="font-black text-brandOrange text-xs mb-4">Viunganishi</h4>
+                <div class="flex flex-col gap-3 text-[9px] font-bold">
+                    <a href="https://pastoraloyce.github.io/THE-TIMOTHY-DISCIPLESHIP-HTML/" target="_blank" class="footer-link">📖 The Timothy Discipleship</a>
+                    <a href="https://pastoraloyce.github.io/freecourses./" target="_blank" class="footer-link">🎓 Pastor Aloyce Courses</a>
+                    <a href="https://pastoraloyce.github.io/freecourses./radio.html" target="_blank" class="footer-link">📻 Disciples Online Radio</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-black text-brandOrange text-xs mb-4">Social Media</h4>
+                <div class="flex flex-col gap-3 text-[9px] font-bold">
+                    <a href="https://youtube.com/@pastoraloyce?si=yLCq0SZk2ogjIHVT" target="_blank" class="footer-link">🎬 YouTube Channel</a>
+                    <a href="https://www.facebook.com/share/1bwx7do3Fp/" target="_blank" class="footer-link">👥 Facebook Page</a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <div class="bg-brandOrange inline-block p-2 rounded-lg mb-4 text-[9px] font-black tracking-widest uppercase">CGN Management System 2026</div>
+            <p class="text-[8px] italic opacity-40 uppercase tracking-tighter">Designed by Pastor Aloyce | Kisesa, Mwanza. 0757 344 860</p>
+        </div>
+    </footer>
+
+    <script>
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('button[id^="btn-"]').forEach(b => b.classList.remove('btn-active', 'bg-slate-100', 'dark:bg-slate-800'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.add('btn-active');
+            if(tabId === 'mahudhurio') loadStudents();
+            if(tabId === 'usajili') loadRegisteredList();
+        }
+    </script>
+</body>
+</html>
