@@ -234,7 +234,7 @@
                             <option value="Mama Gift">Mama Gift</option>
                             <option value="Kanisani">Kanisani</option>
                             <option value="Online">Online</option>
-                             <option value="wageni">Wageni wanaopita</option>
+                            <option value="wageni">Wageni wanaopita</option>
                         </select>
                         <button onclick="clearListFilters()" class="p-2 text-[9px] bg-brandOrange hover:bg-orange-600 text-white rounded-lg font-black uppercase">Wote</button>
                     </div>
@@ -264,7 +264,7 @@
                             <option value="Mama Gift">Kituo cha Mama Gift</option>
                             <option value="Kanisani">Kituo cha Kanisani</option>
                             <option value="Online">Kituo cha Online</option>
-                             <option value="wageni">Kituo cha Wageni wanaopita</option>
+                            <option value="wageni">Kituo cha Wageni wanaopita</option>
                         </select>
                     </div>
                 </div>
@@ -440,116 +440,45 @@
                 document.getElementById('center').value = portalName;
             }
 
-            // Hide Selector, Show App
+            // Set default date picker
+            document.getElementById('registrationDate').value = SelectedAttendanceDate;
+            document.getElementById('listDateFilter').value = SelectedAttendanceDate;
+            document.getElementById('attendanceDatePicker').value = SelectedAttendanceDate;
+            
+            // Show main layout
             document.getElementById('portalSelection').classList.add('hidden');
             document.getElementById('mainNavbar').classList.remove('hidden');
             document.getElementById('mainContentArea').classList.remove('hidden');
-
-            // Setup Dates
-            document.getElementById('registrationDate').value = SelectedAttendanceDate;
-            document.getElementById('attendanceDatePicker').value = SelectedAttendanceDate;
-            document.getElementById('leoDate').textContent = `Tarehe ya Tathmini: ${SelectedAttendanceDate}`;
-            document.getElementById('attendanceDateDisplay').textContent = `Kumbukumbu ya Tarehe: ${SelectedAttendanceDate}`;
-
-            // Fetch Data Realtime
-            FetchGuestsRealtime();
+            
+            // Fetch records from Firestore
+            fetchGuestsFromFirestore();
         }
 
-        // 2. FETCH GUESTS DATA FROM FIRESTORE
-        function FetchGuestsRealtime() {
-            db.collection("dcc_guests").orderBy("registrationDate", "desc")
-            .onSnapshot((snapshot) => {
+        // 2. FETCH FROM FIRESTORE
+        function fetchGuestsFromFirestore() {
+            db.collection("guests").orderBy("registrationDate", "desc").onSnapshot((snapshot) => {
                 AllGuestsData = [];
                 snapshot.forEach((doc) => {
-                    let data = doc.data();
-                    data.id = doc.id;
-                    AllGuestsData.push(data);
+                    AllGuestsData.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Refresh UI Elements
+                // Trigger view re-renders
                 filterMemberList();
                 renderAttendanceGrid();
-                calculateMetrics();
                 updateSmsTargetCount();
             }, (error) => {
-                console.error("Error reading data: ", error);
+                console.error("Error loading guests: ", error);
             });
         }
 
-        // 3. RENDER MAIN GUESTS LIST (Maboresho: Inaonyesha Details Zote na Kipengele cha Maelezo)
-        function filterMemberList() {
-            const centerFilter = document.getElementById('memberFilter').value;
-            const dateFilter = document.getElementById('listDateFilter').value;
-            const listContainer = document.getElementById('membersList');
+        // 3. FORM SUBMISSION LOGIC (Sajili / Hifadhi Taarifa)
+        const registrationForm = document.getElementById('registrationForm');
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Inazuia ukurasa usijirefresh
+
+            const editId = document.getElementById('editGuestId').value;
             
-            let filtered = AllGuestsData;
-
-            if(centerFilter !== "All") {
-                filtered = filtered.filter(g => g.center === centerFilter);
-            }
-            if(dateFilter) {
-                filtered = filtered.filter(g => g.registrationDate === dateFilter);
-            }
-
-            if(filtered.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="col-span-full p-8 text-center text-slate-400 font-bold bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
-                        Hakuna wageni waliopatikana kwa vichujio hivi.
-                    </div>`;
-                return;
-            }
-
-            listContainer.innerHTML = "";
-            filtered.forEach(guest => {
-                const card = document.createElement('div');
-                card.className = "bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col justify-between space-y-3 animate-slideIn";
-                
-                card.innerHTML = `
-                    <div>
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-extrabold text-sm text-brandBlue dark:text-brandOrange uppercase">${guest.name}</h3>
-                            <span class="text-[9px] bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded font-bold text-slate-500">${guest.registrationDate}</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-x-2 gap-y-1 mt-3 text-[11px] font-semibold text-slate-600 dark:text-slate-300">
-                            <div><i class="fa-solid fa-venus-mars text-brandOrange mr-1"></i> Jinsia: <span class="font-bold text-slate-900 dark:text-white">${guest.gender}</span></div>
-                            <div><i class="fa-solid fa-phone text-brandOrange mr-1"></i> Simu: <span class="font-bold text-slate-900 dark:text-white">${guest.phone}</span></div>
-                            <div><i class="fa-solid fa-cross text-brandOrange mr-1"></i> Wokovu: <span class="font-bold text-slate-900 dark:text-white">${guest.salvation}</span></div>
-                            <div><i class="fa-solid fa-heart text-brandOrange mr-1"></i> Ndoa: <span class="font-bold text-slate-900 dark:text-white">${guest.marital}</span></div>
-                            <div><i class="fa-solid fa-sitemap text-brandOrange mr-1"></i> Idara: <span class="font-bold text-slate-900 dark:text-white">${guest.department}</span></div>
-                            <div><i class="fa-solid fa-location-dot text-brandOrange mr-1"></i> Kituo: <span class="font-bold text-brandGreenLight">${guest.center}</span></div>
-                        </div>
-                        
-                        <div class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 mt-1 border-t border-slate-100 dark:border-slate-700/50 pt-1">
-                            <i class="fa-solid fa-star text-brandOrange mr-1"></i> Karama: <span class="font-bold text-slate-900 dark:text-white">${guest.ministry || 'Hajajaza'}</span>
-                        </div>
-
-                        <div class="mt-2 p-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg text-[11px] text-slate-500 dark:text-slate-400 italic">
-                            <i class="fa-solid fa-comment-dots text-brandOrange mr-1"></i> Maelezo: ${guest.notes || 'Hakuna maelezo ya ziada.'}
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-2 justify-end pt-2 border-t border-slate-100 dark:border-slate-700/50">
-                        <button onclick="anzaKuedit('${guest.id}')" class="px-3 py-1 bg-brandBlue text-white text-[10px] font-black uppercase rounded hover:opacity-90"><i class="fa-solid fa-pen mr-1"></i> Edit</button>
-                        <button onclick="futaMgeni('${guest.id}')" class="px-3 py-1 bg-brandRed text-white text-[10px] font-black uppercase rounded hover:opacity-90"><i class="fa-solid fa-trash mr-1"></i> Futa</button>
-                    </div>
-                `;
-                listContainer.appendChild(card);
-            });
-        }
-
-        function clearListFilters() {
-            if(ActivePortal === 'Admin') document.getElementById('memberFilter').value = "All";
-            document.getElementById('listDateFilter').value = "";
-            filterMemberList();
-        }
-
-        // 4. SUBMIT FORM (USAJILI AU MABORESHO)
-        document.getElementById('registrationForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const guestId = document.getElementById('editGuestId').value;
-            const guestObject = {
+            const guestData = {
                 registrationDate: document.getElementById('registrationDate').value,
                 name: document.getElementById('name').value.trim(),
                 gender: document.getElementById('gender').value,
@@ -559,33 +488,310 @@
                 department: document.getElementById('department').value,
                 center: document.getElementById('center').value,
                 ministry: document.getElementById('ministry').value.trim(),
-                notes: document.getElementById('notes').value.trim() // Hifadhi maelezo
+                notes: document.getElementById('notes').value.trim()
             };
 
-            if(guestId) {
-                // Update Existing
-                db.collection("dcc_guests").doc(guestId).update(guestObject)
+            // Onyesha loading spinner wakati data inatumwa
+            Swal.fire({
+                title: 'Tafadhali subiri...',
+                text: 'Tunahifadhi taarifa za mgeni...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            if (editId) {
+                // Update Document
+                db.collection("guests").document(editId).update(guestData)
                 .then(() => {
-                    Swal.fire({ icon: 'success', title: 'Maboresho Yamehifadhiwa!', timer: 1500, showConfirmButton: false });
+                    Swal.fire('Imefanikiwa!', 'Maboresho ya mgeni yamehifadhiwa.', 'success');
                     ghairiKuedit();
+                })
+                .catch((error) => {
+                    Swal.fire('Kosa!', 'Imeshindwa kusasisha: ' + error.message, 'error');
                 });
             } else {
-                // Create New
-                db.collection("dcc_guests").add(guestObject)
+                // Add New Document
+                db.collection("guests").add(guestData)
                 .then(() => {
-                    Swal.fire({ icon: 'success', title: 'Mgeni Amesajiliwa Siku Hii!', timer: 1500, showConfirmButton: false });
-                    document.getElementById('registrationForm').reset();
+                    Swal.fire('Imefanikiwa!', 'Mgeni amesajiliwa kikamilifu kwenye mfumo.', 'success');
+                    registrationForm.reset();
+                    // Rudisha kituo chaguo la sasa kama sio admin
+                    if (ActivePortal !== 'Admin') {
+                        document.getElementById('center').value = ActivePortal;
+                    }
                     document.getElementById('registrationDate').value = SelectedAttendanceDate;
-                    if(ActivePortal !== 'Admin') document.getElementById('center').value = ActivePortal;
+                })
+                .catch((error) => {
+                    Swal.fire('Kosa!', 'Imeshindwa kusajili: ' + error.message, 'error');
                 });
             }
         });
 
-        // EDIT & DELETE ACTIONS
-        function anzaKuedit(id) {
+        // 4. RENDER AND FILTER MEMBER LIST CARDS
+        function filterMemberList() {
+            const dateFilter = document.getElementById('listDateFilter').value;
+            const centerFilter = document.getElementById('memberFilter').value;
+            
+            let filtered = AllGuestsData;
+            
+            if (dateFilter) {
+                filtered = filtered.filter(g => g.registrationDate === dateFilter);
+            }
+            if (centerFilter !== 'All') {
+                filtered = filtered.filter(g => g.center === centerFilter);
+            }
+            
+            renderListCards(filtered);
+            calculateDashboard(filtered, dateFilter || "Vipindi Vyote");
+        }
+
+        function renderListCards(data) {
+            const container = document.getElementById('membersList');
+            container.innerHTML = "";
+            
+            if(data.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full p-12 text-center text-slate-400 font-bold text-sm bg-white dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700">
+                        Hakuna mgeni aliyepatikana kwa vigezo hivi.
+                    </div>
+                `;
+                return;
+            }
+            
+            data.forEach(guest => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/50 flex flex-col justify-between hover:shadow-md transition animate-slideIn";
+                
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-2">
+                            <span class="text-[9px] font-black uppercase bg-brandOrange/10 text-brandOrange px-2.5 py-1 rounded-md tracking-wider">
+                                ${guest.center}
+                            </span>
+                            <span class="text-[9px] font-bold text-slate-400">
+                                <i class="fa-regular fa-calendar-days mr-1"></i>${guest.registrationDate}
+                            </span>
+                        </div>
+                        <h3 class="font-extrabold text-sm text-brandBlue dark:text-white mb-1 uppercase tracking-tight">${guest.name}</h3>
+                        <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-2 mb-3">
+                            <span><i class="fa-solid fa-phone text-brandGreenLight text-[10px]"></i> ${guest.phone}</span>
+                            <span>•</span>
+                            <span>${guest.gender}</span>
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-1.5 text-[10px] font-bold text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/60 p-2.5 rounded-xl border border-slate-100 dark:border-transparent mb-4">
+                            <div>Wokovu: <span class="${guest.salvation === 'Ameokoka' ? 'text-emerald-500' : 'text-brandOrange'}">${guest.salvation}</span></div>
+                            <div>Ndoa: <span>${guest.marital}</span></div>
+                            <div class="col-span-2 border-t border-slate-200/50 dark:border-slate-700/50 pt-1 mt-1">Idara: <span class="text-brandBlue dark:text-brandOrange font-extrabold">${guest.department}</span></div>
+                            ${guest.ministry ? `<div class="col-span-2">Huduma: <span class="italic font-normal">${guest.ministry}</span></div>` : ''}
+                        </div>
+                        
+                        ${guest.notes ? `
+                            <div class="p-2 bg-yellow-50 dark:bg-yellow-950/20 text-yellow-800 dark:text-yellow-400 text-[10px] rounded-lg border border-yellow-200/30 font-medium mb-4">
+                                <strong>Maelezo:</strong> ${guest.notes}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="flex gap-2 border-t border-slate-100 dark:border-slate-700/50 pt-3">
+                        <button onclick="anzishaKuedit('${guest.id}')" class="flex-1 bg-slate-100 hover:bg-brandBlue hover:text-white dark:bg-slate-700/60 dark:hover:bg-brandBlue text-slate-700 dark:text-white py-2 rounded-xl text-[10px] font-black uppercase transition">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> Hariri
+                        </button>
+                        <button onclick="futaMgeni('${guest.id}')" class="bg-slate-100 hover:bg-brandRed hover:text-white dark:bg-slate-700/60 dark:hover:bg-brandRed text-slate-400 hover:text-white p-2 rounded-xl text-[10px] transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function clearListFilters() {
+            document.getElementById('listDateFilter').value = "";
+            if(ActivePortal === 'Admin') {
+                document.getElementById('memberFilter').value = "All";
+            }
+            filterMemberList();
+        }
+
+        // 5. UPDATE SMS COUNTER
+        function updateSmsTargetCount() {
+            const smsFilterValue = document.getElementById('smsFilter').value;
+            let targetList = AllGuestsData;
+            
+            if(smsFilterValue !== 'All') {
+                targetList = targetList.filter(g => g.center === smsFilterValue);
+            }
+            
+            document.getElementById('smsTargetCount').textContent = `${targetList.length} wageni`;
+        }
+
+        // 6. BULK SMS LOGIC
+        function sendBulkSms() {
+            const filterValue = document.getElementById('smsFilter').value;
+            const message = document.getElementById('bulkSmsMessage').value.trim();
+            
+            if(!message) {
+                Swal.fire('Ujumbe Unahitajika', 'Tafadhali andika ujumbe kabla ya kutuma.', 'warning');
+                return;
+            }
+            
+            let targets = AllGuestsData;
+            if(filterValue !== 'All') {
+                targets = targets.filter(g => g.center === filterValue);
+            }
+            
+            if(targets.length === 0) {
+                Swal.fire('Hakuna Walengwa', 'Hakuna namba za simu zilizopatikana kwenye chujio hili.', 'error');
+                return;
+            }
+            
+            // Tengeneza list ya namba
+            const phoneNumbers = targets.map(g => g.phone).join(',');
+            
+            Swal.fire({
+                title: 'Thibitisha Kutuma',
+                text: `Ujumbe utatumwa kwa wageni ${targets.length} kupitia API/Simu yako.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#15803d',
+                confirmButtonText: 'Ndio, Tuma Sasa'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Mfano wa kufungua App ya SMS ya simu/PC na namba zote
+                    const smsUrl = `sms:${phoneNumbers}?body=${encodeURIComponent(message)}`;
+                    window.open(smsUrl, '_blank');
+                    
+                    Swal.fire('Imepakiwa!', 'Mfumo umerusha namba kwenye App yako ya SMS.', 'success');
+                    document.getElementById('bulkSmsMessage').value = "";
+                }
+            });
+        }
+
+        // 7. ATTENDANCE GRID LOGIC (Kuita Majina)
+        function handleDateChange() {
+            SelectedAttendanceDate = document.getElementById('attendanceDatePicker').value;
+            document.getElementById('attendanceDateDisplay').textContent = `Kumbukumbu ya: ${SelectedAttendanceDate}`;
+            renderAttendanceGrid();
+        }
+
+        function filterAttendanceGrid() {
+            renderAttendanceGrid();
+        }
+
+        function renderAttendanceGrid() {
+            const grid = document.getElementById('attendanceGrid');
+            const centerFilter = document.getElementById('callFilter').value;
+            
+            grid.innerHTML = "";
+            
+            let list = AllGuestsData;
+            if (centerFilter !== 'All') {
+                list = list.filter(g => g.center === centerFilter);
+            }
+            
+            if(list.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center text-slate-400 py-12 font-bold italic">
+                        Hakuna wageni kwenye kituo hiki kwa ajili ya mahudhurio.
+                    </div>
+                `;
+                return;
+            }
+            
+            // Tunasoma mahudhurio yaliyopo tayari kwenye Firebase kwa tarehe husika
+            db.collection("attendance").doc(SelectedAttendanceDate).get().then((doc) => {
+                const savedData = doc.exists ? doc.data().presents || {} : {};
+                
+                list.forEach(guest => {
+                    const isChecked = savedData[guest.id] === true;
+                    
+                    const item = document.createElement('div');
+                    item.className = `p-4 rounded-2xl border flex items-center justify-between transition cursor-pointer select-none ${isChecked ? 'bg-emerald-500/10 border-emerald-500/40' : 'bg-slate-50 dark:bg-slate-700/40 border-slate-100 dark:border-slate-700'}`;
+                    item.setAttribute('id', `attCard-${guest.id}`);
+                    item.setAttribute('onclick', `toggleAttendanceRow('${guest.id}')`);
+                    
+                    item.innerHTML = `
+                        <div class="flex flex-col">
+                            <span class="text-xs font-black uppercase text-brandBlue dark:text-white">${guest.name}</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase mt-0.5">${guest.center} • ${guest.phone}</span>
+                        </div>
+                        <input type="checkbox" id="check-${guest.id}" ${isChecked ? 'checked' : ''} class="w-5 h-5 rounded-md accent-emerald-500 pointer-events-none">
+                    `;
+                    grid.appendChild(item);
+                });
+            });
+        }
+
+        function toggleAttendanceRow(id) {
+            const checkbox = document.getElementById(`check-${id}`);
+            const card = document.getElementById(`attCard-${id}`);
+            
+            checkbox.checked = !checkbox.checked;
+            
+            if(checkbox.checked) {
+                card.className = "p-4 rounded-2xl border flex items-center justify-between transition cursor-pointer select-none bg-emerald-500/10 border-emerald-500/40";
+            } else {
+                card.className = "p-4 rounded-2xl border flex items-center justify-between transition cursor-pointer select-none bg-slate-50 dark:bg-slate-700/40 border-slate-100 dark:border-slate-700";
+            }
+        }
+
+        // 8. SAVE ATTENDANCE TO FIRESTORE
+        function calculateAndSave() {
+            const presents = {};
+            let totalPresent = 0;
+            
+            AllGuestsData.forEach(guest => {
+                const cb = document.getElementById(`check-${guest.id}`);
+                if(cb) {
+                    presents[guest.id] = cb.checked;
+                    if(cb.checked) totalPresent++;
+                }
+            });
+            
+            Swal.fire({
+                title: 'Tafadhali subiri...',
+                text: 'Tunahifadhi mahudhurio...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+            
+            db.collection("attendance").doc(SelectedAttendanceDate).set({
+                date: SelectedAttendanceDate,
+                presents: presents,
+                totalPresent: totalPresent,
+                savedAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                Swal.fire('Imehifadhiwa!', `Mahudhurio ya tarehe ${SelectedAttendanceDate} yamehifadhiwa salama.`, 'success');
+            })
+            .catch(err => {
+                Swal.fire('Kosa!', 'Imeshindwa kuhifadhi: ' + err.message, 'error');
+            });
+        }
+
+        // 9. DASHBOARD CALCULATIONS
+        function calculateDashboard(data, timeframeTitle) {
+            document.getElementById('leoDate').textContent = `Kipindi: ${timeframeTitle}`;
+            
+            const total = data.length;
+            const saved = data.filter(g => g.salvation === 'Ameokoka').length;
+            const unsaved = total - saved;
+            const me = data.filter(g => g.gender === 'Mme').length;
+            const ke = total - me;
+            
+            document.getElementById('grandTotal').textContent = total;
+            document.getElementById('totalSaved').textContent = saved;
+            document.getElementById('totalUnsaved').textContent = unsaved;
+            document.getElementById('totalMe').textContent = me;
+            document.getElementById('totalKe').textContent = ke;
+        }
+
+        // 10. EDIT & DELETE LOGIC
+        function anzishaKuedit(id) {
             const guest = AllGuestsData.find(g => g.id === id);
             if(!guest) return;
-
+            
             document.getElementById('editGuestId').value = guest.id;
             document.getElementById('registrationDate').value = guest.registrationDate;
             document.getElementById('name').value = guest.name;
@@ -595,285 +801,85 @@
             document.getElementById('marital').value = guest.marital;
             document.getElementById('department').value = guest.department;
             document.getElementById('center').value = guest.center;
-            document.getElementById('ministry').value = guest.ministry || '';
-            document.getElementById('notes').value = guest.notes || ''; // Weka kwenye fomu ya kuedit
-
-            document.getElementById('formTitle').textContent = "Boresha Taarifa za Mgeni";
+            document.getElementById('ministry').value = guest.ministry || "";
+            document.getElementById('notes').value = guest.notes || "";
+            
+            document.getElementById('formTitle').textContent = "Boresha/Hariri Taarifa za Mgeni";
             document.getElementById('submitBtn').textContent = "Hifadhi Maboresho";
             document.getElementById('cancelEditBtn').classList.remove('hidden');
             
-            // Scroll to form
+            // Scroll mpaka kwenye fomu ya usajili
             document.getElementById('registration').scrollIntoView({ behavior: 'smooth' });
         }
 
         function ghairiKuedit() {
             document.getElementById('editGuestId').value = "";
-            document.getElementById('registrationForm').reset();
-            document.getElementById('registrationDate').value = SelectedAttendanceDate;
-            if(ActivePortal !== 'Admin') document.getElementById('center').value = ActivePortal;
-
+            registrationForm.reset();
+            
             document.getElementById('formTitle').textContent = "Sajili Mgeni Mpya";
             document.getElementById('submitBtn').textContent = "Hifadhi Taarifa za Mgeni";
             document.getElementById('cancelEditBtn').classList.add('hidden');
+            
+            if (ActivePortal !== 'Admin') {
+                document.getElementById('center').value = ActivePortal;
+            }
+            document.getElementById('registrationDate').value = SelectedAttendanceDate;
         }
 
         function futaMgeni(id) {
             Swal.fire({
-                title: 'Una uhakika wa kufuta?',
+                title: 'Una uhakika unataka kufuta?',
                 text: "Taarifa za mgeni huyu zitafutika kabisa kwenye mfumo!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Ndio, Futa!',
-                cancelButtonText: 'Ghairi'
+                cancelButtonColor: '#cbd5e1',
+                confirmButtonText: 'Ndio, Futa',
+                cancelButtonText: 'Hapana'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    db.collection("dcc_guests").doc(id).delete()
+                    db.collection("guests").doc(id).delete()
                     .then(() => {
                         Swal.fire('Imefutwa!', 'Mgeni amefutwa kwenye mfumo.', 'success');
+                    })
+                    .catch(err => {
+                        Swal.fire('Kosa!', 'Imeshindwa kufuta: ' + err.message, 'error');
                     });
                 }
             });
         }
 
-        // 5. BULK SMS FUNCTIONS (Kipengele Kipya)
-        function updateSmsTargetCount() {
-            const smsFilterValue = document.getElementById('smsFilter').value;
-            let filteredList = AllGuestsData;
-            
-            if(smsFilterValue !== "All") {
-                filteredList = filteredList.filter(g => g.center === smsFilterValue);
-            }
-            
-            // Chuja namba za simu zilizopo na halali
-            const activeNumbers = filteredList.filter(g => g.phone && g.phone.length >= 8);
-            document.getElementById('smsTargetCount').textContent = `${activeNumbers.length} Wageni wenye namba za simu`;
-        }
-
-        function sendBulkSms() {
-            const smsFilterValue = document.getElementById('smsFilter').value;
-            const message = document.getElementById('bulkSmsMessage').value.trim();
-            
-            if(!message) {
-                Swal.fire('Ujumbe Tupu!', 'Tafadhali andika ujumbe kabla ya kutuma.', 'warning');
-                return;
-            }
-
-            let filteredList = AllGuestsData;
-            if(smsFilterValue !== "All") {
-                filteredList = filteredList.filter(g => g.center === smsFilterValue);
-            }
-
-            // Kusanya namba zote za simu
-            const phoneNumbers = filteredList
-                .map(g => g.phone.replace(/\s+/g, ''))
-                .filter(p => p.length >= 8);
-
-            if(phoneNumbers.length === 0) {
-                Swal.fire('Hakuna Wageni!', 'Hakuna wageni wenye namba za simu katika kituo hiki.', 'error');
-                return;
-            }
-
-            // Kutengeneza Link ya SMS kulingana na aina ya Device (Android au iOS)
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            const separator = isIOS ? '&' : '?';
-            const numbersString = phoneNumbers.join(',');
-            
-            const smsUrl = `sms:${numbersString}${separator}body=${encodeURIComponent(message)}`;
-            
-            Swal.fire({
-                title: 'Tayari Kutuma?',
-                text: `Mfumo utafungua app ya SMS kwenye simu/kompyuta yako ili kutuma ujumbe huu kwa wageni ${phoneNumbers.length}.`,
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: '#16a34a',
-                confirmButtonText: 'Fungua SMS App',
-                cancelButtonText: 'Ghairi'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = smsUrl;
-                    document.getElementById('bulkSmsMessage').value = ""; // Safisha eneo la ujumbe
-                }
-            });
-        }
-
-        // 6. ATTENDANCE REGISTRATION MANAGEMENT
-        function handleDateChange() {
-            SelectedAttendanceDate = document.getElementById('attendanceDatePicker').value;
-            document.getElementById('attendanceDateDisplay').textContent = `Kumbukumbu ya Tarehe: ${SelectedAttendanceDate}`;
-            document.getElementById('leoDate').textContent = `Tarehe ya Tathmini: ${SelectedAttendanceDate}`;
-            
-            renderAttendanceGrid();
-            calculateMetrics();
-        }
-
-        function filterAttendanceGrid() {
-            renderAttendanceGrid();
-        }
-
-        function renderAttendanceGrid() {
-            const gridContainer = document.getElementById('attendanceGrid');
-            const callFilterValue = document.getElementById('callFilter').value;
-
-            // Tunaleta tu wageni waliofika kwenye tarehe iliyochaguliwa
-            let targetGuests = AllGuestsData.filter(g => g.registrationDate === SelectedAttendanceDate);
-
-            if(callFilterValue !== "All") {
-                targetGuests = targetGuests.filter(g => g.center === callFilterValue);
-            }
-
-            if(targetGuests.length === 0) {
-                gridContainer.innerHTML = `
-                    <div class="col-span-full text-center text-slate-400 py-8 font-bold italic bg-slate-50 dark:bg-slate-900 rounded-xl">
-                        Hakuna wageni waliosajiliwa kwa tarehe ${SelectedAttendanceDate} kwenye vichujio vilivyochaguliwa.
-                    </div>`;
-                return;
-            }
-
-            // Kwanza tunasoma mahudhurio ya sasa kwenye Firestore kwa tarehe hiyo
-            db.collection("dcc_attendance").doc(SelectedAttendanceDate).get().then((doc) => {
-                let existingAttendance = {};
-                if(doc.exists) {
-                    existingAttendance = doc.data().records || {};
-                }
-
-                gridContainer.innerHTML = "";
-                targetGuests.forEach(guest => {
-                    const isPresent = existingAttendance[guest.id] !== undefined ? existingAttendance[guest.id] : true;
-                    
-                    const card = document.createElement('div');
-                    card.className = "p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl flex justify-between items-center border border-transparent hover:border-brandRed/20 transition";
-                    card.innerHTML = `
-                        <div>
-                            <p class="text-xs font-black uppercase text-brandBlue dark:text-white truncate max-w-[150px]">${guest.name}</p>
-                            <p class="text-[9px] text-brandOrange font-bold">${guest.center} | ${guest.gender}</p>
-                        </div>
-                        <div class="flex items-center gap-1 bg-white dark:bg-slate-800 p-1 rounded-xl shadow-sm">
-                            <button onclick="setAttendanceStatus('${guest.id}', true)" id="btn-pres-${guest.id}" class="px-3 py-1 text-[10px] font-black uppercase rounded-lg transition-all ${isPresent ? 'bg-brandGreen text-white' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}">
-                                Yupo
-                            </button>
-                            <button onclick="setAttendanceStatus('${guest.id}', false)" id="btn-abs-${guest.id}" class="px-3 py-1 text-[10px] font-black uppercase rounded-lg transition-all ${!isPresent ? 'bg-brandRed text-white' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'}">
-                                Haonekani
-                            </button>
-                        </div>
-                    `;
-                    gridContainer.appendChild(card);
-                    // Attach dynamic internal state tracking attribute
-                    card.setAttribute('data-guest-id', guest.id);
-                    card.setAttribute('data-status', isPresent ? 'present' : 'absent');
-                });
-            });
-        }
-
-        function setAttendanceStatus(guestId, statusBool) {
-            const cards = document.querySelectorAll(`[data-guest-id="${guestId}"]`);
-            cards.forEach(card => {
-                card.setAttribute('data-status', statusBool ? 'present' : 'absent');
-            });
-
-            const presBtn = document.getElementById(`btn-pres-${guestId}`);
-            const absBtn = document.getElementById(`btn-abs-${guestId}`);
-
-            if(statusBool) {
-                presBtn.className = "px-3 py-1 text-[10px] font-black uppercase rounded-lg bg-brandGreen text-white transition-all";
-                absBtn.className = "px-3 py-1 text-[10px] font-black uppercase rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all";
-            } else {
-                presBtn.className = "px-3 py-1 text-[10px] font-black uppercase rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all";
-                absBtn.className = "px-3 py-1 text-[10px] font-black uppercase rounded-lg bg-brandRed text-white transition-all";
-            }
-        }
-
-        function calculateAndSave() {
-            const elements = document.querySelectorAll('[data-guest-id]');
-            let recordsObject = {};
-
-            elements.forEach(el => {
-                const id = el.getAttribute('data-guest-id');
-                const status = el.getAttribute('data-status');
-                recordsObject[id] = (status === 'present');
-            });
-
-            db.collection("dcc_attendance").doc(SelectedAttendanceDate).set({
-                date: SelectedAttendanceDate,
-                records: recordsObject,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                Swal.fire({ icon: 'success', title: 'Mahudhurio Yamehifadhiwa!', text: `Kumbukumbu ya tarehe ${SelectedAttendanceDate} ipo salama sasa.`, confirmButtonColor: '#dc2626' });
-            }).catch(err => {
-                Swal.fire('Error!', err.message, 'error');
-            });
-        }
-
-        // 7. DASHBOARD METRICS CALCULATIONS
-        function calculateMetrics() {
-            // Tunapiga hesabu za wageni wa siku iliyochaguliwa tu
-            let currentDayGuests = AllGuestsData.filter(g => g.registrationDate === SelectedAttendanceDate);
-
-            // Mipangilio ya hesabu
-            let total = currentDayGuests.length;
-            let saved = currentDayGuests.filter(g => g.salvation === "Ameokoka").length;
-            let unsaved = currentDayGuests.filter(g => g.salvation === "Hajaokoka").length;
-            let males = currentDayGuests.filter(g => g.gender === "Mme").length;
-            let females = currentDayGuests.filter(g => g.gender === "Mke").length;
-
-            // Kudhihirisha kwenye skrini
-            document.getElementById('grandTotal').textContent = total;
-            document.getElementById('totalSaved').textContent = saved;
-            document.getElementById('totalUnsaved').textContent = unsaved;
-            document.getElementById('totalMe').textContent = males;
-            document.getElementById('totalKe').textContent = females;
-        }
-
-        // 8. SYSTEM ACCESSIBILITY UTILITIES
+        // 11. UTILITIES (DarkMode, Font size, Exit)
         function toggleDarkMode() {
-            const html = document.documentElement;
-            if(html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('dcc-theme', 'light');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('dcc-theme', 'dark');
-            }
+            document.documentElement.classList.toggle('dark');
         }
-
-        let currentFontScale = 100;
+        
+        let currentSizeState = 0; 
         function changeFontSize(direction) {
-            currentFontScale += (direction * 5);
-            if(currentFontScale < 80) currentFontScale = 80;
-            if(currentFontScale > 130) currentFontScale = 130;
-            document.getElementById('mainContentArea').style.fontSize = `${currentFontScale}%`;
+            const body = document.getElementById('mainBody');
+            if(direction === 1 && currentSizeState < 2) {
+                body.style.fontSize = currentSizeState === 0 ? '115%' : '125%';
+                currentSizeState++;
+            } else if(direction === -1 && currentSizeState > -1) {
+                body.style.fontSize = currentSizeState === 0 ? '90%' : '100%';
+                currentSizeState--;
+            }
         }
 
         function MalizaKazi() {
             Swal.fire({
-                title: 'Je, unataka kutoka?',
-                text: "Utafungwa upatikanaji wa portal hii hadi utakapochagua tena!",
+                title: 'Ungependa kutoka?',
+                text: "Ukurasa utafungwa na utalazimika kuchagua portal tena.",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#64748b',
-                confirmButtonText: 'Ndio, Toka',
-                cancelButtonText: 'Baki Mfumoni'
+                confirmButtonText: 'Ndio, Toka'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    ActivePortal = "";
-                    document.getElementById('mainNavbar').classList.add('hidden');
-                    document.getElementById('mainContentArea').classList.add('hidden');
-                    document.getElementById('portalSelection').classList.remove('hidden');
+                    location.reload();
                 }
             });
         }
-
-        // Auto Load Preferences on Startup
-        (function initApp() {
-            const storedTheme = localStorage.getItem('dcc-theme') || 'dark';
-            if(storedTheme === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        })();
     </script>
 </body>
 </html>
