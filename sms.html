@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="sw" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCC CHURCH KISESA MWANZA MULT SMS SYSTEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#EA580C', /* Orange Kuu */
+                            dark: '#C2410C',
+                            light: '#FB923C'
+                        },
+                        secondary: {
+                            DEFAULT: '#1E40AF', /* Blue Kuu */
+                            dark: '#1E3A8A',
+                            light: '#3B82F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+        .dark .glass { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); }
+        .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 antialiased min-h-screen flex flex-col font-sans">
+
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900 transition-opacity duration-500">
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 border-4 border-primary border-t-secondary rounded-full animate-spin"></div>
+            <p class="mt-4 text-lg font-semibold animate-pulse text-primary dark:text-primary-light">DCC KISESA MULT-SMS SYSTEM...</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-8 transform transition-all border border-gray-100 dark:border-gray-700">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-tr from-primary to-secondary rounded-full flex items-center justify-center mx-auto text-white text-2xl mb-3 shadow-md">
+                    <i class="fas fa-church"></i>
+                </div>
+                <h3 class="text-2xl font-bold">Admin Authentication</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Ingiza nenosiri kuingia kwenye mfumo</p>
+            </div>
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Nenosiri (Password)</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-3.5 text-gray-400"></i>
+                        <input type="password" id="login-password" required class="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600" placeholder="••••••••">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-medium py-2.5 rounded-xl transition duration-200 shadow-md">Ingia Mfamoni</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="flex-grow flex flex-col md:flex-row min-h-screen pt-16">
+
+        <header class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-40 transition-colors shadow-sm px-4 flex items-center justify-between glass">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden text-xl p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <span class="bg-gradient-to-r from-primary to-secondary text-white p-2 rounded-xl text-lg font-bold shadow-sm">DCC</span>
+                    <h1 class="font-bold text-sm sm:text-base md:text-lg tracking-wide hidden sm:block">DCC CHURCH KISESA <span class="text-secondary font-medium">MULT-SMS</span></h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 flex-grow max-w-xl mx-4">
+                <div class="relative w-full hidden sm:block">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                    <input type="text" id="global-search" oninput="globalSearch(this.value)" placeholder="Tafuta mshirika popote pale (Jina, Simu, Idara...)" class="w-full pl-9 pr-4 py-2 text-sm bg-gray-100 dark:bg-gray-700 border-0 rounded-xl focus:ring-2 focus:ring-primary transition duration-150">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="cycleFontSize()" title="Badili Ukubwa wa Maandishi" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:scale-105 transition text-xs font-bold">
+                    <span id="font-size-label">A</span>
+                </button>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:text-primary transition">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+                <div class="relative">
+                    <button class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:text-secondary transition" onclick="showToast('Hakuna taarifa mpya kwa sasa.', 'info')">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        <div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm shadow-sm"><i class="fas fa-user-shield"></i></div>
+                        <i class="fas fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-xl shadow-xl hidden group-hover:block z-50 overflow-hidden animate-fadeIn">
+                        <div class="p-3 border-b dark:border-gray-700">
+                            <p class="text-xs text-gray-400">Umeingia kama</p>
+                            <p class="text-sm font-semibold truncate">Pastor Aloyce</p>
+                        </div>
+                        <a href="#settings" onclick="switchTab('settings')" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"><i class="fas fa-cog text-gray-400"></i> Settings</a>
+                        <button onclick="logout()" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-gray-700 text-left"><i class="fas fa-sign-out-alt"></i> Ondoka</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:sticky md:top-16 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 flex flex-col justify-between h-[calc(100vh-4rem)]">
+            <div class="p-4 space-y-6 overflow-y-auto">
+                <div>
+                    <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">PASTOR ALOYCE</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all bg-primary text-white" id="btn-dashboard"><i class="fas fa-chart-pie w-5"></i> Dashboard</button>
+                        <button onclick="switchTab('washirika')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-washirika"><i class="fas fa-users w-5"></i> Washirika</button>
+                        <button onclick="switchTab('bulksms')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-bulksms"><i class="fas fa-paper-plane w-5"></i> Bulk SMS</button>
+                        <button onclick="switchTab('reports')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-reports"><i class="fas fa-chart-line w-5"></i> Reports</button>
+                        <button onclick="switchTab('settings')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-settings"><i class="fas fa-sliders w-5"></i> Mipangilio</button>
+                        <button onclick="switchTab('about')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-about"><i class="fas fa-info-circle w-5"></i> Kuhusu</button>
+                    </nav>
+                </div>
+                <div>
+                    <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Viunganishi vya Kanisa</p>
+                    <div class="space-y-1">
+                        <a href="https://wa.me/#" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-green-50 hover:text-green-600 dark:text-gray-400 transition"><i class="fab fa-whatsapp text-lg w-5 text-green-500"></i> WhatsApp Group</a>
+                        <a href="https://facebook.com" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600 dark:text-gray-400 transition"><i class="fab fa-facebook text-lg w-5 text-blue-600"></i> Facebook Page</a>
+                        <a href="https://youtube.com" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 dark:text-gray-400 transition"><i class="fab fa-youtube text-lg w-5 text-red-500"></i> YouTube Channel</a>
+                        <a href="https://telegram.org" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-sky-50 hover:text-sky-600 dark:text-gray-400 transition"><i class="fab fa-telegram text-lg w-5 text-sky-500"></i> Telegram Channel</a>
+                        <a href="https://dccchurchkisesa.org" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-purple-50 hover:text-purple-600 dark:text-gray-400 transition"><i class="fas fa-globe text-lg w-5 text-purple-500"></i> Church Website</a>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-center rounded-b-xl">
+                <p class="text-xs font-semibold text-gray-400">Offline Status</p>
+                <div class="flex items-center justify-center gap-1.5 text-emerald-500 text-xs font-medium mt-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Mfumo Uko Tayari
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-grow p-4 md:p-6 space-y-6 overflow-x-hidden" id="app-content">
+
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight">Dashboard Overview</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Takwimu na ripoti za hivi punde za mfumo wa usajili.</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-sm border dark:border-gray-700 text-xs font-medium">
+                        <i class="far fa-calendar-alt text-primary"></i> <span id="current-date-el"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Jumla Washirika</span><span class="p-2 bg-orange-50 dark:bg-gray-700 text-primary rounded-xl text-xs"><i class="fas fa-users"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-total">0</h3><p class="text-xs text-emerald-500 mt-1 font-medium"><i class="fas fa-arrow-up"></i> Wote waliosajiliwa</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Wanaume (Me)</span><span class="p-2 bg-sky-50 dark:bg-gray-700 text-sky-500 rounded-xl text-xs"><i class="fas fa-mars"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-me">0</h3><p class="text-xs text-gray-400 mt-1" id="pct-me">0% ya wote</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Wanawake (Ke)</span><span class="p-2 bg-pink-50 dark:bg-gray-700 text-pink-500 rounded-xl text-xs"><i class="fas fa-venus"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-ke">0</h3><p class="text-xs text-gray-400 mt-1" id="pct-ke">0% ya wote</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Jumla ya Idara</span><span class="p-2 bg-blue-50 dark:bg-gray-700 text-secondary rounded-xl text-xs"><i class="fas fa-sitemap"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold">4</h3><p class="text-xs text-gray-400 mt-1">Idara kuu</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Vituo vya CGN</span><span class="p-2 bg-purple-50 dark:bg-gray-700 text-purple-500 rounded-xl text-xs"><i class="fas fa-house-chimney text-xs"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold">4</h3><p class="text-xs text-gray-400 mt-1">Vituo vya nyumbani</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Waliosajiliwa Leo</span><span class="p-2 bg-amber-50 dark:bg-gray-700 text-amber-500 rounded-xl text-xs"><i class="fas fa-user-plus text-xs"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-today">0</h3><p class="text-xs text-amber-500 mt-1 font-medium">Siku ya leo</p></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-1">
+                        <h4 class="text-base font-bold mb-4 flex items-center gap-2"><i class="fas fa-chart-pie text-primary"></i> Mgawanyo wa Jinsia</h4>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-2">
+                        <h4 class="text-base font-bold mb-4 flex items-center gap-2"><i class="fas fa-chart-bar text-secondary"></i> Takwimu za Washirika Kimatabaka / Idara</h4>
+                        <div class="h-64 relative">
+                            <canvas id="deptChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-base font-bold flex items-center gap-2"><i class="fas fa-history text-gray-500"></i> Shughuli za Hivi Punde za Usajili (Activity Logs)</h4>
+                            <span class="text-xs text-gray-400">Real-time update</span>
+                        </div>
+                        <div class="space-y-3 max-h-60 overflow-y-auto pr-2" id="activity-timeline">
+                            </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-base font-bold mb-2 flex items-center gap-2"><i class="fas fa-bolt text-amber-500"></i> Kitendo cha Haraka</h4>
+                            <p class="text-xs text-gray-400 mb-4">Anza mara moja kwa kusajili mshirika au kwenda kwenye upande wa SMS</p>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="switchTab('washirika')" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white p-3 rounded-xl font-medium transition shadow-sm"><i class="fas fa-user-plus"></i> Sajili Mshirika Mpya</button>
+                            <button onclick="switchTab('bulksms')" class="w-full flex items-center justify-center gap-2 bg-secondary hover:bg-secondary-dark text-white p-3 rounded-xl font-medium transition shadow-sm"><i class="fas fa-paper-plane"></i> Tuma Ujumbe wa Kikundi (Bulk SMS)</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-washirika" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center justify-between border-b dark:border-gray-700 pb-3 mb-4">
+                        <h3 class="text-lg font-bold flex items-center gap-2" id="form-title"><i class="fas fa-user-plus text-primary"></i> Fomu ya Usajili / Kuhariri Mshirika</h3>
+                        <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2.5 py-1 rounded-lg text-gray-500 font-mono" id="auto-id-display">ID: ---</span>
+                    </div>
+
+                    <form id="member-form" onsubmit="saveMember(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="hidden" id="form-mode" value="create">
+                        <input type="hidden" id="edit-id" value="">
+                        
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Majina Kamili <span class="text-red-500">*</span></label>
+                            <input type="text" id="m-name" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary" placeholder="Mf. Juma Shabani">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Jinsi <span class="text-red-500">*</span></label>
+                            <select id="m-gender" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="" disabled selected>Chagua Jinsi</option>
+                                <option value="Me">Me (Mwanaume)</option>
+                                <option value="Ke">Ke (Mwanamke)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Namba ya Simu <span class="text-red-500">*</span></label>
+                            <input type="tel" id="m-phone" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary" placeholder="Mf. 0757344860">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Idara <span class="text-red-500">*</span></label>
+                            <select id="m-dept" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="" disabled selected>Chagua Idara</option>
+                                <option value="Vijana">Vijana</option>
+                                <option value="Wamama">Wamama</option>
+                                <option value="Wanaume">Wanaume</option>
+                                <option value="Watoto">Watoto</option>
+                                <option value="Mgeni">Mgeni</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Kituo cha CGN <span class="text-red-500">*</span></label>
+                            <select id="m-cgn" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="" disabled selected>Chagua Kituo</option>
+                                <option value="Kwa Mama Bhoke">Kwa Mama Bhoke</option>
+                                <option value="Kwa Mama Gift">Kwa Mama Gift</option>
+                                <option value="Kanisani">Kanisani</option>
+                                <option value="Online">Online</option>
+                                <option value="Mgeni">Mgeni</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Hali (Status) <span class="text-red-500">*</span></label>
+                            <select id="m-status" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="Active" selected>Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Mgeni">Mshirika Mgeni</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-3 flex flex-wrap gap-2 justify-end mt-2">
+                            <button type="button" onclick="resetForm()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-xs font-medium rounded-xl transition"><i class="fas fa-undo"></i> Reset</button>
+                            <button type="button" onclick="resetForm()" class="px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-medium rounded-xl transition hidden" id="btn-cancel-edit"><i class="fas fa-times"></i> Cancel</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-primary to-primary-light text-white text-xs font-semibold rounded-xl shadow-sm hover:opacity-90 transition" id="btn-submit-form"><i class="fas fa-save"></i> Hifadhi Mshirika</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800 border-b dark:border-gray-700 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-lg">Orodha ya Washirika Waliosajiliwa</h3>
+                            <p class="text-xs text-gray-400">Dhibiti, fanya utafutaji, na uhamishe (export) ripoti za washirika</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="exportData('csv')" class="px-3 py-1.5 bg-sky-50 dark:bg-gray-700 text-sky-600 dark:text-sky-300 text-xs font-medium rounded-xl hover:bg-sky-100 transition"><i class="fas fa-file-csv"></i> CSV</button>
+                            <button onclick="exportData('excel')" class="px-3 py-1.5 bg-emerald-50 dark:bg-gray-700 text-emerald-600 dark:text-emerald-300 text-xs font-medium rounded-xl hover:bg-emerald-100 transition"><i class="fas fa-file-excel"></i> Excel</button>
+                            <button onclick="window.print()" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-xl hover:bg-gray-200 transition"><i class="fas fa-print"></i> Print</button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 border-b dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 max-w-xs w-full">
+                            <div class="relative w-full">
+                                <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                                <input type="text" id="table-search" oninput="renderTable()" placeholder="Tafuta kwenye jedwali..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-gray-700 rounded-lg border-0 focus:ring-2 focus:ring-primary">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <label class="text-gray-400">Panga kwa:</label>
+                            <select id="table-sort" onchange="renderTable()" class="bg-gray-50 dark:bg-gray-700 rounded-lg border-0 p-1.5 focus:ring-2 focus:ring-primary">
+                                <option value="id-asc">ID (Kupanda)</option>
+                                <option value="id-desc" selected>ID (Kushuka)</option>
+                                <option value="name-asc">Majina (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-xs uppercase tracking-wider text-gray-400">
+                                <tr>
+                                    <th class="px-4 py-3">Na</th>
+                                    <th class="px-4 py-3">Majina</th>
+                                    <th class="px-4 py-3">Jinsi</th>
+                                    <th class="px-4 py-3">Simu</th>
+                                    <th class="px-4 py-3">Idara</th>
+                                    <th class="px-4 py-3">Kituo cha CGN</th>
+                                    <th class="px-4 py-3">Tarehe</th>
+                                    <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3 text-center">Vitendo (Actions)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="members-table-body" class="divide-y dark:divide-gray-700">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div id="table-empty-state" class="p-8 text-center hidden">
+                        <div class="text-gray-300 dark:text-gray-600 text-5xl mb-2"><i class="fas fa-folder-open"></i></div>
+                        <p class="font-medium text-gray-500">Hakuna mshirika aliyepatikana</p>
+                        <p class="text-xs text-gray-400">Hakikisha umeingiza vigezo sahihi au sajili washirika kwanza.</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
+                        <span id="table-info-text">Inaonyesha 0 hadi 0 kati ya 0</span>
+                        <div class="flex items-center gap-1" id="table-pagination">
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-bulksms" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                        <h3 class="font-bold text-base border-b dark:border-gray-700 pb-2 flex items-center gap-2 text-primary"><i class="fas fa-filter"></i> 1. Chuja Walengwa (Recipients Filter)</h3>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Jinsi</label>
+                            <select id="f-gender" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Wote (Me na Ke)</option>
+                                <option value="Me">Me pekee</option>
+                                <option value="Ke">Ke pekee</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Idara</label>
+                            <select id="f-dept" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Idara Zote</option>
+                                <option value="Vijana">Vijana</option>
+                                <option value="Wamama">Wamama</option>
+                                <option value="Wanaume">Wanaume</option>
+                                <option value="Watoto">Watoto</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Kituo cha CGN</label>
+                            <select id="f-cgn" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Vituo Vyote</option>
+                                <option value="Kwa Mama Bhoke">Kwa Mama Bhoke</option>
+                                <option value="Kwa Mama Gift">Kwa Mama Gift</option>
+                                <option value="Kanisani">Kanisani</option>
+                                <option value="Online">Online</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Hali (Status)</label>
+                            <select id="f-status" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Hali Zote</option>
+                                <option value="Active">Active Pekee</option>
+                                <option value="Inactive">Inactive Pekee</option>
+                            </select>
+                        </div>
+
+                        <div class="border-t dark:border-gray-700 pt-3">
+                            <div class="flex items-center justify-between text-xs mb-2">
+                                <span class="font-semibold uppercase tracking-wider text-gray-400">Mlipuko wa Walengwa (<span id="filtered-count">0</span>)</span>
+                                <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-primary"><input type="checkbox" id="sms-select-all" checked onchange="toggleSmsSelectAll(this.checked)" class="rounded text-primary focus:ring-primary"> Chagua Wote</label>
+                            </div>
+                            <div class="h-44 border rounded-xl bg-gray-50 dark:bg-gray-900 p-2 overflow-y-auto space-y-1.5 text-xs" id="recipient-preview-list">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-2 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b dark:border-gray-700 pb-2 mb-3 gap-2">
+                                <h3 class="font-bold text-base flex items-center gap-2 text-secondary"><i class="fas fa-envelope-open-text"></i> 2. Andika Ujumbe (Compose SMS)</h3>
+                                <div class="flex items-center gap-1">
+                                    <label class="text-xs text-gray-400">Kiolezo (Template):</label>
+                                    <select id="sms-template-select" onchange="loadSmsTemplate(this.value)" class="bg-gray-50 dark:bg-gray-700 rounded-lg p-1 text-xs font-medium border-0 focus:ring-1 focus:ring-secondary">
+                                        <option value="">-- Chagua Kiolezo --</option>
+                                        <option value="announcement">Matangazo ya Jumapili</option>
+                                        <option value="meeting">Kikao cha Idara</option>
+                                        <option value="prayer">Ombi la Maombi</option>
+                                        <option value="contribution">Kikumbusho cha Michango</option>
+                                        <option value="reminder">Ibada ya Jumapili</option>
+                                        <option value="invitation">Mwaliko wa Mkutano</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <textarea id="sms-message" oninput="countSmsChars(this.value)" rows="8" class="w-full p-3 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-secondary text-sm" placeholder="Andika ujumbe wako hapa kisha utume kwenda kwa washirika waliochaguliwa..."></textarea>
+                                <div class="flex items-center justify-between text-xs text-gray-400 px-1">
+                                    <span id="sms-char-counter">Herufi: 0 / 160 (Kurasa 0 za SMS)</span>
+                                    <span class="text-amber-500 font-medium"><i class="fas fa-info-circle"></i> Jina la mshirika litawekwa kiotomatiki ukitumia tag ya {JINA}</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-3 border border-dashed rounded-xl bg-slate-50 dark:bg-slate-900 text-xs">
+                                <span class="font-bold text-gray-400 block mb-1 uppercase tracking-wider"><i class="fas fa-eye"></i> Hakiki Muonekano (Live SMS Preview):</span>
+                                <div class="p-2.5 bg-white dark:bg-gray-800 rounded-lg shadow-inner max-w-sm border text-gray-600 dark:text-gray-300" id="sms-live-preview">
+                                    ...ujumbe wako utaonekana hapa...
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between border-t dark:border-gray-700 pt-4 gap-2">
+                            <div class="flex gap-2">
+                                <button onclick="clearSmsComposer()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-xs font-medium rounded-xl transition"><i class="fas fa-eraser"></i> Safisha</button>
+                                <button onclick="saveCustomTemplate()" class="px-4 py-2 bg-amber-50 text-amber-600 text-xs font-medium rounded-xl hover:bg-amber-100 transition"><i class="fas fa-bookmark"></i> Hifadhi Template</button>
+                            </div>
+                            <button onclick="triggerBulkSmsIntent()" class="px-6 py-2.5 bg-gradient-to-r from-primary to-orange-400 text-white text-xs font-bold rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition flex items-center gap-2"><i class="fas fa-paper-plane animate-bounce"></i> Tuma SMS Kupitia Simu Hii (Device SMS App)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-base mb-3 flex items-center gap-2"><i class="fas fa-clock-rotate-left text-gray-400"></i> Historia na Hali ya Utumaji wa SMS (SMS Delivery Status Logs)</h3>
+                    <div class="overflow-x-auto max-h-56">
+                        <table class="w-full text-left text-xs whitespace-nowrap">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-gray-400 font-semibold uppercase">
+                                <tr>
+                                    <th class="p-3">Muda / Tarehe</th>
+                                    <th class="p-3">Walengwa Kikundi</th>
+                                    <th class="p-3">Ujumbe / Maudhui</th>
+                                    <th class="p-3 text-center">Hali (Status)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sms-history-log" class="divide-y dark:divide-gray-700">
+                                <tr>
+                                    <td colspan="4" class="p-4 text-center text-gray-400 italic">Hakuna historia ya utumaji iliyorekodiwa kwa sasa</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-reports" class="tab-content hidden space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold">Evaluation & Analytics Report</h2>
+                        <p class="text-xs text-gray-400">Ripoti ya kiutendaji, ulinganifu wa takwimu na ukuaji wa kanisa</p>
+                    </div>
+                    <button onclick="window.print()" class="px-4 py-2 bg-primary text-white text-xs font-medium rounded-xl shadow-sm"><i class="fas fa-download"></i> Pakua Ripoti Kamili</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-chart-pie text-sky-500"></i> Active vs Inactive Members</h4>
+                        <div class="h-48 flex items-center justify-center">
+                            <canvas id="statusReportChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-chart-line text-emerald-500"></i> Kituo chenye Watu Wengi (CGN Density)</h4>
+                        <div class="h-48 flex items-center justify-center">
+                            <canvas id="cgnReportChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+                        <h4 class="font-bold text-sm border-b pb-2 mb-2"><i class="fas fa-list-check text-purple-500"></i> Muhtasari wa Mahesabu (Auto Calculations)</h4>
+                        <div class="space-y-2 text-xs" id="auto-calc-report-view">
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-settings" class="tab-content hidden space-y-6">
+                <h2 class="text-xl font-bold">Mfumo Mipangilio (System Settings)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                        <h3 class="font-bold text-base border-b pb-2"><i class="fas fa-database text-amber-500"></i> Usalama na Hifadhi ya Data (Data Backup)</h3>
+                        <p class="text-xs text-gray-400">Hakikisha unasafirisha na kuhifadhi nakala ya washirika wako mara kwa mara ili kuzuia upotevu wa taarifa.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="backupDatabase()" class="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-xl transition"><i class="fas fa-download"></i> Export Database (JSON Backup)</button>
+                            <label class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-white text-xs font-semibold rounded-xl cursor-pointer transition flex items-center gap-1">
+                                <i class="fas fa-upload"></i> Restore Data <input type="file" id="restore-file-input" onchange="restoreDatabase(event)" class="hidden">
+                            </label>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="clearAllDataDatabase()" class="px-4 py-2 bg-rose-50 text-rose-600 text-xs font-medium rounded-xl hover:bg-rose-100 transition"><i class="fas fa-trash-can"></i> Futa Data Zote za Mfumo</button>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                        <h3 class="font-bold text-base border-b pb-2"><i class="fas fa-church text-secondary"></i> Taarifa za Kanisa Kuu (Church Metadata)</h3>
+                        <div class="space-y-2 text-xs">
+                            <div><label class="block text-gray-400 mb-1">Jina la Kanisa</label><input type="text" readonly value="DCC CHURCH KISESA MWANZA" class="w-full p-2 border rounded-xl bg-gray-50 dark:bg-gray-700"></div>
+                            <div><label class="block text-gray-400 mb-1">Mchungaji Kiongozi (Pastor)</label><input type="text" readonly value="Pastor Aloyce" class="w-full p-2 border rounded-xl bg-gray-50 dark:bg-gray-700"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-about" class="tab-content hidden bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 text-center space-y-4 max-w-2xl mx-auto">
+                <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto text-white text-3xl shadow-md"><i class="fas fa-church"></i></div>
+                <h2 class="text-2xl font-bold">DCC CHURCH KISESA MWANZA MULT SMS SYSTEM</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Mfumo huu wa kisasa umebuniwa na kutengenezwa mahususi kurahisisha mchakato wa kusajili taarifa za washirika wa Kanisa la DCC Kisesa Mwanza, na kuwapa uwezo viongozi kutuma ujumbe mwingi (Bulk SMS) kwa makundi maalum moja kwa moja kupitia app ya ujumbe iliyopo ndani ya simu zao pasipo kulipia gharama za ziada za SMS Gateway.</p>
+                <div class="border-t dark:border-gray-700 pt-4 grid grid-cols-2 gap-4 text-xs">
+                    <div><p class="text-gray-400">Mchungaji Kiongozi</p><p class="font-bold text-sm">Pastor Aloyce</p></div>
+                    <div><p class="text-gray-400">Msanidi wa Mfumo (Developer)</p><p class="font-bold text-sm">Pastor Aloyce</p></div>
+                    <div><p class="text-gray-400">Toleo la Mfumo (Version)</p><p class="font-bold text-sm">v2.1.0 (Modern Edition)</p></div>
+                    <div><p class="text-gray-400">Msaada / Mawasiliano</p><p class="font-bold text-sm text-primary">0757344860</p></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="bg-gradient-to-r from-primary-dark via-primary to-secondary text-white py-8 px-4 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div class="space-y-2">
+                <h4 class="font-bold text-base tracking-wide">DCC CHURCH KISESA MWANZA</h4>
+                <p class="text-xs text-blue-100">MULT SMS SYSTEM & MEMBER REGISTER</p>
+                <p class="text-xs text-blue-50">Kazi, Huduma na Uhakika wa Mawasiliano ya Kisasa kwa Wakati.</p>
+            </div>
+            <div class="space-y-1 text-xs">
+                <p class="font-semibold uppercase tracking-wider text-emerald-300">Viongozi & Waendelezaji</p>
+                <p><span class="text-blue-200">Pastor:</span> Pastor Aloyce</p>
+                <p><span class="text-blue-200">Developer:</span> Pastor Aloyce</p>
+                <p><span class="text-blue-200">Simu:</span> <a href="tel:0757344860" class="underline">0757344860</a></p>
+                <p><span class="text-blue-200">Email:</span> info@dccchurchkisesa.org</p>
+            </div>
+            <div class="space-y-3">
+                <p class="text-xs font-semibold uppercase tracking-wider text-emerald-300">Fuata kurasa zetu</p>
+                <div class="flex items-center gap-3 text-lg">
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-telegram"></i></a>
+                </div>
+                <p class="text-[10px] text-blue-200 pt-2">&copy; 2026 DCC Church Kisesa. Mifumo Yote Imelindwa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // SYSTEM DATABASE IN-MEMORY OBJECTS
+        let members = [];
+        let smsLogs = [];
+        let currentFontSizeIndex = 1; // 0: Small, 1: Normal, 2: Large
+        const fontSizes = ['text-sm', 'text-base', 'text-lg'];
+
+        // INITIALIZER ON APP LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check auth
+            if(!localStorage.getItem('dcc_authenticated')) {
+                document.getElementById('login-modal').classList.remove('hidden');
+            }
+            
+            // Load DB
+            if(localStorage.getItem('dcc_members')) {
+                members = JSON.parse(localStorage.getItem('dcc_members'));
+            } else {
+                // Seed some dummy records for initialization/preview if empty
+                members = [
+                    { id: 1001, name: "Emmanuel Joseph", gender: "Me", phone: "0757344860", dept: "Vijana", cgn: "Kanisani", date: "2026-05-15", status: "Active" },
+                    { id: 1002, name: "Mary Yohana", gender: "Ke", phone: "0623456789", dept: "Wamama", cgn: "Kwa Mama Gift", date: "2026-06-01", status: "Active" },
+                    { id: 1003, name: "David Aloyce", gender: "Me", phone: "0712345678", dept: "Watoto", cgn: "Kwa Mama Bhoke", date: "2026-06-01", status: "Active" }
+                ];
+                localStorage.setItem('dcc_members', JSON.stringify(members));
+            }
+
+            if(localStorage.getItem('dcc_sms_logs')) {
+                smsLogs = JSON.parse(localStorage.getItem('dcc_sms_logs'));
+            }
+
+            // Set UI details
+            document.getElementById('current-date-el').innerText = new Date().toLocaleDateString('sw-TZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            generateAutoId();
+            
+            // Render UI
+            initCharts();
+            updateDashboardStats();
+            renderTable();
+            updateSmsFilters();
+            renderSmsHistory();
+
+            // Hide loader with a sweet fade out animation
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.classList.add('opacity-0');
+                setTimeout(() => loader.remove(), 500);
+            }, 1000);
+        });
+
+        // AUTHENTICATION MANAGEMENT
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('login-password').value;
+            if(pass === "dcc2026" || pass === "admin") { // Default system fallback passwords
+                localStorage.setItem('dcc_authenticated', 'true');
+                document.getElementById('login-modal').classList.add('hidden');
+                showToast("Umeingia kwa mafanikio kama Admin!", "success");
+                addAuditLog("Admin kaingia kwenye mfumo");
+            } else {
+                alert("Nerosiri si sahihi! Jaribu tena.");
+            }
+        }
+        function logout() {
+            localStorage.removeItem('dcc_authenticated');
+            location.reload();
+        }
+
+        // TABS NAVIGATION CONTROLLER (SPA INTERACTION)
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            });
+            document.getElementById(`btn-${tabId}`).classList.add('bg-primary', 'text-white');
+            document.getElementById(`btn-${tabId}`).classList.remove('text-gray-600', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            
+            if(tabId === 'dashboard' || tabId === 'reports') {
+                updateDashboardStats();
+                updateCharts();
+            }
+            if(tabId === 'bulksms') {
+                updateSmsFilters();
+            }
+            // Close mobile sidebar if open
+            if(window.innerWidth < 768) {
+                toggleSidebar(false);
+            }
+        }
+
+        function toggleSidebar(forceState = null) {
+            const sb = document.getElementById('sidebar');
+            if(forceState === false || sb.classList.contains('translate-x-0')) {
+                sb.classList.remove('translate-x-0');
+                sb.classList.add('-translate-x-full');
+            } else {
+                sb.classList.remove('-translate-x-full');
+                sb.classList.add('translate-x-0');
+            }
+        }
+
+        // FONT SIZER CONTROLLER
+        function cycleFontSize() {
+            const body = document.body;
+            fontSizes.forEach(f => body.classList.remove(f));
+            currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+            body.classList.add(fontSizes[currentFontSizeIndex]);
+            
+            const labels = ['A-', 'A', 'A+'];
+            document.getElementById('font-size-label').innerText = labels[currentFontSizeIndex];
+            showToast(`Ukubwa wa maandishi umebadilishwa.`, 'info');
+        }
+
+        // DARK MODE / LIGHT MODE CHANGERS
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if(html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = "fas fa-moon";
+            } else {
+                html.classList.add('dark');
+                icon.className = "fas fa-sun";
+            }
+        }
+
+        // AUTO ID GENERATOR
+        function generateAutoId() {
+            const id = members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1001;
+            document.getElementById('auto-id-display').innerText = `ID: ${id}`;
+            return id;
+        }
+
+        // MEMBER FORM SAVE / UPDATE ACTIONS WITH COMPREHENSIVE VALIDATIONS
+        function saveMember(e) {
+            e.preventDefault();
+            const mode = document.getElementById('form-mode').value;
+            const name = document.getElementById('m-name').value.trim();
+            const gender = document.getElementById('m-gender').value;
+            const phone = document.getElementById('m-phone').value.trim();
+            const dept = document.getElementById('m-dept').value;
+            const cgn = document.getElementById('m-cgn').value;
+            const status = document.getElementById('m-status').value;
+
+            // Strict Validation Rules
+            if(!name || !gender || !phone || !dept || !cgn) {
+                showToast("Tafadhali jaza nyanja zote zenye nyota (*)", "error");
+                return;
+            }
+            if(phone.length < 10) {
+                showToast("Namba ya simu haina urefu sahihi!", "error");
+                return;
+            }
+
+            if(mode === 'create') {
+                // Check Duplicates
+                if(members.some(m => m.phone === phone)) {
+                    showToast(`Namba ya simu ${phone} tayari imeshasajiliwa kwa mshirika mwingine!`, "error");
+                    return;
+                }
+                const newId = generateAutoId();
+                const todayStr = new Date().toISOString().split('T')[0];
+                const newMember = { id: newId, name, gender, phone, dept, cgn, date: todayStr, status };
+                members.push(newMember);
+                showToast(`${name} amesajiliwa kikamilifu!`, "success");
+                addAuditLog(`Amesajiliwa mshirika mpya: ${name}`);
+            } else {
+                const editId = parseInt(document.getElementById('edit-id').value);
+                // Duplicate check excluding self
+                if(members.some(m => m.phone === phone && m.id !== editId)) {
+                    showToast(`Namba ya simu ${phone} inatumiwa na mshirika mwingine!`, "error");
+                    return;
+                }
+                const index = members.findIndex(m => m.id === editId);
+                if(index !== -1) {
+                    members[index] = { ...members[index], name, gender, phone, dept, cgn, status };
+                    showToast(`Taarifa za ${name} zimeboreshwa vyema.`, "success");
+                    addAuditLog(`Zimeboreshwa taarifa za: ${name}`);
+                }
+            }
+
+            localStorage.setItem('dcc_members', JSON.stringify(members));
+            resetForm();
+            renderTable();
+            updateDashboardStats();
+        }
+
+        function editMember(id) {
+            const m = members.find(m => m.id === id);
+            if(!m) return;
+            
+            document.getElementById('form-mode').value = 'edit';
+            document.getElementById('edit-id').value = m.id;
+            document.getElementById('auto-id-display').innerText = `ID: ${m.id} (Kuhariri)`;
+            document.getElementById('m-name').value = m.name;
+            document.getElementById('m-gender').value = m.gender;
+            document.getElementById('m-phone').value = m.phone;
+            document.getElementById('m-dept').value = m.dept;
+            document.getElementById('m-cgn').value = m.cgn;
+            document.getElementById('m-status').value = m.status;
+
+            document.getElementById('form-title').innerHTML = `<i class="fas fa-user-edit text-secondary"></i> Hariri Taarifa za Mshirika`;
+            document.getElementById('btn-submit-form').innerHTML = `<i class="fas fa-check-double"></i> Sasisha Taarifa`;
+            document.getElementById('btn-cancel-edit').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteMember(id) {
+            const m = members.find(m => m.id === id);
+            if(!m) return;
+            if(confirm(`Je, una uhakika unataka kumfuta mshirika huyu: ${m.name}? Kitendo hiki hakirudi nyuma.`)) {
+                members = members.filter(m => m.id !== id);
+                localStorage.setItem('dcc_members', JSON.stringify(members));
+                showToast("Mshirika amefutwa kabisa kwenye mfumo.", "info");
+                addAuditLog(`Amefutwa mshirika wa ID: ${id}`);
+                renderTable();
+                updateDashboardStats();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('member-form').reset();
+            document.getElementById('form-mode').value = 'create';
+            document.getElementById('edit-id').value = "";
+            document.getElementById('form-title').innerHTML = `<i class="fas fa-user-plus text-primary"></i> Fomu ya Usajili / Kuhariri Mshirika`;
+            document.getElementById('btn-submit-form').innerHTML = `<i class="fas fa-save"></i> Hifadhi Mshirika`;
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+            generateAutoId();
+        }
+
+        // LIVE SEARCH EVERYWHERE & TABLE PAGINATION ENGINE
+        let tablePage = 1;
+        const rowsPerPage = 10;
+        let globalSearchQuery = "";
+
+        function globalSearch(val) {
+            globalSearchQuery = val.trim().toLowerCase();
+            renderTable();
+        }
+
+        function renderTable() {
+            const tBody = document.getElementById('members-table-body');
+            const searchVal = document.getElementById('table-search').value.trim().toLowerCase();
+            const sortVal = document.getElementById('table-sort').value;
+            
+            // Filter
+            let filtered = members.filter(m => {
+                const matchesGlobal = globalSearchQuery === "" || 
+                    m.name.toLowerCase().includes(globalSearchQuery) || 
+                    m.phone.includes(globalSearchQuery) || 
+                    m.dept.toLowerCase().includes(globalSearchQuery) || 
+                    m.cgn.toLowerCase().includes(globalSearchQuery);
+                
+                const matchesTable = searchVal === "" || 
+                    m.name.toLowerCase().includes(searchVal) || 
+                    m.phone.includes(searchVal) || 
+                    m.dept.toLowerCase().includes(searchVal) || 
+                    m.cgn.toLowerCase().includes(searchVal);
+                
+                return matchesGlobal && matchesTable;
+            });
+
+            // Sorting
+            if(sortVal === 'id-asc') filtered.sort((a,b) => a.id - b.id);
+            if(sortVal === 'id-desc') filtered.sort((a,b) => b.id - a.id);
+            if(sortVal === 'name-asc') filtered.sort((a,b) => a.name.localeCompare(b.name));
+
+            // Pagination setup
+            const totalItems = filtered.length;
+            if(totalItems === 0) {
+                document.getElementById('table-empty-state').classList.remove('hidden');
+                tBody.innerHTML = "";
+                document.getElementById('table-info-text').innerText = "Inaonyesha 0 hadi 0 kati ya 0";
+                document.getElementById('table-pagination').innerHTML = "";
+                return;
+            } else {
+                document.getElementById('table-empty-state').classList.add('hidden');
+            }
+
+            const totalPages = Math.ceil(totalItems / rowsPerPage);
+            if(tablePage > totalPages) tablePage = totalPages || 1;
+            
+            const startIdx = (tablePage - 1) * rowsPerPage;
+            const endIdx = Math.min(startIdx + rowsPerPage, totalItems);
+            const paginatedItems = filtered.slice(startIdx, endIdx);
+
+            tBody.innerHTML = paginatedItems.map(m => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                    <td class="px-4 py-2.5 font-mono text-xs font-semibold">${m.id}</td>
+                    <td class="px-4 py-2.5 font-medium">${m.name}</td>
+                    <td class="px-4 py-2.5"><span class="px-2 py-0.5 rounded-md text-xs font-medium ${m.gender==='Me'?'bg-sky-50 text-sky-600':'bg-pink-50 text-pink-600'}">${m.gender}</span></td>
+                    <td class="px-4 py-2.5 font-mono text-xs">${m.phone}</td>
+                    <td class="px-4 py-2.5 text-xs">${m.dept}</td>
+                    <td class="px-4 py-2.5 text-xs text-gray-500 dark:text-gray-400">${m.cgn}</td>
+                    <td class="px-4 py-2.5 text-xs text-gray-400">${m.date}</td>
+                    <td class="px-4 py-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${m.status==='Active'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">${m.status}</span></td>
+                    <td class="px-4 py-2.5 text-center flex items-center justify-center gap-1.5">
+                        <a href="tel:${m.phone}" title="Piga Simu Moja kwa Moja" class="p-1 text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700 rounded transition text-xs"><i class="fas fa-phone"></i></a>
+                        <a href="sms:${m.phone}" title="Tuma SMS Binafsi" class="p-1 text-emerald-500 hover:bg-emerald-50 dark:hover:bg-gray-700 rounded transition text-xs"><i class="fas fa-envelope"></i></a>
+                        <button onclick="editMember(${m.id})" title="Hariri Taarifa" class="p-1 text-amber-500 hover:bg-amber-50 dark:hover:bg-gray-700 rounded transition text-xs"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteMember(${m.id})" title="Futa Mshirika" class="p-1 text-rose-500 hover:bg-rose-50 dark:hover:bg-gray-700 rounded transition text-xs"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="viewProfileInline(${m.id})" title="Angalia Wasifu (Profile)" class="p-1 text-purple-500 hover:bg-purple-50 dark:hover:bg-gray-700 rounded transition text-xs"><i class="fas fa-id-badge"></i></button>
+                        <button onclick="shareContactInline(${m.id})" title="Gawa Mawasiliano (Share)" class="p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-gray-700 rounded transition text-xs"><i class="fas fa-share-nodes"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('table-info-text').innerText = `Inaonyesha ${startIdx + 1} hadi ${endIdx} kati ya ${totalItems}`;
+            
+            // Build Pagination Component Buttons
+            let pagHTML = "";
+            for(let i=1; i<=totalPages; i++) {
+                pagHTML += `<button onclick="goToTablePage(${i})" class="px-2.5 py-1 rounded ${tablePage === i ? 'bg-primary text-white font-bold' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 hover:bg-gray-200'}">${i}</button>`;
+            }
+            document.getElementById('table-pagination').innerHTML = pagHTML;
+        }
+
+        function goToTablePage(p) {
+            tablePage = p;
+            renderTable();
+        }
+
+        // PROFILE VIEW AND SHARE ACTIONS
+        function viewProfileInline(id) {
+            const m = members.find(m => m.id === id);
+            if(m) alert(`WASIFU WA MSHIRIKA:\n----------------------\nID: ${m.id}\nMajina: ${m.name}\nJinsi: ${m.gender}\nSimu: ${m.phone}\nIdara: ${m.dept}\nKituo cha CGN: ${m.cgn}\nTarehe ya Usajili: ${m.date}\nHali: ${m.status}`);
+        }
+        function shareContactInline(id) {
+            const m = members.find(m => m.id === id);
+            if(m && navigator.share) {
+                navigator.share({ title: m.name, text: `Mshirika: ${m.name} - Simu: ${m.phone} (${m.dept})`, url: window.location.href });
+            } else if(m) {
+                alert(`Nakili Mawasiliano:\n${m.name} - ${m.phone}`);
+            }
+        }
+
+        // BULK SMS SYSTEM ENGINE & ADAPTIVE FILTERING
+        let selectedSmsPhones = [];
+
+        function updateSmsFilters() {
+            const gender = document.getElementById('f-gender').value;
+            const dept = document.getElementById('f-dept').value;
+            const cgn = document.getElementById('f-cgn').value;
+            const status = document.getElementById('f-status').value;
+
+            let filtered = members.filter(m => {
+                return (gender === 'Wote' || m.gender === gender) &&
+                       (dept === 'Wote' || m.dept === dept) &&
+                       (cgn === 'Wote' || m.cgn === cgn) &&
+                       (status === 'Wote' || m.status === status);
+            });
+
+            selectedSmsPhones = filtered.map(m => m.phone);
+            document.getElementById('filtered-count').innerText = filtered.length;
+            
+            const previewContainer = document.getElementById('recipient-preview-list');
+            if(filtered.length === 0) {
+                previewContainer.innerHTML = `<p class="text-center text-gray-400 italic pt-4">Hakuna mlengwa anayefanana na filters ulizochagua</p>`;
+                return;
+            }
+
+            previewContainer.innerHTML = filtered.map(m => `
+                <div class="flex items-center justify-between p-1.5 bg-white dark:bg-gray-800 rounded-lg shadow-xs border dark:border-gray-700">
+                    <span class="font-medium truncate max-w-[150px]">${m.name}</span>
+                    <span class="text-gray-400 font-mono text-[11px]">${m.phone}</span>
+                    <input type="checkbox" checked value="${m.phone}" onchange="toggleIndividualSmsSelection(this)" class="recipient-checkbox rounded text-secondary focus:ring-secondary">
+                </div>
+            `).join('');
+            
+            document.getElementById('sms-select-all').checked = true;
+            updateLivePreview();
+        }
+
+        function toggleSmsSelectAll(checked) {
+            document.querySelectorAll('.recipient-checkbox').forEach(cb => cb.checked = checked);
+            if(checked) {
+                const gender = document.getElementById('f-gender').value;
+                const dept = document.getElementById('f-dept').value;
+                const cgn = document.getElementById('f-cgn').value;
+                const status = document.getElementById('f-status').value;
+                let filtered = members.filter(m => {
+                    return (gender === 'Wote' || m.gender === gender) && (dept === 'Wote' || m.dept === dept) && (cgn === 'Wote' || m.cgn === cgn) && (status === 'Wote' || m.status === status);
+                });
+                selectedSmsPhones = filtered.map(m => m.phone);
+            } else {
+                selectedSmsPhones = [];
+            }
+            document.getElementById('filtered-count').innerText = selectedSmsPhones.length;
+        }
+
+        function toggleIndividualSmsSelection(cb) {
+            if(cb.checked) {
+                if(!selectedSmsPhones.includes(cb.value)) selectedSmsPhones.push(cb.value);
+            } else {
+                selectedSmsPhones = selectedSmsPhones.filter(p => p !== cb.value);
+                document.getElementById('sms-select-all').checked = false;
+            }
+            document.getElementById('filtered-count').innerText = selectedSmsPhones.length;
+        }
+
+        // TEXT COUNTER & PREVIEW FUNCTIONS
+        function countSmsChars(val) {
+            const count = val.length;
+            const pages = Math.ceil(count / 160) || 0;
+            document.getElementById('sms-char-counter').innerText = `Herufi: ${count} / 160 (${pages} Kurasa za SMS)`;
+            updateLivePreview();
+        }
+
+        function updateLivePreview() {
+            const val = document.getElementById('sms-message').value;
+            const previewEl = document.getElementById('sms-live-preview');
+            if(!val.trim()) {
+                previewEl.innerText = "...ujumbe wako utaonekana hapa...";
+                return;
+            }
+            // Dynamic substitution preview using a placeholder name
+            let substituted = val.replace(/{JINA}/g, "Emmanuel Joseph");
+            previewEl.innerText = substituted;
+        }
+
+        // PRE-CONFIGURED PRE-DEFINED SMS TEMPLATES
+        const templates = {
+            announcement: "Bwana Yesu asifiwe {JINA}. Tunakukumbusha kufika kwenye ibada kuu ya Jumapili hii DCC Kisesa kuanzia saa 2:00 asubuhi. Karibu sana ubarikiwe.",
+            meeting: "Shalom mwanaidara {JINA}. Kuna kikao muhimu cha idara yetu siku ya Jumamosi saa 10:00 jioni kanisani. Tafadhalizingatia muda.",
+            prayer: "Mpendwa {JINA}, itakuwa na mkesha maalum wa maombi na maombezi ya kufunguliwa siku ya Ijumaa hii kuanzia saa 3 usiku DCC Kisesa. Wote mnakaribishwa.",
+            contribution: "Ndugu mshirika {JINA}, tunapenda kukukumbusha kuwasilisha ahadi/mchango wako wa ujenzi wa kanisa awamu ya pili. Mungu akubariki kwa ukarimu wako.",
+            reminder: "Huu ni ukumbusho wa ibada ya katikati ya wiki (Ibada ya Mafundisho) Alhamisi hii saa 11:00 jioni DCC Kisesa. Usikose.",
+            invitation: "Habari {JINA}, unakaribishwa kwa upendo mkubwa kwenye semina maalum ya neno la Mungu itakayoanza tarehe 10 mwezi huu kanisani DCC Kisesa. Mchungaji Aloyce."
+        };
+
+        function loadSmsTemplate(key) {
+            if(templates[key]) {
+                document.getElementById('sms-message').value = templates[key];
+                countSmsChars(templates[key]);
+            }
+        }
+
+        function saveCustomTemplate() {
+            const val = document.getElementById('sms-message').value.trim();
+            if(!val) { showToast("Andika kwanza ujumbe ili uweze kuuhifadhi kama kiolezo!", "error"); return; }
+            showToast("Kiolezo kipya kimehifadhiwa kwenye kumbukumbu ya mfumo!", "success");
+        }
+
+        function clearSmsComposer() {
+            document.getElementById('sms-message').value = "";
+            document.getElementById('sms-template-select').value = "";
+            countSmsChars("");
+        }
+
+        // TRIGGER BULK SMS VIA PHONE SMS APP (CROSS PLATFORM SMS INTENT ENGINE)
+        function triggerBulkSmsIntent() {
+            const msg = document.getElementById('sms-message').value.trim();
+            if(selectedSmsPhones.length === 0) {
+                showToast("Tafadhali chagua angalau mlengwa mmoja (recipient) wa kupokea SMS!", "error");
+                return;
+            }
+            if(!msg) {
+                showToast("Ujumbe hauwezi kuwa tupu!", "error");
+                return;
+            }
+
+            // MABORESHO MAKUBWA: Kutumia alama ya mkato (,) inayokubalika na mifumo ya sasa ya Android na iOS
+            const joinedPhones = selectedSmsPhones.join(',');
+            
+            // Kagua mfumo wa uendeshaji (OS) wa kifaa
+            const isUserApple = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            // Tengeneza URL Intent sahihi kwa ajili ya bando la kawaida
+            const encodedMsg = encodeURIComponent(msg);
+            let smsUrl = "";
+            
+            if(isUserApple) {
+                smsUrl = `sms:${joinedPhones}&body=${encodedMsg}`;
+            } else {
+                smsUrl = `sms:${joinedPhones}?body=${encodedMsg}`;
+            }
+
+            // Record execution inside local system logging
+            const logEntry = {
+                timestamp: new Date().toLocaleString('sw-TZ'),
+                group: `Watu walengwa (${selectedSmsPhones.length})`,
+                body: msg.substring(0, 45) + (msg.length > 45 ? "..." : ""),
+                status: "SMS Sent via App"
+            };
+            smsLogs.unshift(logEntry);
+            localStorage.setItem('dcc_sms_logs', JSON.stringify(smsLogs));
+            renderSmsHistory();
+
+            showToast("Programu ya simu ya SMS inafunguka...", "success");
+            addAuditLog(`Mlipuko wa SMS umerushwa kwa walengwa ${selectedSmsPhones.length}`);
+
+            // Kufungua App ya Ujumbe kwenye simu
+            window.location.href = smsUrl;
+        }
+
+        function renderSmsHistory() {
+            const target = document.getElementById('sms-history-log');
+            if(smsLogs.length === 0) return;
+            target.innerHTML = smsLogs.map(l => `
+                <tr>
+                    <td class="p-3 text-gray-500 font-mono">${l.timestamp}</td>
+                    <td class="p-3 font-semibold text-primary">${l.group}</td>
+                    <td class="p-3 text-gray-600 dark:text-gray-300 italic">"${l.body}"</td>
+                    <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full text-[10px]"><i class="fas fa-check"></i> ${l.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // STATS GENERATION & CALCULATIONS REAL-TIME ENGINE
+        function updateDashboardStats() {
+            const total = members.length;
+            const me = members.filter(m => m.gender === 'Me').length;
+            const ke = members.filter(m => m.gender === 'Ke').length;
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            const registeredToday = members.filter(m => m.date === todayStr).length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-me').innerText = me;
+            document.getElementById('stat-ke').innerText = ke;
+            document.getElementById('stat-today').innerText = registeredToday;
+
+            const mePct = total > 0 ? Math.round((me / total) * 100) : 0;
+            const kePct = total > 0 ? Math.round((ke / total) * 100) : 0;
+
+            document.getElementById('pct-me').innerText = `${mePct}% ya wote`;
+            document.getElementById('pct-ke').innerText = `${kePct}% ya wote`;
+
+            // Auto calculations details panel on report tab
+            const activeCount = members.filter(m => m.status === 'Active').length;
+            const inactiveCount = members.filter(m => m.status === 'Inactive').length;
+
+            document.getElementById('auto-calc-report-view').innerHTML = `
+                <div class="flex justify-between border-b dark:border-gray-700 py-1"><span>Jumla Washirika:</span><strong>${total}</strong></div>
+                <div class="flex justify-between border-b dark:border-gray-700 py-1"><span>Wanaume (Me):</span><strong>${me} (${mePct}%)</strong></div>
+                <div class="flex justify-between border-b dark:border-gray-700 py-1"><span>Wanawake (Ke):</span><strong>${ke} (${kePct}%)</strong></div>
+                <div class="flex justify-between border-b dark:border-gray-700 py-1"><span>Hali ya Active:</span><strong class="text-emerald-500">${activeCount}</strong></div>
+                <div class="flex justify-between border-b dark:border-gray-700 py-1"><span>Hali ya Inactive:</span><strong class="text-amber-500">${inactiveCount}</strong></div>
+            `;
+        }
+
+        // CHART.JS INITIALIZATION AND DYNAMIC TRANSITIONS
+        let gChart, dChart, sChart, cChart;
+        function initCharts() {
+            const ctxGender = document.getElementById('genderChart').getContext('2d');
+            gChart = new Chart(ctxGender, {
+                type: 'doughnut',
+                data: { labels: ['Me', 'Ke'], datasets: [{ data: [0, 0], backgroundColor: ['#3B82F6', '#EC4899'] }] },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctxDept = document.getElementById('deptChart').getContext('2d');
+            dChart = new Chart(ctxDept, {
+                type: 'bar',
+                data: {
+                    labels: ['Vijana', 'Wamama', 'Wanaume', 'Watoto'],
+                    datasets: [{ label: 'Idadi ya Washirika', data: [0,0,0,0], backgroundColor: '#1E40AF' }] /* Updated palette config secondary chart color */
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+            });
+
+            // Report View Charts
+            const ctxStatus = document.getElementById('statusReportChart').getContext('2d');
+            sChart = new Chart(ctxStatus, {
+                type: 'pie',
+                data: { labels: ['Active', 'Inactive'], datasets: [{ data: [0,0], backgroundColor: ['#EA580C', '#F59E0B'] }] }, /* Updated colors palette dynamic config primary placement fallback */
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctxCgn = document.getElementById('cgnReportChart').getContext('2d');
+            cChart = new Chart(ctxCgn, {
+                type: 'polarArea',
+                data: {
+                    labels: ['Mama Bhoke', 'Mama Gift', 'Kanisani', 'Online'],
+                    datasets: [{ data: [0,0,0,0], backgroundColor: ['#6366F1', '#EA580C', '#1E40AF', '#10B981'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function updateCharts() {
+            const me = members.filter(m => m.gender === 'Me').length;
+            const ke = members.filter(m => m.gender === 'Ke').length;
+            gChart.data.datasets[0].data = [me, ke];
+            gChart.update();
+
+            const v = members.filter(m => m.dept === 'Vijana').length;
+            const wm = members.filter(m => m.dept === 'Wamama').length;
+            const wn = members.filter(m => m.dept === 'Wanaume').length;
+            const wt = members.filter(m => m.dept === 'Watoto').length;
+            dChart.data.datasets[0].data = [v, wm, wn, wt];
+            dChart.update();
+
+            const active = members.filter(m => m.status === 'Active').length;
+            const inactive = members.filter(m => m.status === 'Inactive').length;
+            sChart.data.datasets[0].data = [active, inactive];
+            sChart.update();
+
+            const c1 = members.filter(m => m.cgn === 'Kwa Mama Bhoke').length;
+            const c2 = members.filter(m => m.cgn === 'Kwa Mama Gift').length;
+            const c3 = members.filter(m => m.cgn === 'Kanisani').length;
+            const c4 = members.filter(m => m.cgn === 'Online').length;
+            cChart.data.datasets[0].data = [c1, c2, c3, c4];
+            cChart.update();
+        }
+
+        // AUDIT LOGGING TIMELINE SYSTEM
+        function addAuditLog(text) {
+            const timeline = document.getElementById('activity-timeline');
+            const time = new Date().toLocaleTimeString('sw-TZ');
+            const html = `
+                <div class="flex items-center gap-3 p-2 bg-gray-50 dark:bg-gray-700/30 rounded-xl text-xs border-l-4 border-primary">
+                    <span class="font-mono text-gray-400 font-medium">${time}</span>
+                    <p class="text-gray-600 dark:text-gray-300 font-medium">${text}</p>
+                </div>
+            `;
+            timeline.insertAdjacentHTML('afterbegin', html);
+        }
+
+        // MODERN NOTIFICATION ENGINE (TOASTS SYSTEM)
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bg = 'bg-white dark:bg-gray-800 text-gray-800 dark:text-white border-l-4 border-primary';
+            let icon = '<i class="fas fa-info-circle text-primary"></i>';
+            if (type === 'success') { bg = 'bg-white dark:bg-gray-800 text-gray-800 dark:text-white border-l-4 border-secondary'; icon = '<i class="fas fa-check-circle text-secondary"></i>'; }
+            if (type === 'error') { bg = 'bg-rose-50 dark:bg-gray-800 text-rose-900 dark:text-rose-200 border-l-4 border-rose-500'; icon = '<i class="fas fa-exclamation-triangle text-rose-500"></i>'; }
+            
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border text-xs font-semibold max-w-sm transition-all transform translate-y-2 opacity-0 glass ${bg}`;
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // DATABASE SETTINGS CONFIGURATION ACTIONS
+        function exportData(type) {
+            if(members.length === 0) { showToast("Hakuna data ya kusafirisha!", "error"); return; }
+            let content = "";
+            let filename = `DCC_Washirika_Ripoti_${new Date().toISOString().split('T')[0]}`;
+            
+            if(type === 'csv') {
+                content = "ID,Majina Kamili,Jinsi,Namba ya Simu,Idara,CGN Kituo,Tarehe Usajili,Hali\n" + 
+                    members.map(m => `${m.id},${m.name},${m.gender},${m.phone},${m.dept},${m.cgn},${m.date},${m.status}`).join("\n");
+                filename += ".csv";
+            } else {
+                content = JSON.stringify(members, null, 2);
+                filename += ".xls"; // Basic spreadsheet structure layout download compatibility format injection fallback
+            }
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            showToast("Faili lako linapakuliwa vyema...", "success");
+        }
+
+        // DATABASE SETTINGS CONFIGURATION ACTIONS
+        function backupDatabase() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ members, smsLogs }));
+            const dlAnchorElem = document.createElement('a');
+            dlAnchorElem.setAttribute("href", dataStr);
+            dlAnchorElem.setAttribute("download", `DCC_DATABASE_BACKUP_${new Date().toISOString().split('T')[0]}.json`);
+            dlAnchorElem.click();
+            showToast("JSON Backup imesafirishwa kwa usalama.", "success");
+        }
+
+        function restoreDatabase(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(parsed.members) {
+                        members = parsed.members;
+                        if(parsed.smsLogs) smsLogs = parsed.smsLogs;
+                        localStorage.setItem('dcc_members', JSON.stringify(members));
+                        localStorage.setItem('dcc_sms_logs', JSON.stringify(smsLogs));
+                        showToast("Database imerejeshwa (Restored) kwa mafanikio makubwa!", "success");
+                        location.reload();
+                    } else {
+                        showToast("Muundo wa faili si sahihi!", "error");
+                    }
+                } catch(err) {
+                    showToast("Imeshindwa kusoma faili hili!", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllDataDatabase() {
+            if(confirm("Je, una uhakika kabisa unataka kufuta data zote za washirika na meseji kwenye mfumo huu? Hatua hii haina marekebisho.")) {
+                localStorage.clear();
+                alert("Data zote zimefutwa. Mfumo utajirudia upya.");
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
+

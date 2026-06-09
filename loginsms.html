@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="sw" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCC Church Management System - Login</title>
+    <!-- Tailwind CSS & FontAwesome Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dccBlue: '#0D47A1',
+                        dccOrange: '#FF6F00',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bg-gradient-dcc {
+            background: linear-gradient(135deg, #0D47A1 0%, #1565C0 40%, #FF6F00 100%);
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-screen flex flex-col justify-between">
+
+    <!-- Toggle Dark Mode Button -->
+    <div class="fixed top-4 right-4 z-50">
+        <button id="themeToggle" class="p-3 rounded-full glass shadow-lg hover:scale-110 transition-transform text-xl text-dccOrange dark:text-yellow-400">
+            <i class="fas fa-moon dark:hidden"></i>
+            <i class="fas fa-sun hidden dark:block"></i>
+        </button>
+    </div>
+
+    <!-- MAIN LOGIN SECTION -->
+    <main class="flex-grow flex items-center justify-center p-4 bg-gradient-dcc relative overflow-hidden">
+        <!-- Floating Animated Orbs -->
+        <div class="absolute w-72 h-72 bg-blue-400 rounded-full blur-3xl opacity-30 -top-10 -left-10 animate-pulse"></div>
+        <div class="absolute w-80 h-80 bg-orange-400 rounded-full blur-3xl opacity-20 -bottom-10 -right-10 animate-pulse" style="animation-delay: 2s;"></div>
+
+        <div class="w-full max-w-lg glass rounded-3xl p-8 shadow-2xl text-white relative z-10">
+            <!-- Hero Header -->
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full p-2 mb-3 shadow-inner hover:rotate-12 transition-transform duration-300">
+                    <i class="fas fa-church text-4xl text-dccBlue"></i>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-black tracking-wide uppercase drop-shadow">DCC Church Management</h1>
+                <p class="text-xs text-orange-200 mt-1 font-semibold tracking-wider">Kisesa Mwanza | Pastor Aloyce</p>
+                <blockquote class="text-sm italic text-slate-200 mt-3 border-l-4 border-dccOrange pl-3 py-1 bg-black/10 rounded-r-lg">
+                    "Tumia mfumo kwa manufaa ya kuujenga ufalme wa Mungu"
+                </blockquote>
+            </div>
+
+            <!-- Error Alerts (Pastor Aloyce Custom Message) -->
+            <div id="loginError" class="hidden bg-red-600/90 border border-red-700 text-white text-sm p-4 rounded-xl mb-4 text-center leading-relaxed shadow-lg font-medium"></div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-5 text-slate-900 dark:text-white">
+                <div>
+                    <label class="block text-sm font-medium text-slate-200 mb-1">Email ya Mtumiaji</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fas fa-envelope"></i>
+                        </span>
+                        <input type="email" id="loginEmail" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-white/20 bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-dccOrange transition" placeholder="ingiza@email.com">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-200 mb-1">Nenosiri (Password)</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fas fa-lock"></i>
+                        </span>
+                        <input type="password" id="loginPassword" required class="w-full pl-10 pr-12 py-3 rounded-xl border border-white/20 bg-white/90 dark:bg-slate-800/90 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-dccOrange transition" placeholder="••••••••">
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-500 hover:text-slate-800 dark:hover:text-white">
+                            <i class="fas fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs md:text-sm text-slate-200">
+                    <label class="flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" class="rounded text-dccOrange focus:ring-0 cursor-pointer w-4 h-4">
+                        <span>Nikumbuke</span>
+                    </label>
+                    <a href="#" class="hover:underline text-orange-300">Umesahau Password?</a>
+                </div>
+
+                <button type="submit" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-dccOrange to-amber-600 text-white font-bold rounded-xl shadow-lg hover:shadow-orange-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all flex justify-center items-center space-x-2 text-lg">
+                    <span>Ingia Kwenye Mfumo</span>
+                    <i class="fas fa-sign-in-alt"></i>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 text-center py-6 border-t border-slate-800 text-xs md:text-sm px-4">
+        <div class="max-w-4xl mx-auto space-y-2">
+            <p class="font-bold text-white text-base">Disciples Community Church (DCC) Kisesa Mwanza</p>
+            <p>Mchungaji Kiongozi: <span class="text-white">Pastor Aloyce</span> | Simu: <span class="text-dccOrange font-mono">+255 757 344 860</span></p>
+            <p class="italic text-slate-500">"Tumia mfumo kwa manufaa ya kuujenga ufalme wa Mungu"</p>
+            <hr class="border-slate-800 w-1/4 mx-auto my-2">
+            <p>&copy; 2026 <span class="text-slate-300">DCC Church Management System</span>. Haki zote zimehifadhiwa.</p>
+        </div>
+    </footer>
+
+    <!-- FIREBASE CORE SCRIPT -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase Configuration yako halisi
+        const firebaseConfig = {
+            apiKey: "AIzaSyCv01cdwWFqeDcvMAkILY3K4G8yKJWwL6k",
+            authDomain: "pastoraloyce-3530f.firebaseapp.com",
+            projectId: "pastoraloyce-3530f",
+            storageBucket: "pastoraloyce-3530f.firebasestorage.app",
+            messagingSenderId: "978341477941",
+            appId: "1:978341477941:web:289e3b0671f00e52907b7c",
+            measurementId: "G-XYK8ZL0JSJ"
+        };
+
+        // Kuanzisha Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ** WEKA LINK YA MFUMO WAKO ULIOPO TAYARI HAPA CHINI **
+        const mfumoUliopoURL = "sms.html";
+
+        // Light / Dark Mode Toggle
+        const themeToggleBtn = document.getElementById('themeToggle');
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Show/Hide Password
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('loginPassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            eyeIcon.classList.toggle('fa-eye');
+            eyeIcon.classList.toggle('fa-eye-slash');
+        });
+
+        // Login Logic yenye Ujumbe Maalum wa Pastor Aloyce
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = passwordInput.value;
+
+            // Uhakiki wa ujumbe maalum ukikosea
+            const pasterCustomErrorMessage = "Shalom mtu wa Mungu, samahani umekosea email au password, pole sana! by Pastor Aloyce.";
+
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = `<i class="fas fa-spinner animate-spin mr-2"></i> Inahakiki sasa...`;
+            loginError.classList.add('hidden');
+
+            // Firebase Sign In
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Kurekodi historia ya kuingia kwenye Firestore Collection "loginmifumo" kabla ya kuelekeza mtumiaji
+                    db.collection("loginmifumo").add({
+                        email: user.email,
+                        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                        status: "active",
+                        device: navigator.userAgent
+                    }).then(() => {
+                        // AKIFANIKIWA: Mfumo unampeleka moja kwa moja kwenye link ya mfumo wako uliopo tayari
+                        window.location.href = mfumoUliopoURL;
+                    }).catch(() => {
+                        // Kama mtandao unasumbua kuandika log, bado mpeleke kwenye mfumo uliopo
+                        window.location.href = mfumoUliopoURL;
+                    });
+                })
+                .catch((error) => {
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = `<span>Ingia Kwenye Mfumo</span> <i class="fas fa-sign-in-alt"></i>`;
+                    
+                    // Kosa lolote la uingizaji data litaleta ujumbe uliouomba mahususi
+                    loginError.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i> ${pasterCustomErrorMessage}`;
+                    loginError.classList.remove('hidden');
+                });
+        });
+    </script>
+</body>
+</html>
