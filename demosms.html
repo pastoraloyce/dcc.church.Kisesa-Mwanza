@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="sw" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DCC CHURCH KISESA MWANZA MULT SMS SYSTEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#EA580C', /* Orange Kuu */
+                            dark: '#C2410C',
+                            light: '#FB923C'
+                        },
+                        secondary: {
+                            DEFAULT: '#1E40AF', /* Blue Kuu */
+                            dark: '#1E3A8A',
+                            light: '#3B82F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+        .dark .glass { background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(12px); }
+        .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+        @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300 antialiased min-h-screen flex flex-col font-sans">
+
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-gray-900 transition-opacity duration-500">
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 border-4 border-primary border-t-secondary rounded-full animate-spin"></div>
+            <p class="mt-4 text-lg font-semibold animate-pulse text-primary dark:text-primary-light">DCC KISESA MULT-SMS SYSTEM...</p>
+        </div>
+    </div>
+    <div class="flex-grow flex flex-col md:flex-row min-h-screen pt-16">
+
+        <header class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 z-40 transition-colors shadow-sm px-4 flex items-center justify-between glass">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden text-xl p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <span class="bg-gradient-to-r from-primary to-secondary text-white p-2 rounded-xl text-lg font-bold shadow-sm">DCC</span>
+                    <h1 class="font-bold text-sm sm:text-base md:text-lg tracking-wide hidden sm:block">DCC CHURCH KISESA <span class="text-secondary font-medium">MULT-SMS</span></h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 flex-grow max-w-xl mx-4">
+                <div class="relative w-full hidden sm:block">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                    <input type="text" id="global-search" oninput="globalSearch(this.value)" placeholder="Tafuta mshirika popote pale (Jina, Simu, Idara...)" class="w-full pl-9 pr-4 py-2 text-sm bg-gray-100 dark:bg-gray-700 border-0 rounded-xl focus:ring-2 focus:ring-primary transition duration-150">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="cycleFontSize()" title="Badili Ukubwa wa Maandishi" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:scale-105 transition text-xs font-bold">
+                    <span id="font-size-label">A</span>
+                </button>
+                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:text-primary transition">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+                <div class="relative">
+                    <button class="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 hover:text-secondary transition" onclick="showToast('Hakuna taarifa mpya kwa sasa.', 'info')">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+                </div>
+                <div class="relative group">
+                    <button class="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                        <div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm shadow-sm"><i class="fas fa-user-shield"></i></div>
+                        <i class="fas fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border rounded-xl shadow-xl hidden group-hover:block z-50 overflow-hidden animate-fadeIn">
+                        <div class="p-3 border-b dark:border-gray-700">
+                            <p class="text-xs text-gray-400">Umeingia kama</p>
+                            <p class="text-sm font-semibold truncate">Pastor Aloyce</p>
+                        </div>
+                        <a href="#settings" onclick="switchTab('settings')" class="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-700"><i class="fas fa-cog text-gray-400"></i> Settings</a>
+                        <button onclick="logout()" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-gray-700 text-left"><i class="fas fa-sign-out-alt"></i> Ondoka</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 md:sticky md:top-16 z-30 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-transform duration-300 flex flex-col justify-between h-[calc(100vh-4rem)]">
+            <div class="p-4 space-y-6 overflow-y-auto">
+                <div>
+                    <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">PASTOR ALOYCE</p>
+                    <nav class="space-y-1">
+                        <button onclick="switchTab('dashboard')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm transition-all bg-primary text-white" id="btn-dashboard"><i class="fas fa-chart-pie w-5"></i> Dashboard</button>
+                        <button onclick="switchTab('washirika')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-washirika"><i class="fas fa-users w-5"></i> Washirika</button>
+                        <button onclick="switchTab('bulksms')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-bulksms"><i class="fas fa-paper-plane w-5"></i> Bulk SMS</button>
+                        <button onclick="switchTab('reports')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-reports"><i class="fas fa-chart-line w-5"></i> Reports</button>
+                        <button onclick="switchTab('settings')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-settings"><i class="fas fa-sliders w-5"></i> Mipangilio</button>
+                        <button onclick="switchTab('about')" class="tab-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all" id="btn-about"><i class="fas fa-info-circle w-5"></i> Kuhusu</button>
+                    </nav>
+                </div>
+                <div>
+                    <p class="px-3 text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Viunganishi vya Kanisa</p>
+                    <div class="space-y-1">
+                        <a href="https://wa.me/#" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-green-50 hover:text-green-600 dark:text-gray-400 transition"><i class="fab fa-whatsapp text-lg w-5 text-green-500"></i> WhatsApp Group</a>
+                        <a href="https://facebook.com" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600 dark:text-gray-400 transition"><i class="fab fa-facebook text-lg w-5 text-blue-600"></i> Facebook Page</a>
+                        <a href="https://youtube.com" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 dark:text-gray-400 transition"><i class="fab fa-youtube text-lg w-5 text-red-500"></i> YouTube Channel</a>
+                        <a href="https://telegram.org" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-sky-50 hover:text-sky-600 dark:text-gray-400 transition"><i class="fab fa-telegram text-lg w-5 text-sky-500"></i> Telegram Channel</a>
+                        <a href="https://dccchurchkisesa.org" target="_blank" class="flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-gray-500 hover:bg-purple-50 hover:text-purple-600 dark:text-gray-400 transition"><i class="fas fa-globe text-lg w-5 text-purple-500"></i> Church Website</a>
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-center rounded-b-xl">
+                <p class="text-xs font-semibold text-gray-400">Offline Status</p>
+                <div class="flex items-center justify-center gap-1.5 text-emerald-500 text-xs font-medium mt-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Mfumo Uko Tayari
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-grow p-4 md:p-6 space-y-6 overflow-x-hidden" id="app-content">
+
+            <section id="tab-dashboard" class="tab-content space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h2 class="text-2xl font-bold tracking-tight">Dashboard Overview</h2>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Takwimu na ripoti za hivi punde za mfumo wa usajili.</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white dark:bg-gray-800 p-2 rounded-xl shadow-sm border dark:border-gray-700 text-xs font-medium">
+                        <i class="far fa-calendar-alt text-primary"></i> <span id="current-date-el"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Jumla Washirika</span><span class="p-2 bg-orange-50 dark:bg-gray-700 text-primary rounded-xl text-xs"><i class="fas fa-users"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-total">0</h3><p class="text-xs text-emerald-500 mt-1 font-medium"><i class="fas fa-arrow-up"></i> Wote waliosajiliwa</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Wanaume (Me)</span><span class="p-2 bg-sky-50 dark:bg-gray-700 text-sky-500 rounded-xl text-xs"><i class="fas fa-mars"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-me">0</h3><p class="text-xs text-gray-400 mt-1" id="pct-me">0% ya wote</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Wanawake (Ke)</span><span class="p-2 bg-pink-50 dark:bg-gray-700 text-pink-500 rounded-xl text-xs"><i class="fas fa-venus"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-ke">0</h3><p class="text-xs text-gray-400 mt-1" id="pct-ke">0% ya wote</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Jumla ya Idara</span><span class="p-2 bg-blue-50 dark:bg-gray-700 text-secondary rounded-xl text-xs"><i class="fas fa-sitemap"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold">4</h3><p class="text-xs text-gray-400 mt-1">Idara kuu</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Vituo vya CGN</span><span class="p-2 bg-purple-50 dark:bg-gray-700 text-purple-500 rounded-xl text-xs"><i class="fas fa-house-chimney text-xs"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold">4</h3><p class="text-xs text-gray-400 mt-1">Vituo vya nyumbani</p></div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between hover:shadow-md transition">
+                        <div class="flex items-center justify-between"><span class="text-xs text-gray-400 font-medium uppercase">Waliosajiliwa Leo</span><span class="p-2 bg-amber-50 dark:bg-gray-700 text-amber-500 rounded-xl text-xs"><i class="fas fa-user-plus text-xs"></i></span></div>
+                        <div class="mt-4"><h3 class="text-2xl font-bold" id="stat-today">0</h3><p class="text-xs text-amber-500 mt-1 font-medium">Siku ya leo</p></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-1">
+                        <h4 class="text-base font-bold mb-4 flex items-center gap-2"><i class="fas fa-chart-pie text-primary"></i> Mgawanyo wa Jinsia</h4>
+                        <div class="h-64 relative flex items-center justify-center">
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-2">
+                        <h4 class="text-base font-bold mb-4 flex items-center gap-2"><i class="fas fa-chart-bar text-secondary"></i> Takwimu za Washirika Kimatabaka / Idara</h4>
+                        <div class="h-64 relative">
+                            <canvas id="deptChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="text-base font-bold flex items-center gap-2"><i class="fas fa-history text-gray-500"></i> Shughuli za Hivi Punde za Usajili (Activity Logs)</h4>
+                            <span class="text-xs text-gray-400">Real-time update</span>
+                        </div>
+                        <div class="space-y-3 max-h-60 overflow-y-auto pr-2" id="activity-timeline">
+                            </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-base font-bold mb-2 flex items-center gap-2"><i class="fas fa-bolt text-amber-500"></i> Kitendo cha Haraka</h4>
+                            <p class="text-xs text-gray-400 mb-4">Anza mara moja kwa kusajili mshirika au kwenda kwenye upande wa SMS</p>
+                        </div>
+                        <div class="space-y-2">
+                            <button onclick="switchTab('washirika')" class="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white p-3 rounded-xl font-medium transition shadow-sm"><i class="fas fa-user-plus"></i> Sajili Mshirika Mpya</button>
+                            <button onclick="switchTab('bulksms')" class="w-full flex items-center justify-center gap-2 bg-secondary hover:bg-secondary-dark text-white p-3 rounded-xl font-medium transition shadow-sm"><i class="fas fa-paper-plane"></i> Tuma Ujumbe wa Kikundi (Bulk SMS)</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-washirika" class="tab-content hidden space-y-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <div class="flex items-center justify-between border-b dark:border-gray-700 pb-3 mb-4">
+                        <h3 class="text-lg font-bold flex items-center gap-2" id="form-title"><i class="fas fa-user-plus text-primary"></i> Fomu ya Usajili / Kuhariri Mshirika</h3>
+                        <span class="text-xs bg-gray-100 dark:bg-gray-700 px-2.5 py-1 rounded-lg text-gray-500 font-mono" id="auto-id-display">ID: ---</span>
+                    </div>
+
+                    <form id="member-form" onsubmit="saveMember(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="hidden" id="form-mode" value="create">
+                        <input type="hidden" id="edit-id" value="">
+                        
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Majina Kamili <span class="text-red-500">*</span></label>
+                            <input type="text" id="m-name" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary" placeholder="Mf. Juma Shabani">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Jinsi <span class="text-red-500">*</span></label>
+                            <select id="m-gender" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="" disabled selected>Chagua Jinsi</option>
+                                <option value="Me">Me (Mwanaume)</option>
+                                <option value="Ke">Ke (Mwanamke)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Namba ya Simu <span class="text-red-500">*</span></label>
+                            <input type="tel" id="m-phone" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary" placeholder="Mf. 0757344860">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Idara <span class="text-red-500">*</span></label>
+                            <select id="m-dept" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="" disabled selected>Chagua Idara</option>
+                                <option value="Vijana">Vijana</option>
+                                <option value="Wamama">Wamama</option>
+                                <option value="Wanaume">Wanaume</option>
+                                <option value="Watoto">Watoto</option>
+                                <option value="Mgeni">Mgeni</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Kituo cha CGN <span class="text-red-500">*</span></label>
+                            <select id="m-cgn" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="" disabled selected>Chagua Kituo</option>
+                                <option value="Kwa Mama Bhoke">Kwa Mama Bhoke</option>
+                                <option value="Kwa Mama Gift">Kwa Mama Gift</option>
+                                <option value="Kanisani">Kanisani</option>
+                                <option value="Online">Online</option>
+                                <option value="Mgeni">Mgeni</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Hali (Status) <span class="text-red-500">*</span></label>
+                            <select id="m-status" required class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-primary">
+                                <option value="Active" selected>Active</option>
+                                <option value="Inactive">Inactive</option>
+                                <option value="Mgeni">Mshirika Mgeni</option>
+                            </select>
+                        </div>
+
+                        <div class="md:col-span-3 flex flex-wrap gap-2 justify-end mt-2">
+                            <button type="button" onclick="resetForm()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-xs font-medium rounded-xl transition"><i class="fas fa-undo"></i> Reset</button>
+                            <button type="button" onclick="resetForm()" class="px-4 py-2 bg-rose-50 text-rose-600 hover:bg-rose-100 text-xs font-medium rounded-xl transition hidden" id="btn-cancel-edit"><i class="fas fa-times"></i> Cancel</button>
+                            <button type="submit" class="px-5 py-2 bg-gradient-to-r from-primary to-primary-light text-white text-xs font-semibold rounded-xl shadow-sm hover:opacity-90 transition" id="btn-submit-form"><i class="fas fa-save"></i> Hifadhi Mshirika</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800 border-b dark:border-gray-700 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-lg">Orodha ya Washirika Waliosajiliwa</h3>
+                            <p class="text-xs text-gray-400">Dhibiti, fanya utafutaji, na uhamishe (export) ripoti za washirika</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="exportData('csv')" class="px-3 py-1.5 bg-sky-50 dark:bg-gray-700 text-sky-600 dark:text-sky-300 text-xs font-medium rounded-xl hover:bg-sky-100 transition"><i class="fas fa-file-csv"></i> CSV</button>
+                            <button onclick="exportData('excel')" class="px-3 py-1.5 bg-emerald-50 dark:bg-gray-700 text-emerald-600 dark:text-emerald-300 text-xs font-medium rounded-xl hover:bg-emerald-100 transition"><i class="fas fa-file-excel"></i> Excel</button>
+                            <button onclick="window.print()" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs font-medium rounded-xl hover:bg-gray-200 transition"><i class="fas fa-print"></i> Print</button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 border-b dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex items-center gap-2 max-w-xs w-full">
+                            <div class="relative w-full">
+                                <i class="fas fa-search absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                                <input type="text" id="table-search" oninput="renderTable()" placeholder="Tafuta kwenye jedwali..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-gray-50 dark:bg-gray-700 rounded-lg border-0 focus:ring-2 focus:ring-primary">
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <label class="text-gray-400">Panga kwa:</label>
+                            <select id="table-sort" onchange="renderTable()" class="bg-gray-50 dark:bg-gray-700 rounded-lg border-0 p-1.5 focus:ring-2 focus:ring-primary">
+                                <option value="id-asc">ID (Kupanda)</option>
+                                <option value="id-desc" selected>ID (Kushuka)</option>
+                                <option value="name-asc">Majina (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm whitespace-nowrap">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-xs uppercase tracking-wider text-gray-400">
+                                <tr>
+                                    <th class="px-4 py-3">Na</th>
+                                    <th class="px-4 py-3">Majina</th>
+                                    <th class="px-4 py-3">Jinsi</th>
+                                    <th class="px-4 py-3">Simu</th>
+                                    <th class="px-4 py-3">Idara</th>
+                                    <th class="px-4 py-3">Kituo cha CGN</th>
+                                    <th class="px-4 py-3">Tarehe</th>
+                                    <th class="px-4 py-3">Status</th>
+                                    <th class="px-4 py-3 text-center">Vitendo (Actions)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="members-table-body" class="divide-y dark:divide-gray-700">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div id="table-empty-state" class="p-8 text-center hidden">
+                        <div class="text-gray-300 dark:text-gray-600 text-5xl mb-2"><i class="fas fa-folder-open"></i></div>
+                        <p class="font-medium text-gray-500">Hakuna mshirika aliyepatikana</p>
+                        <p class="text-xs text-gray-400">Hakikisha umeingiza vigezo sahihi au sajili washirika kwanza.</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-400">
+                        <span id="table-info-text">Inaonyesha 0 hadi 0 kati ya 0</span>
+                        <div class="flex items-center gap-1" id="table-pagination">
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-bulksms" class="tab-content hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                        <h3 class="font-bold text-base border-b dark:border-gray-700 pb-2 flex items-center gap-2 text-primary"><i class="fas fa-filter"></i> 1. Chuja Walengwa (Recipients Filter)</h3>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Jinsi</label>
+                            <select id="f-gender" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Wote (Me na Ke)</option>
+                                <option value="Me">Me pekee</option>
+                                <option value="Ke">Ke pekee</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Idara</label>
+                            <select id="f-dept" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Idara Zote</option>
+                                <option value="Vijana">Vijana</option>
+                                <option value="Wamama">Wamama</option>
+                                <option value="Wanaume">Wanaume</option>
+                                <option value="Watoto">Watoto</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Kituo cha CGN</label>
+                            <select id="f-cgn" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Vituo Vyote</option>
+                                <option value="Kwa Mama Bhoke">Kwa Mama Bhoke</option>
+                                <option value="Kwa Mama Gift">Kwa Mama Gift</option>
+                                <option value="Kanisani">Kanisani</option>
+                                <option value="Online">Online</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Chuja kwa Hali (Status)</label>
+                            <select id="f-status" onchange="updateSmsFilters()" class="w-full px-3 py-2 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 text-xs">
+                                <option value="Wote">Hali Zote</option>
+                                <option value="Active">Active Pekee</option>
+                                <option value="Inactive">Inactive Pekee</option>
+                            </select>
+                        </div>
+
+                        <div class="border-t dark:border-gray-700 pt-3">
+                            <div class="flex items-center justify-between text-xs mb-2">
+                                <span class="font-semibold uppercase tracking-wider text-gray-400">Mlipuko wa Walengwa (<span id="filtered-count">0</span>)</span>
+                                <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-primary"><input type="checkbox" id="sms-select-all" checked onchange="toggleSmsSelectAll(this.checked)" class="rounded text-primary focus:ring-primary"> Chagua Wote</label>
+                            </div>
+                            <div class="h-44 border rounded-xl bg-gray-50 dark:bg-gray-900 p-2 overflow-y-auto space-y-1.5 text-xs" id="recipient-preview-list">
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 lg:col-span-2 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b dark:border-gray-700 pb-2 mb-3 gap-2">
+                                <h3 class="font-bold text-base flex items-center gap-2 text-secondary"><i class="fas fa-envelope-open-text"></i> 2. Andika Ujumbe (Compose SMS)</h3>
+                                <div class="flex items-center gap-1">
+                                    <label class="text-xs text-gray-400">Kiolezo (Template):</label>
+                                    <select id="sms-template-select" onchange="loadSmsTemplate(this.value)" class="bg-gray-50 dark:bg-gray-700 rounded-lg p-1 text-xs font-medium border-0 focus:ring-1 focus:ring-secondary">
+                                        <option value="">-- Chagua Kiolezo --</option>
+                                        <option value="announcement">Matangazo ya Jumapili</option>
+                                        <option value="meeting">Kikao cha Idara</option>
+                                        <option value="prayer">Ombi la Maombi</option>
+                                        <option value="contribution">Kikumbusho cha Michango</option>
+                                        <option value="reminder">Ibada ya Jumapili</option>
+                                        <option value="invitation">Mwaliko wa Mkutano</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <textarea id="sms-message" oninput="countSmsChars(this.value)" rows="8" class="w-full p-3 border rounded-xl bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-secondary text-sm" placeholder="Andika ujumbe wako hapa kisha utume kwenda kwa washirika waliochaguliwa..."></textarea>
+                                <div class="flex items-center justify-between text-xs text-gray-400 px-1">
+                                    <span id="sms-char-counter">Herufi: 0 / 160 (Kurasa 0 za SMS)</span>
+                                    <span class="text-amber-500 font-medium"><i class="fas fa-info-circle"></i> Jina la mshirika litawekwa kiotomatiki ukitumia tag ya {JINA}</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-3 border border-dashed rounded-xl bg-slate-50 dark:bg-slate-900 text-xs">
+                                <span class="font-bold text-gray-400 block mb-1 uppercase tracking-wider"><i class="fas fa-eye"></i> Hakiki Muonekano (Live SMS Preview):</span>
+                                <div class="p-2.5 bg-white dark:bg-gray-800 rounded-lg shadow-inner max-w-sm border text-gray-600 dark:text-gray-300" id="sms-live-preview">
+                                    ...ujumbe wako utaonekana hapa...
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between border-t dark:border-gray-700 pt-4 gap-2">
+                            <div class="flex gap-2">
+                                <button onclick="clearSmsComposer()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-xs font-medium rounded-xl transition"><i class="fas fa-eraser"></i> Safisha</button>
+                                <button onclick="saveCustomTemplate()" class="px-4 py-2 bg-amber-50 text-amber-600 text-xs font-medium rounded-xl hover:bg-amber-100 transition"><i class="fas fa-bookmark"></i> Hifadhi Template</button>
+                            </div>
+                            <button onclick="triggerBulkSmsIntent()" class="px-6 py-2.5 bg-gradient-to-r from-primary to-orange-400 text-white text-xs font-bold rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition flex items-center gap-2"><i class="fas fa-paper-plane animate-bounce"></i> Tuma SMS Kupitia Simu Hii (Device SMS App)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="font-bold text-base mb-3 flex items-center gap-2"><i class="fas fa-clock-rotate-left text-gray-400"></i> Historia na Hali ya Utumaji wa SMS (SMS Delivery Status Logs)</h3>
+                    <div class="overflow-x-auto max-h-56">
+                        <table class="w-full text-left text-xs whitespace-nowrap">
+                            <thead class="bg-gray-50 dark:bg-gray-700 text-gray-400 font-semibold uppercase">
+                                <tr>
+                                    <th class="p-3">Muda / Tarehe</th>
+                                    <th class="p-3">Walengwa Kikundi</th>
+                                    <th class="p-3">Ujumbe / Maudhui</th>
+                                    <th class="p-3 text-center">Hali (Status)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="sms-history-log" class="divide-y dark:divide-gray-700">
+                                <tr>
+                                    <td colspan="4" class="p-4 text-center text-gray-400 italic">Hakuna historia ya utumaji iliyorekodiwa kwa sasa</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-reports" class="tab-content hidden space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold">Evaluation & Analytics Report</h2>
+                        <p class="text-xs text-gray-400">Ripoti ya kiutendaji, ulinganifu wa takwimu na ukuaji wa kanisa</p>
+                    </div>
+                    <button onclick="window.print()" class="px-4 py-2 bg-primary text-white text-xs font-medium rounded-xl shadow-sm"><i class="fas fa-download"></i> Pakua Ripoti Kamili</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-chart-pie text-sky-500"></i> Active vs Inactive Members</h4>
+                        <div class="h-48 flex items-center justify-center">
+                            <canvas id="statusReportChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-chart-line text-emerald-500"></i> Kituo chenye Watu Wengi (CGN Density)</h4>
+                        <div class="h-48 flex items-center justify-center">
+                            <canvas id="cgnReportChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col justify-between">
+                        <h4 class="font-bold text-sm border-b pb-2 mb-2"><i class="fas fa-list-check text-purple-500"></i> Muhtasari wa Mahesabu (Auto Calculations)</h4>
+                        <div class="space-y-2 text-xs" id="auto-calc-report-view">
+                            </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-settings" class="tab-content hidden space-y-6">
+                <h2 class="text-xl font-bold">Mfumo Mipangilio (System Settings)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                        <h3 class="font-bold text-base border-b pb-2"><i class="fas fa-database text-amber-500"></i> Usalama na Hifadhi ya Data (Data Backup)</h3>
+                        <p class="text-xs text-gray-400">Hakikisha unasafirisha na kuhifadhi nakala ya washirika wako mara kwa mara ili kuzuia upotevu wa taarifa.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="backupDatabase()" class="px-4 py-2 bg-primary text-white text-xs font-semibold rounded-xl transition"><i class="fas fa-download"></i> Export Database (JSON Backup)</button>
+                            <label class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-white text-xs font-semibold rounded-xl cursor-pointer transition flex items-center gap-1">
+                                <i class="fas fa-upload"></i> Restore Data <input type="file" id="restore-file-input" onchange="restoreDatabase(event)" class="hidden">
+                            </label>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="clearAllDataDatabase()" class="px-4 py-2 bg-rose-50 text-rose-600 text-xs font-medium rounded-xl hover:bg-rose-100 transition"><i class="fas fa-trash-can"></i> Futa Data Zote za Mfumo</button>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 space-y-4">
+                        <h3 class="font-bold text-base border-b pb-2"><i class="fas fa-church text-secondary"></i> Taarifa za Kanisa Kuu (Church Metadata)</h3>
+                        <div class="space-y-2 text-xs">
+                            <div><label class="block text-gray-400 mb-1">Jina la Kanisa</label><input type="text" readonly value="DCC CHURCH KISESA MWANZA" class="w-full p-2 border rounded-xl bg-gray-50 dark:bg-gray-700"></div>
+                            <div><label class="block text-gray-400 mb-1">Mchungaji Kiongozi (Pastor)</label><input type="text" readonly value="Pastor Aloyce" class="w-full p-2 border rounded-xl bg-gray-50 dark:bg-gray-700"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-about" class="tab-content hidden bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 text-center space-y-4 max-w-2xl mx-auto">
+                <div class="w-20 h-20 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center mx-auto text-white text-3xl shadow-md"><i class="fas fa-church"></i></div>
+                <h2 class="text-2xl font-bold">DCC CHURCH KISESA MWANZA MULT SMS SYSTEM</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">Mfumo huu wa kisasa umebuniwa na kutengenezwa mahususi kurahisisha mchakato wa kusajili taarifa za washirika wa Kanisa la DCC Kisesa Mwanza, na kuwapa uwezo viongozi kutuma ujumbe mwingi (Bulk SMS) kwa makundi maalum moja kwa moja kupitia app ya ujumbe iliyopo ndani ya simu zao pasipo kulipia gharama za ziada za SMS Gateway.</p>
+                <div class="border-t dark:border-gray-700 pt-4 grid grid-cols-2 gap-4 text-xs">
+                    <div><p class="text-gray-400">Mchungaji Kiongozi</p><p class="font-bold text-sm">Pastor Aloyce</p></div>
+                    <div><p class="text-gray-400">Msanidi wa Mfumo (Developer)</p><p class="font-bold text-sm">Pastor Aloyce</p></div>
+                    <div><p class="text-gray-400">Toleo la Mfumo (Version)</p><p class="font-bold text-sm">v2.1.0 (Modern Edition)</p></div>
+                    <div><p class="text-gray-400">Msaada / Mawasiliano</p><p class="font-bold text-sm text-primary">0757344860</p></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="bg-gradient-to-r from-primary-dark via-primary to-secondary text-white py-8 px-4 mt-auto">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+            <div class="space-y-2">
+                <h4 class="font-bold text-base tracking-wide">DCC CHURCH KISESA MWANZA</h4>
+                <p class="text-xs text-blue-100">MULT SMS SYSTEM & MEMBER REGISTER</p>
+                <p class="text-xs text-blue-50">Kazi, Huduma na Uhakika wa Mawasiliano ya Kisasa kwa Wakati.</p>
+            </div>
+            <div class="space-y-1 text-xs">
+                <p class="font-semibold uppercase tracking-wider text-emerald-300">Viongozi & Waendelezaji</p>
+                <p><span class="text-blue-200">Pastor:</span> Pastor Aloyce</p>
+                <p><span class="text-blue-200">Developer:</span> Pastor Aloyce</p>
+                <p><span class="text-blue-200">Simu:</span> <a href="tel:0757344860" class="underline">0757344860</a></p>
+                <p><span class="text-blue-200">Email:</span> info@dccchurchkisesa.org</p>
+            </div>
+            <div class="space-y-3">
+                <p class="text-xs font-semibold uppercase tracking-wider text-emerald-300">Fuata kurasa zetu</p>
+                <div class="flex items-center gap-3 text-lg">
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="hover:text-emerald-300 transition"><i class="fab fa-telegram"></i></a>
+                </div>
+                <p class="text-[10px] text-blue-200 pt-2">&copy; 2026 DCC Church Kisesa. Mifumo Yote Imelindwa.</p>
+            </div>
+        </div>
+    </footer>
+
+ <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+<script>
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans p-4 md:p-8 transition-colors duration-300 text-base">
+
+    <div id="toast-container" class="fixed top-4 right-4 z-50 max-w-sm w-full pointer-events-none flex flex-col items-end"></div>
+
+    <div id="loader" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center transition-opacity duration-500">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mfumo wa DCC - Washirika</h1>
+                <p id="current-date-el" class="text-sm text-gray-500 dark:text-gray-400 font-medium"></p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="cycleFontSize()" class="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600">
+                    <i class="fas fa-font mr-1"></i> <span id="font-size-label">A</span>
+                </button>
+                <button onclick="toggleTheme()" class="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 text-lg">
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md h-fit">
+                <h2 id="form-title" class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-user-plus text-primary"></i> Fomu ya Usajili / Kuhariri Mshirika
+                </h2>
+                <div id="auto-id-display" class="mb-4 text-xs font-mono bg-gray-100 dark:bg-gray-700 px-2.5 py-1 rounded w-fit text-gray-600 dark:text-gray-300">ID: ...</div>
+                
+                <form id="member-form" onsubmit="saveMember(event)" class="space-y-4">
+                    <input type="hidden" id="form-mode" value="create">
+                    <input type="hidden" id="edit-id" value="">
+                    <input type="hidden" id="firebase-key" value="">
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Majina Kamili *</label>
+                        <input type="text" id="m-name" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary" placeholder="Mf. Yohana Juma">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider mb-1">Jinsia *</label>
+                            <select id="m-gender" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary">
+                                <option value="Me">Mwanaume (Me)</option>
+                                <option value="Ke">Mwanamke (Ke)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider mb-1">Namba ya Simu *</label>
+                            <input type="tel" id="m-phone" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary" placeholder="07xxxxxxxx">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Idara / Kitengo *</label>
+                        <select id="m-dept" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary">
+                            <option value="Sifa na Kuabudu">Sifa na Kuabudu</option>
+                            <option value="Ushauri na Maombezi">Ushauri na Maombezi</option>
+                            <option value="Ukaribisho">Ukaribisho</option>
+                            <option value="Watoto">Kanisa la Watoto</option>
+                            <option value="Hakuna">Sipo Kwenye Idara</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Kikundi cha Nyumbani *</label>
+                        <input type="text" id="m-cgn" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary" placeholder="Mf. Shilo, Bethania">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Hali (Status) *</label>
+                        <select id="m-status" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" id="btn-submit-form" class="flex-1 bg-primary text-white p-2.5 rounded font-bold hover:bg-emerald-600 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i> Hifadhi Mshirika
+                        </button>
+                        <button type="button" id="btn-cancel-edit" onclick="resetForm()" class="hidden bg-gray-500 text-white p-2.5 rounded font-bold hover:bg-gray-600 transition">
+                            Ghairi
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md lg:col-span-2 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fas fa-users text-primary"></i> Orodha ya Washirika Wetu
+                    </h2>
+                    
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <input type="text" id="table-search" onkeyup="renderTable()" class="p-2 text-sm rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary w-full sm:w-48" placeholder="Tafuta hapa...">
+                        <select id="table-sort" onchange="renderTable()" class="p-2 text-sm rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none">
+                            <option value="id-asc">ID (Chini kwenda Juu)</option>
+                            <option value="id-desc">ID (Juu kwenda Chini)</option>
+                            <option value="name-asc">Jina (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-100 dark:border-gray-700">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-700 text-xs uppercase tracking-wider font-bold">
+                                <th class="px-4 py-3">ID</th>
+                                <th class="px-4 py-3">Majina Kamili</th>
+                                <th class="px-4 py-3">Jinsia</th>
+                                <th class="px-4 py-3">Namba ya Simu</th>
+                                <th class="px-4 py-3">Idara</th>
+                                <th class="px-4 py-3">Kikundi</th>
+                                <th class="px-4 py-3">Tarehe</th>
+                                <th class="px-4 py-3">Hali</th>
+                                <th class="px-4 py-3 text-center">Vitendo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-table-body" class="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="table-empty-state" class="hidden text-center py-12 text-gray-400">
+                    <i class="fas fa-folder-open text-4xl mb-2 block"></i>
+                    Hakuna mshirika aliyepatikana kwa sasa.
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2 text-xs text-gray-500 dark:text-gray-400">
+                    <div id="table-info-text">Inaonyesha 0 hadi 0 kati ya 0</div>
+                    <div id="table-pagination" class="flex gap-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <select id="f-gender" class="hidden"><option value="Wote">Wote</option></select>
+    <select id="f-dept" class="hidden"><option value="Wote">Wote</option></select>
+    <select id="f-cgn" class="hidden"><option value="Wote">Wote</option></select>
+    <select id="f-status" class="hidden"><option value="Wote">Wote</option></select>
+    <div id="filtered-count" class="hidden">0</div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+   </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans p-4 md:p-8 transition-colors duration-300 text-base">
+
+    <div id="toast-container" class="fixed top-4 right-4 z-50 max-w-sm w-full pointer-events-none flex flex-col items-end"></div>
+
+    <div id="loader" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex items-center justify-center transition-opacity duration-500">
+        <div class="flex flex-col items-center gap-3">
+            <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">Inafungua mfumo, tafadhali subiri...</p>
+        </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mfumo wa DCC - Washirika</h1>
+                <p id="current-date-el" class="text-sm text-gray-500 dark:text-gray-400 font-medium"></p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="cycleFontSize()" class="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600">
+                    <i class="fas fa-font mr-1"></i> <span id="font-size-label">A</span>
+                </button>
+                <button onclick="toggleTheme()" class="p-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 text-lg">
+                    <i id="theme-icon" class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md h-fit">
+                <h2 id="form-title" class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <i class="fas fa-user-plus text-primary"></i> Fomu ya Usajili / Kuhariri Mshirika
+                </h2>
+                <div id="auto-id-display" class="mb-4 text-xs font-mono bg-gray-100 dark:bg-gray-700 px-2.5 py-1 rounded w-fit text-gray-600 dark:text-gray-300">ID: ...</div>
+                
+                <form id="member-form" onsubmit="saveMember(event)" class="space-y-4">
+                    <input type="hidden" id="form-mode" value="create">
+                    <input type="hidden" id="edit-id" value="">
+                    <input type="hidden" id="firebase-key" value="">
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Majina Kamili *</label>
+                        <input type="text" id="m-name" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary" placeholder="Mf. Yohana Juma">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider mb-1">Jinsia *</label>
+                            <select id="m-gender" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary">
+                                <option value="Me">Mwanaume (Me)</option>
+                                <option value="Ke">Mwanamke (Ke)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase tracking-wider mb-1">Namba ya Simu *</label>
+                            <input type="tel" id="m-phone" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary" placeholder="07xxxxxxxx">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Idara / Kitengo *</label>
+                        <select id="m-dept" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary">
+                            <option value="Sifa na Kuabudu">Sifa na Kuabudu</option>
+                            <option value="Ushauri na Maombezi">Ushauri na Maombezi</option>
+                            <option value="Ukaribisho">Ukaribisho</option>
+                            <option value="Watoto">Kanisa la Watoto</option>
+                            <option value="Hakuna">Sipo Kwenye Idara</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Kikundi cha Nyumbani *</label>
+                        <input type="text" id="m-cgn" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary" placeholder="Mf. Shilo, Bethania">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-1">Hali (Status) *</label>
+                        <select id="m-status" class="w-full p-2.5 rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" id="btn-submit-form" class="flex-1 bg-primary text-white p-2.5 rounded font-bold hover:bg-emerald-600 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i> Hifadhi Mshirika
+                        </button>
+                        <button type="button" id="btn-cancel-edit" onclick="resetForm()" class="hidden bg-gray-500 text-white p-2.5 rounded font-bold hover:bg-gray-600 transition">
+                            Ghairi
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md lg:col-span-2 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <h2 class="text-lg font-bold flex items-center gap-2">
+                        <i class="fas fa-users text-primary"></i> Orodha ya Washirika Wetu
+                    </h2>
+                    
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <input type="text" id="table-search" onkeyup="renderTable()" class="p-2 text-sm rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none focus:border-primary w-full sm:w-48" placeholder="Tafuta hapa...">
+                        <select id="table-sort" onchange="renderTable()" class="p-2 text-sm rounded bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 focus:outline-none">
+                            <option value="id-asc">ID (Chini kwenda Juu)</option>
+                            <option value="id-desc">ID (Juu kwenda Chini)</option>
+                            <option value="name-asc">Jina (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-100 dark:border-gray-700">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 dark:bg-gray-700 text-xs uppercase tracking-wider font-bold">
+                                <th class="px-4 py-3">ID</th>
+                                <th class="px-4 py-3">Majina Kamili</th>
+                                <th class="px-4 py-3">Jinsia</th>
+                                <th class="px-4 py-3">Namba ya Simu</th>
+                                <th class="px-4 py-3">Idara</th>
+                                <th class="px-4 py-3">Kikundi</th>
+                                <th class="px-4 py-3">Tarehe</th>
+                                <th class="px-4 py-3">Hali</th>
+                                <th class="px-4 py-3 text-center">Vitendo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="members-table-body" class="divide-y divide-gray-100 dark:divide-gray-700 text-sm">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="table-empty-state" class="hidden text-center py-12 text-gray-400">
+                    <i class="fas fa-folder-open text-4xl mb-2 block"></i>
+                    Hakuna mshirika aliyepatikana kwa sasa.
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2 text-xs text-gray-500 dark:text-gray-400">
+                    <div id="table-info-text">Inaonyesha 0 hadi 0 kati ya 0</div>
+                    <div id="table-pagination" class="flex gap-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <select id="f-gender" class="hidden"><option value="Wote">Wote</option></select>
+    <select id="f-dept" class="hidden"><option value="Wote">Wote</option></select>
+    <select id="f-cgn" class="hidden"><option value="Wote">Wote</option></select>
+    <select id="f-status" class="hidden"><option value="Wote">Wote</option></select>
+    <div id="filtered-count" class="hidden">0</div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCv01cdwWFqeDcvMAkILY3K4G8yKJWwL6k",
+            authDomain: "pastoraloyce-3530f.firebaseapp.com",
+            projectId: "pastoraloyce-3530f",
+            storageBucket: "pastoraloyce-3530f.firebasestorage.app",
+            messagingSenderId: "978341477941",
+            appId: "1:978341477941:web:289e3b0671f00e52907b7c",
+            measurementId: "G-XYK8ZL0JSJ"
+        };
+
+        // Washa Firebase na Realtime Database
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let members = [];
+        let currentFontSizeIndex = 1; 
+        const fontSizes = ['text-sm', 'text-base', 'text-lg'];
+
+        // INITIALIZER ON APP LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            const dateEl = document.getElementById('current-date-el');
+            if(dateEl) {
+                dateEl.innerText = new Date().toLocaleDateString('sw-TZ', { 
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                });
+            }
+
+            // Anza kusikiliza Firebase Live
+            listenToFirebase();
+
+            // USALAMA: Ondoa loader baada ya sekunde 3.5 hata kama Firebase ikichelewa ili mfumo usikwame
+            setTimeout(() => {
+                removeLoader();
+            }, 3500);
+        });
+
+        // FUNCTION YA KUONDOA KIOO CHA LOADING
+        function removeLoader() {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.classList.add('opacity-0');
+                setTimeout(() => loader.remove(), 500);
+            }
+        }
+
+        // LIVE DATABASE SYNC
+        function listenToFirebase() {
+            database.ref('members').on('value', (snapshot) => {
+                const data = snapshot.val();
+                members = []; // Safisha mseto wa zamani kuzuia duplicates
+                
+                if (data) {
+                    for (let key in data) {
+                        members.push({
+                            firebaseKey: key, 
+                            ...data[key]
+                        });
+                    }
+                }
+                
+                // Sasisha meza ya orodha na fomu upya
+                renderTable();
+                generateAutoId();
+                removeLoader(); // Toa loader mara baada ya kupata data kwa mafanikio
+            }, (error) => {
+                console.error("Uvutaji wa data umefeli: ", error);
+                removeLoader(); // Toa loader hata ikifeli ili uweze kuona mfumo
+                showToast("Shalom mtu wa Mungu, hakuna ruhusa ya kufikia database au mtandao unasumbua. Tafadhali kagua 'Rules' kule Firebase.", "error");
+            });
+        }
+
+        // GENERATE AUTO INCREMENT ID
+        function generateAutoId() {
+            const id = members.length > 0 ? Math.max(...members.map(m => m.id)) + 1 : 1001;
+            const idDisplay = document.getElementById('auto-id-display');
+            if(idDisplay && document.getElementById('form-mode').value === 'create') {
+                idDisplay.innerText = `ID ya Usajili Inayofuata: ${id}`;
+            }
+            return id;
+        }
+
+        // SAVE & UPDATE DATA IN FIREBASE
+        function saveMember(e) {
+            e.preventDefault();
+            const mode = document.getElementById('form-mode').value;
+            const name = document.getElementById('m-name').value.trim();
+            const gender = document.getElementById('m-gender').value;
+            const phone = document.getElementById('m-phone').value.trim();
+            const dept = document.getElementById('m-dept').value;
+            const cgn = document.getElementById('m-cgn').value;
+            const status = document.getElementById('m-status').value;
+
+            if(!name || !gender || !phone || !dept || !cgn) {
+                showToast("Tafadhali jaza nyanja zote zenye nyota (*)", "error");
+                return;
+            }
+            if(phone.length < 10) {
+                showToast("Namba ya simu haina urefu sahihi!", "error");
+                return;
+            }
+
+            if(mode === 'create') {
+                // Kuzuia namba kujirudia
+                if(members.some(m => m.phone === phone)) {
+                    showToast(`Namba ya simu ${phone} tayari ipo kwa mshirika mwingine!`, "error");
+                    return;
+                }
+                
+                const newId = generateAutoId();
+                const todayStr = new Date().toISOString().split('T')[0];
+                const newMember = { id: newId, name, gender, phone, dept, cgn, date: todayStr, status };
+
+                // Sukuma kwenda Firebase Database
+                database.ref('members').push(newMember)
+                    .then(() => {
+                        showToast(`Shalom mtu wa Mungu, ${name} amesajiliwa kikamilifu mtandaoni! - By Pastor Aloyce`, "success");
+                        resetForm();
+                    })
+                    .catch((error) => {
+                        showToast("Imeshindwa kuhifadhi: " + error.message, "error");
+                    });
+
+            } else {
+                // Update Mode
+                const editId = parseInt(document.getElementById('edit-id').value);
+                const firebaseKey = document.getElementById('firebase-key').value;
+
+                if(members.some(m => m.phone === phone && m.id !== editId)) {
+                    showToast(`Namba ya simu ${phone} inatumiwa na mtu mwingine!`, "error");
+                    return;
+                }
+
+                const updatedMember = { name, gender, phone, dept, cgn, status };
+
+                database.ref('members/' + firebaseKey).update(updatedMember)
+                    .then(() => {
+                        showToast(`Shalom mtu wa Mungu, taarifa za ${name} zimeboreshwa vyema mtandaoni. - By Pastor Aloyce`, "success");
+                        resetForm();
+                    })
+                    .catch((error) => {
+                        showToast("Imeshindwa kusasisha: " + error.message, "error");
+                    });
+            }
+        }
+
+        // EDIT ACTION TRIGGERED VIA ROW BUTTON
+        function editMember(id) {
+            const m = members.find(m => m.id === id);
+            if(!m) return;
+            
+            document.getElementById('form-mode').value = 'edit';
+            document.getElementById('edit-id').value = m.id;
+            document.getElementById('firebase-key').value = m.firebaseKey;
+            
+            document.getElementById('auto-id-display').innerText = `Kuhariri Mshirika ID: ${m.id}`;
+            document.getElementById('m-name').value = m.name;
+            document.getElementById('m-gender').value = m.gender;
+            document.getElementById('m-phone').value = m.phone;
+            document.getElementById('m-dept').value = m.dept;
+            document.getElementById('m-cgn').value = m.cgn;
+            document.getElementById('m-status').value = m.status;
+
+            document.getElementById('form-title').innerHTML = `<i class="fas fa-user-edit text-secondary"></i> Hariri Taarifa za Mshirika`;
+            document.getElementById('btn-submit-form').innerHTML = `<i class="fas fa-check-double"></i> Sasisha Taarifa`;
+            document.getElementById('btn-cancel-edit').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // DELETE ENTIRE RECORD FROM FIREBASE
+        function deleteMember(id) {
+            const m = members.find(m => m.id === id);
+            if(!m) return;
+            if(confirm(`Je, una uhakika unataka kumfuta mshirika huyu: ${m.name}? Kitendo hiki hakirudi nyuma.`)) {
+                database.ref('members/' + m.firebaseKey).remove()
+                    .then(() => {
+                        showToast("Mshirika amefutwa kabisa kwenye mfumo mtandaoni.", "info");
+                    })
+                    .catch((error) => {
+                        showToast("Imeshindwa kufuta: " + error.message, "error");
+                    });
+            }
+        }
+
+        // RESET FORM FIELD LOGIC
+        function resetForm() {
+            document.getElementById('member-form').reset();
+            document.getElementById('form-mode').value = 'create';
+            document.getElementById('edit-id').value = "";
+            document.getElementById('firebase-key').value = "";
+            document.getElementById('form-title').innerHTML = `<i class="fas fa-user-plus text-primary"></i> Fomu ya Usajili / Kuhariri Mshirika`;
+            document.getElementById('btn-submit-form').innerHTML = `<i class="fas fa-save"></i> Hifadhi Mshirika`;
+            document.getElementById('btn-cancel-edit').classList.add('hidden');
+            generateAutoId();
+        }
+
+        // RENDER TABLE FUNCTION WITH SEARCH AND SORT
+        let tablePage = 1;
+        const rowsPerPage = 10;
+
+        function renderTable() {
+            const tBody = document.getElementById('members-table-body');
+            if(!tBody) return;
+            
+            const searchVal = document.getElementById('table-search').value.trim().toLowerCase();
+            const sortVal = document.getElementById('table-sort').value;
+            
+            let filtered = members.filter(m => {
+                return searchVal === "" || 
+                    m.name.toLowerCase().includes(searchVal) || 
+                    m.phone.includes(searchVal) || 
+                    m.dept.toLowerCase().includes(searchVal) || 
+                    m.cgn.toLowerCase().includes(searchVal);
+            });
+
+            // Sorting Logics
+            if(sortVal === 'id-asc') filtered.sort((a,b) => a.id - b.id);
+            if(sortVal === 'id-desc') filtered.sort((a,b) => b.id - a.id);
+            if(sortVal === 'name-asc') filtered.sort((a,b) => a.name.localeCompare(b.name));
+
+            const totalItems = filtered.length;
+            const emptyState = document.getElementById('table-empty-state');
+            const infoText = document.getElementById('table-info-text');
+            const pagination = document.getElementById('table-pagination');
+
+            if(totalItems === 0) {
+                if(emptyState) emptyState.classList.remove('hidden');
+                tBody.innerHTML = "";
+                if(infoText) infoText.innerText = "Inaonyesha 0 hadi 0 kati ya 0";
+                if(pagination) pagination.innerHTML = "";
+                return;
+            } else {
+                if(emptyState) emptyState.classList.add('hidden');
+            }
+
+            const totalPages = Math.ceil(totalItems / rowsPerPage);
+            if(tablePage > totalPages) tablePage = totalPages || 1;
+            
+            const startIdx = (tablePage - 1) * rowsPerPage;
+            const endIdx = Math.min(startIdx + rowsPerPage, totalItems);
+            const paginatedItems = filtered.slice(startIdx, endIdx);
+
+            tBody.innerHTML = paginatedItems.map(m => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+                    <td class="px-4 py-2.5 font-mono text-xs font-semibold">${m.id}</td>
+                    <td class="px-4 py-2.5 font-medium">${m.name}</td>
+                    <td class="px-4 py-2.5">
+                        <span class="px-2 py-0.5 rounded-md text-xs font-medium ${m.gender==='Me'?'bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-400':'bg-pink-50 text-pink-600 dark:bg-pink-950/50 dark:text-pink-400'}">
+                            ${m.gender}
+                        </span>
+                    </td>
+                    <td class="px-4 py-2.5 font-mono text-xs">${m.phone}</td>
+                    <td class="px-4 py-2.5 text-xs">${m.dept}</td>
+                    <td class="px-4 py-2.5 text-xs text-gray-500 dark:text-gray-400">${m.cgn}</td>
+                    <td class="px-4 py-2.5 text-xs text-gray-400">${m.date}</td>
+                    <td class="px-4 py-2.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${m.status==='Active'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'}">
+                            ${m.status}
+                        </span>
+                    </td>
+                    <td class="px-4 py-2.5 text-center flex items-center justify-center gap-1.5">
+                        <a href="tel:${m.phone}" class="p-1 text-blue-500 rounded text-xs hover:bg-gray-100 dark:hover:bg-gray-600" title="Piga Simu"><i class="fas fa-phone"></i></a>
+                        <button onclick="editMember(${m.id})" class="p-1 text-amber-500 rounded text-xs hover:bg-gray-100 dark:hover:bg-gray-600" title="Hariri"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteMember(${m.id})" class="p-1 text-rose-500 rounded text-xs hover:bg-gray-100 dark:hover:bg-gray-600" title="Futa"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            if(infoText) infoText.innerText = `Inaonyesha ${startIdx + 1} hadi ${endIdx} kati ya ${totalItems}`;
+            
+            let pagHTML = "";
+            for(let i=1; i<=totalPages; i++) {
+                pagHTML += `<button onclick="goToTablePage(${i})" class="px-2.5 py-1 rounded ${tablePage === i ? 'bg-primary text-white font-bold' : 'bg-gray-100 dark:bg-gray-700 text-gray-600'}">${i}</button>`;
+            }
+            if(pagination) pagination.innerHTML = pagHTML;
+        }
+
+        function goToTablePage(p) {
+            tablePage = p;
+            renderTable();
+        }
+
+        // ACCESSIBILITY & CONTROLLERS (Theme / Font Size)
+        function cycleFontSize() {
+            const body = document.body;
+            fontSizes.forEach(f => body.classList.remove(f));
+            currentFontSizeIndex = (currentFontSizeIndex + 1) % fontSizes.length;
+            body.classList.add(fontSizes[currentFontSizeIndex]);
+            
+            const labels = ['A-', 'A', 'A+'];
+            document.getElementById('font-size-label').innerText = labels[currentFontSizeIndex];
+            showToast(`Ukubwa wa maandishi umebadilishwa.`, 'info');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if(html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = "fas fa-moon";
+            } else {
+                html.classList.add('dark');
+                icon.className = "fas fa-sun";
+            }
+        }
+
+        // LIVE TOAST BANNER NOTIFICATION SYSTEM
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if(!container) { alert(message); return; }
+            
+            const toast = document.createElement('div');
+            toast.className = `p-4 mb-2 rounded-xl shadow-xl border text-sm font-medium transition duration-300 w-80 transform translate-y-0 opacity-100 pointer-events-auto flex items-start gap-3 
+                ${type === 'success' ? 'bg-emerald-50 dark:bg-emerald-950 border-emerald-500 text-emerald-800 dark:text-emerald-200' : 
+                  type === 'error' ? 'bg-rose-50 dark:bg-rose-950 border-rose-500 text-rose-800 dark:text-rose-200' : 
+                  'bg-blue-50 dark:bg-blue-950 border-blue-500 text-blue-800 dark:text-blue-200'}`;
+            
+            const icon = type === 'success' ? 'fa-circle-check text-emerald-500' : type === 'error' ? 'fa-circle-xmark text-rose-500' : 'fa-circle-info text-blue-500';
+            
+            toast.innerHTML = `<i class="fas ${icon} mt-0.5 text-base"></i> <div>${message}</div>`;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
+
