@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kozi: Baba wa Kiroho - Disciples Community Church</title>
+    <style>
+        /* Mipangilio ya Awali (Reset & Fonts) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f7fafc;
+            color: #2d3748;
+            padding-top: 70px; /* Inazuia navbar isifunike maudhui */
+        }
+
+        /* 1. Muundo wa Navbar ya Kisasa */
+        .navbar {
+            background-color: #1a365d; /* Bluu ya Kifalme */
+            border-bottom: 3px solid #d69e2e; /* Dhahabu */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .navbar-brand {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar-brand span {
+            color: #d69e2e;
+        }
+
+        .navbar-menu {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .navbar-menu a {
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .navbar-menu a:hover {
+            color: #d69e2e; /* Inabadilika kuwa dhahabu ikiguswa */
+        }
+
+        /* Banner ya Juu (Hero Section) */
+        .hero-section {
+            background-color: #2b6cb0;
+            background-image: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 60px 20px;
+            border-bottom: 4px solid #d69e2e;
+        }
+
+        .hero-section h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .hero-section p {
+            color: #e2e8f0;
+            font-size: 16px;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Container Kuu */
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        /* 2. Container ya Profaili ya Pastor Aloyce */
+        .pastor-container {
+            background-color: #ffffff;
+            border: 2px solid #d69e2e;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .pastor-image-wrapper {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%; /* Inafanya picha iwe ya duara */
+            border: 4px solid #d69e2e;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            flex-shrink: 0;
+        }
+
+        .pastor-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .pastor-info h2 {
+            color: #1a365d;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .pastor-church {
+            color: #b7791f;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .pastor-bio {
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .pastor-contact {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f7fafc;
+            border: 1px dashed #d69e2e;
+            padding: 8px 15px;
+            border-radius: 6px;
+            color: #1a365d;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .pastor-contact span {
+            margin-right: 8px;
+        }
+
+        /* Mpangilio wa Grid ya Moduli */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* Muundo wa Kadi ya Moduli */
+        .module-card {
+            background-color: #ffffff;
+            border: 2px solid #d69e2e;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(26, 54, 93, 0.1);
+        }
+
+        /* Sehemu ya jina la Pastor Aloyce juu ya kila kadi */
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #718096;
+            font-weight: 600;
+        }
+
+        .pastor-badge {
+            background-color: #ebf8ff;
+            color: #2b6cb0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #bee3f8;
+        }
+
+        .module-card h3 {
+            color: #2b6cb0;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .module-card ul {
+            list-style-type: none;
+            margin-bottom: 20px;
+        }
+
+        .module-card ul li {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.5;
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .module-card ul li::before {
+            content: "•";
+            color: #d69e2e;
+            font-weight: bold;
+            display: inline-block;
+            width: 15px;
+            margin-left: -15px;
+        }
+
+        .module-card p {
+            font-size: 14px;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Button ya Kusoma Moduli */
+        .module-link {
+            display: block;
+            text-align: center;
+            background-color: #1a365d;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 6px rgba(26, 54, 93, 0.15);
+            margin-top: auto;
+        }
+
+        .module-link:hover {
+            background-color: #2b6cb0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #718096;
+            font-size: 14px;
+            background-color: #edf2f7;
+            margin-top: 60px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Responsive kwa ajili ya Simu */
+        @media (max-width: 768px) {
+            .pastor-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+            .pastor-image-wrapper {
+                width: 140px;
+                height: 140px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-section h1 { font-size: 26px; }
+            .modules-grid { grid-template-columns: 1fr; }
+            .navbar-menu { display: none; } /* Inaficha menu za kawaida kwenye simu kwa usafi */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVBAR YA JUU -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="navbar-brand">Disciples Community <span>Church</span></a>
+            <ul class="navbar-menu">
+                <li><a href="#">Mwanzo</a></li>
+                <li><a href="#pastor">Kuhusu Mkufunzi</a></li>
+                <li><a href="#masomo">Moduli za Kozi</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- BANNER KUU -->
+    <header class="hero-section">
+        <h1>Kozi ya Tatu: Baba wa Kiroho</h1>
+        <p>Gundua siri za malezi, nidhamu, protokali, na namna sahihi ya kurithi urithi wa kiroho na kupokea upako kupitia misingi ya Kibiblia.</p>
+    </header>
+
+    <main class="main-container">
+
+        <!-- 2. CONTAINER YA PASTOR ALOYCE -->
+        <section class="pastor-container" id="pastor">
+            <div class="pastor-image-wrapper">
+                <img src="https://i.ibb.co/DHZk949w/549523780-3661567680646400-5204043858758619736-n.jpg" alt="Pastor Aloyce" class="pastor-image">
+            </div>
+            <div class="pastor-info">
+                <h2>Pastor Aloyce</h2>
+                <div class="pastor-church">Disciples Community Church, Kisesa Mwanza</div>
+                <p class="pastor-bio">Karibu kwenye darasa hili la kiroho. Kupitia kozi hii ya Baba wa Kiroho, utajifunza protokali, nidhamu, na misingi thabiti ya kiungu itakayokusaidia kukua, kulindwa, na kurithi upako sahihi kwa ajili ya hatua yako ijayo ya huduma na maisha.</p>
+                <a href="tel:0757344860" class="pastor-contact">
+                    <span>📞</span> Mpigie: 0757 344 860
+                </a>
+            </div>
+        </section>
+
+        <!-- GRID YA MODULI/SURA ZOTE -->
+        <section class="modules-grid" id="masomo">
+
+            <!-- UTANGULIZI -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>UTANGULIZI</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Utangulizi wa Kozi</h3>
+                <p>Ufahamu wa msingi kuhusu umuhimu wa somo la Ubaba wa Kiroho na namna litakavyobadilisha maisha yako ya kiroho na huduma.</p>
+                <a href="babawakirohoutangulizi.html" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 1 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 1</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Dhana ya Ubaba wa Kiroho</h3>
+                <ul>
+                    <li>Tofauti kati ya Mwalimu, Kiongozi, na Baba.</li>
+                    <li>Chimbuko la Ubaba: Mungu kama mfano wa kwanza.</li>
+                    <li>Kwa nini kila mwana anahitaji madhabahu ya kuunganishwa nayo?</li>
+                </ul>
+                <a href="babawakirohomoduliyakwanza.html" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 2 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 2</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Msingi wa Kibiblia wa Malezi ya Kiroho</h3>
+                <ul>
+                    <li>Mfano wa Eliya na Elisha: Siri ya kufuata hadi mwisho.</li>
+                    <li>Paulo na Timotheo: Kuzaa watoto katika kifungo na katika injili.</li>
+                    <li>Yesu na Wanafunzi wake: Kuishi maisha kama darasa la huduma.</li>
+                </ul>
+                <a href="babawakirohomoduliyapili.html" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 3 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 3</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Jinsi ya Kumtambua Baba Yako wa Kiroho</h3>
+                <ul>
+                    <li>Sauti unayoitii na Roho unayofungamana nayo.</li>
+                    <li>Vigezo vya Baba wa kweli: Upendo, Maono, na Nidhamu.</li>
+                    <li>Hatari za "Yatima wa Kiroho" na "Manabii wa Kutanga-tanga."</li>
+                </ul>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 4 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 4</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Protokali na Nidhamu kwa Baba wa Kiroho</h3>
+                <ul>
+                    <li>Heshima (Honor): Ufunguo wa kuvuta upako.</li>
+                    <li>Huduma (Service): Jinsi ya kushika mikono ya Musa ili ushinde vita.</li>
+                    <li>Uaminifu katika mambo madogo and siri za huduma.</li>
+                </ul>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 5 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 5</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Mchakato wa Kufuliwa (The Refining Process)</h3>
+                <ul>
+                    <li>Kukubali marekebisho na mapigo ya upendo ya baba.</li>
+                    <li>Kushinda majaribu ya moyo: Kiburi, mashindano, na haraka ya kutaka kujitegemea.</li>
+                    <li>Kukaa chini ya mamlaka hata wakati huoni matokeo ya haraka.</li>
+                </ul>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 6 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 6</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Kurithi Upako na Urithi wa Kiroho</h3>
+                <ul>
+                    <li>Jinsi urithi unavyopokelewa (Haupiganiwi, unatunukiwa).</li>
+                    <li>Siri ya vazi la Eliya: Kumiliki kile ambacho baba amekijenga.</li>
+                    <li>Kuendeleza maono badala ya kuanzisha mapya yasiyo na msingi.</li>
+                </ul>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 7 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 7</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Kutoka Mtoto hadi Kuwa Baba</h3>
+                <ul>
+                    <li>Mzunguko wa uzazi wa kiroho.</li>
+                    <li>Maandalizi ya kuandaa kizazi kijacho (Disciples Community Church Vision).</li>
+                    <li>Wajibu wa baba kwa watoto wake wa kiroho.</li>
+                </ul>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 8 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 8</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Mambo ya Kuepuka kwa Baba Yako wa Kiroho</h3>
+                <p>Jifunze mitego, makosa, na tabia hatari zinazoweza kuharibu uhusiano wako wa kiroho na kusababisha upoteze baraka na upako.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 9 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 9</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Kwa Nini Kizazi cha Sasa Kinakimbia Malezi ya Kiroho?</h3>
+                <p>Uchambuzi wa kina kuhusu changamoto, uasi, na fikra za kisasa zinazofanya vijana wengi kukataa kukaa chini ya mamlaka.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 10 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 10</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Namna Bora ya Kujenga Mahusiano na Baba Yako wa Kiroho</h3>
+                <p>Mbinu za vitendo na za kimaandiko zitakazokusaidia kuunganishwa vyema na moyo wa baba yako kwa ajili ya ustawi wako.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 11 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 11</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Namna Sahihi ya Kufuata Maelekezo ya Baba wa Kiroho</h3>
+                <p>Kujifunze utii kamili, unyenyekevu, na namna ya kutekeleza maagizo ya kiroho hata pale yanapoonekana kuwa magumu.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 12 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 12</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Hatari za Baba wa Kiroho Wasio Sahihi</h3>
+                <p>Utambuzi wa ishara za hatari (red flags) kwa viongozi wasio sahihi au wenye nia mbaya na jinsi ya kujilinda kiroho.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 13 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 13</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Mashujaa wa Biblia na Baba Zao wa Kiroho</h3>
+                <p>Uchambuzi wa kina wa maisha ya watumishi wakuu wa Mungu kwenye Maandiko na jinsi walivyolelewa hadi kufikia hatua zao kuu.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 14 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 14</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Mifano Kumi ya Sasa ya Wana na Baba Zao wa Kiroho</h3>
+                <p>Mifano halisi ya nyakati zetu hizi inayonyesha matokeo chanya ya kuwa na baba sahihi wa kiroho na jinsi ilivyowajenga.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 15 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 15</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Namna ya Kufanyika Mwana kwa Baba Yako wa Kiroho</h3>
+                <p>Hatua kwa hatua za kiroho na kisaikolojia zitakazomfanya baba yako akutambue kama mwana wa kweli na si mtumiaji tu wa huduma.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 16 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 16</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Mwana Hatari kwa Baba Yake</h3>
+                <p>Onyo na mifano ya tabia ambazo mwana anaweza kuwa nazo zilizobeba sumu au hatari ya kuharibu huduma au mahusiano na baba.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 17 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 17</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Mwana Asiyejua Maono ya Baba Yake</h3>
+                <p>Upofu wa kiroho wa wana wanaotafuta tu mikono ya baraka pasipo kujua au kushiriki maono makuu yaliyobeba madhabahu husika.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+            <!-- SURA YA 18 -->
+            <article class="module-card">
+                <div class="card-meta">
+                    <span>SURA YA 18</span>
+                    <span class="pastor-badge">Pastor Aloyce</span>
+                </div>
+                <h3>Aina za Mababa</h3>
+                <p>Uchambuzi wa aina tofauti tofauti za mababa utakaokutana nao maishani na namna ya kuishi na kila mmoja kwa hekima na utambuzi.</p>
+                <a href="#" class="module-link" target="_blank">Soma Moduli</a>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Disciples Community Church. Haki zote zimehifadhiwa. Pastor Aloyce</p>
+    </footer>
+
+</body>
+</html>

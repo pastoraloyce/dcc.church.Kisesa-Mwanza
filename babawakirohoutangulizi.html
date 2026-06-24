@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utangulizi: Kozi ya Baba wa Kiroho</title>
+    <!-- Google Fonts & Tailwind CSS for modern layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .dark-mode { background-color: #0f172a; color: #f8fafc; }
+        .dark-mode .card-container { background-color: #1e293b; border-color: #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        .dark-mode input, .dark-mode textarea, .dark-mode select { background-color: #334155; color: #fff; border-color: #475569; }
+        .dark-mode .text-slate-900 { color: #ffffff; }
+        .dark-mode .text-slate-700 { color: #cbd5e1; }
+        .dark-mode .text-slate-600 { color: #94a3b8; }
+        .dark-mode .bg-slate-50 { background-color: #1e293b; }
+        .dark-mode .bg-blue-50\/50 { background-color: rgba(30, 41, 59, 0.5); }
+        .dark-mode .bg-white { background-color: #1e293b; }
+        .dark-mode nav { background-color: #0f172a; border-color: #1e293b; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo / Brand Title -->
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <div class="w-10 h-10 bg-gradient-to-tr from-blue-600 to-orange-500 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/20">
+                        <span class="text-white font-extrabold text-xl">BK</span>
+                    </div>
+                    <div>
+                        <span class="text-lg font-extrabold text-blue-600 tracking-tight">Baba wa <span class="text-orange-500">Kiroho</span></span>
+                        <p class="text-[10px] text-slate-400 font-medium -mt-1 tracking-wider uppercase">Online Training. Pastor Aloyce</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links (Desktop) -->
+                <div class="hidden md:flex items-center space-x-8 text-sm font-semibold">
+                    <a href="#" class="text-blue-600 border-b-2 border-blue-600 pb-5 pt-5">Kozi Zangu</a>
+                    <a href="#" class="text-slate-500 hover:text-blue-600 transition">Maktaba</a>
+                    <a href="#" class="text-slate-500 hover:text-blue-600 transition">Kuhusu Sisi</a>
+                    <a href="#" class="text-slate-500 hover:text-blue-600 transition">Msaada</a>
+                </div>
+                
+                <!-- Accessibility Controls (Font Resize & Dark Mode) -->
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg text-xs font-bold border border-slate-200/60">
+                        <button onclick="changeFontSize('small')" class="px-2 py-1 rounded bg-white dark:bg-slate-700 shadow-xs hover:bg-slate-50 text-slate-600 dark:text-slate-300">A-</button>
+                        <button onclick="changeFontSize('normal')" class="px-2 py-1 rounded mx-1 bg-white dark:bg-slate-700 shadow-xs hover:bg-slate-50 text-slate-800 dark:text-white">A</button>
+                        <button onclick="changeFontSize('large')" class="px-2 py-1 rounded bg-white dark:bg-slate-700 shadow-xs hover:bg-slate-50 text-slate-600 dark:text-slate-300">A+</button>
+                    </div>
+                    <button onclick="toggleDarkMode()" id="themeBtn" class="bg-slate-900 text-white dark:bg-orange-500 px-3 py-2 rounded-xl text-xs font-semibold hover:opacity-90 transition flex items-center gap-1 shadow-xs">
+                        🌙 Dark Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8 flex-grow w-full">
+        
+        <!-- COLUMN 1 & 2: COURSE CONTENT & INPUT FORM -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Beautiful Container 1: Course Introduction Text -->
+            <section id="course-content" class="card-container bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80 text-base leading-relaxed space-y-6">
+                <div class="border-b border-slate-100 pb-4 flex justify-between items-start flex-wrap gap-2">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-orange-50 text-orange-600 border border-orange-100">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
+                            Somo la Utangulizi
+                        </span>
+                        <h2 class="text-3xl font-extrabold mt-2 text-slate-900 tracking-tight">Baba wa Kiroho</h2>
+                        <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Mwandishi: <span class="text-blue-600 font-bold">Pastor Aloyce</span></p>
+                    </div>
+                </div>
+
+                <p class="italic text-slate-700 bg-gradient-to-r from-blue-50/50 to-orange-50/20 p-5 rounded-2xl border-l-4 border-blue-600 shadow-xs">
+                    Katika safari ya ukristo, imani si tukio la upweke; ni safari ya kurithishana moto, maarifa, na upako kutoka kizazi kimoja kwenda kingine. Kitabu hiki, “Baba wa Kiroho,” kimezaliwa katika moyo wa hitaji kubwa la kanisa la sasa—hitaji la malezi, usalama wa kiroho, na mwongozo wa kichungaji unaovuka mipaka ya mimbari na kuingia katika undani wa maisha ya muumini.
+                </p>
+
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold text-blue-600 flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-orange-500 rounded-full inline-block"></span>
+                        Msingi wa Kibiblia: Zaidi ya Mwalimu, ni Baba
+                    </h3>
+                    <p class="text-slate-700">Dhana ya ubaba wa kiroho si uvumbuzi wa wanadamu, bali ni mpango wa kimungu uliothibitishwa katika Maandiko Matakatifu. Mtume Paulo anafafanua tofauti ya msingi kati ya mwalimu na baba anapowaambia Wakorintho:</p>
+                    <blockquote class="bg-slate-50 p-5 rounded-xl font-serif my-4 border-l-4 border-orange-500 text-slate-800 shadow-xs text-base">
+                        "Maana ijapokuwa mnao walimu elfu kumi katika Kristo, lakini hamna baba wengi. Maana mimi ndiye niliyewazaa katika Kristo Yesu kwa njia ya Injili." <span class="font-sans font-bold text-xs text-orange-600 block mt-1">(1 Wakorintho 4:15)</span>
+                    </blockquote>
+                    <p class="text-slate-700">Hapa tunaona kuwa mwalimu hutoa taarifa, lakini baba hutoa uhai. Uhusiano huu unajidhihirisha katika mifano hai ya Biblia:</p>
+                    <ul class="space-y-3 mt-3 pl-2">
+                        <li class="flex items-start gap-2 text-slate-700"><span class="text-orange-500 mt-1">✦</span> <div><span class="font-bold text-slate-900">Eliya na Elisha:</span> Elisha hakutafuta tu miujiza, alimtafuta baba. Alipomwona Eliya akiondoka, alipiga yowe, <em>"Baba yangu, baba yangu, gari la Israeli na wapanda farasi wake!"</em> (2 Wafalme 2:12). Upako wa mara mbili ulikuja kupitia muunganisho wa ubaba.</div></li>
+                        <li class="flex items-start gap-2 text-slate-700"><span class="text-orange-500 mt-1">✦</span> <div><span class="font-bold text-slate-900">Paulo na Timotheo:</span> Paulo anamwita Timotheo "mwanangu mpenzi katika imani." Huu ulikuwa ukaribu wa kufundishana kazi, tabia, na uvumilivu.</div></li>
+                        <li class="flex items-start gap-2 text-slate-700"><span class="text-orange-500 mt-1">✦</span> <div><span class="font-bold text-slate-900">Yesu na Wanafunzi wake:</span> Kristo hakuwafundisha tu wanafunzi wake kama rabi, bali aliishi nao kama baba, akiwaonyesha mfano wa utii kwa Baba wa mbinguni.</div></li>
+                    </ul>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold text-blue-600 flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-orange-500 rounded-full inline-block"></span>
+                        Changamoto ya Kizazi cha "Yatima wa Kiroho"
+                    </h3>
+                    <p class="text-slate-700">Tunaishi katika kizazi chenye maarifa mengi lakini chenye hekima kidogo; kizazi chenye podcasts nyingi lakini chenye walezi wachache. Changamoto kubwa ya sasa ni kuibuka kwa mfumo wa "ukristo wa kujitegemea" (independent Christianity), ambapo muumini anajiongoza mwenyewe bila kuwa na mamlaka ya kiroho juu yake. Kukosekana kwa baba wa kiroho kumesababisha wengi kupoteza mwelekeo, kuingia kwenye mafundisho ya uongo, na kukosa nidhamu ya kiroho inayohitajika kwa ajili ya huduma thabiti.</p>
+                    <p class="mt-4 font-semibold text-slate-800 bg-orange-500/10 p-4 rounded-xl border border-orange-500/20">
+                        Kama alivyowahi kusema mtumishi mmoja mashuhuri wa Mungu, Dr. Myles Munroe: <span class="text-orange-600">"Kizazi kisicho na baba ni kizazi kisicho na utambulisho, na kisicho na utambulisho hakiwezi kumiliki urithi wake."</span>
+                    </p>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold text-blue-600 flex items-center gap-2">
+                        <span class="w-1.5 h-5 bg-orange-500 rounded-full inline-block"></span>
+                        Kufaulu Kupitia Uangalizi: Faida za Kuwa na Baba
+                    </h3>
+                    <p class="text-slate-700">Kuwa chini ya uangalizi wa baba wa kiroho si utumwa, bali ni ulinzi. Kitabu hiki kitaainisha faida kuu nne:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-500/30 transition">
+                            <span class="text-xs font-bold text-blue-600 uppercase">Faida 01</span>
+                            <h4 class="font-bold text-slate-900 mt-0.5">Ukuaji wa Imani</h4>
+                            <p class="text-xs text-slate-600 mt-1">Baba anaona mbali kuliko mwana; anakusaidia kuepuka mashimo ambayo yeye tayari alishatumbukia.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-500/30 transition">
+                            <span class="text-xs font-bold text-blue-600 uppercase">Faida 02</span>
+                            <h4 class="font-bold text-slate-900 mt-0.5">Maadili na Nidhamu</h4>
+                            <p class="text-xs text-slate-600 mt-1">Baba anayo haki ya kukusahihisha pale unapokengeuka, jambo ambalo mwalimu wa kawaida anaweza kuliogopa.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-500/30 transition">
+                            <span class="text-xs font-bold text-blue-600 uppercase">Faida 03</span>
+                            <h4 class="font-bold text-slate-900 mt-0.5">Uthibitisho wa Huduma</h4>
+                            <p class="text-xs text-slate-600 mt-1">Karama yako inahitaji mikono ya mamlaka ili iweze kutambulika na kuachiliwa kwa usalama.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-blue-500/30 transition">
+                            <span class="text-xs font-bold text-blue-600 uppercase">Faida 04</span>
+                            <h4 class="font-bold text-slate-900 mt-0.5">Urithi na Upako</h4>
+                            <p class="text-xs text-slate-600 mt-1">Kuna baraka ambazo hazipatikani kwa maombi ya peke yako, bali kwa "kutiwa mikono" na yule aliyekutangulia.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Beautiful Container 2: Student Journal / Form Input -->
+            <section class="card-container bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200/80 space-y-6">
+                <div class="border-b border-slate-100 pb-3">
+                    <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Tathmini ya Somo</h3>
+                    <p class="text-xs text-slate-400 mt-0.5">Jaza taarifa zako kisha ubofye hifadhi ili kujiandikisha na kuweka maoni.</p>
+                </div>
+                
+                <form id="courseForm" class="space-y-6">
+                    <input type="hidden" id="docId">
+                    
+                    <!-- Section: Personal Information -->
+                    <div class="bg-gradient-to-b from-slate-50 to-white p-5 rounded-2xl border border-slate-200 space-y-4 shadow-xs">
+                        <div class="font-bold text-xs uppercase tracking-wider text-blue-600 flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                            1. Taarifa Binafsi & Mwezeshaji
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Jina Lako Kamili</label>
+                                <input type="text" id="jina" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Kituo cha CGN</label>
+                                <input type="text" id="kituo" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Idara yako</label>
+                                <input type="text" id="idara" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Jinsi (Gender)</label>
+                                <select id="jinsi" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                                    <option value="Kiume">Kiume</option>
+                                    <option value="Kike">Kike</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Namba ya Simu</label>
+                                <input type="tel" id="simu" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Tarehe ya Kusoma Kozi</label>
+                                <input type="date" id="tarehe" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                            </div>
+                            <div class="col-span-1 md:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Jina la Mwezeshaji wako</label>
+                                <input type="text" id="mwezeshaji" placeholder="Mfano: Pastor Aloyce" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm font-medium shadow-xs">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Lesson Questions -->
+                    <div class="space-y-4">
+                        <div class="font-bold text-xs uppercase tracking-wider text-orange-500 flex items-center gap-1.5 border-b border-slate-100 pb-1">
+                            <span class="w-2 h-2 rounded-full bg-orange-500"></span>
+                            2. Maswali ya Kutafakari Somo
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">1. Nini kimekufurahisha?</label>
+                            <textarea id="kimefurahisha" rows="3" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-xs"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">2. Nini kimekukasirisha (au kukuchangamoto)?</label>
+                            <textarea id="kimekasirisha" rows="3" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-xs"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">3. Nini Umejifunza?</label>
+                            <textarea id="umejifunza" rows="3" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-xs"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">4. Andika Mabadiliko ya kiUngu unayotarajia kutokea:</label>
+                            <textarea id="mabadiliko" rows="3" required class="w-full p-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-xs"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 px-6 rounded-xl shadow-md shadow-blue-500/10 transition text-sm tracking-wide">
+                            Hifadhi Taarifa (Save)
+                        </button>
+                        <button type="button" onclick="clearForm()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3.5 px-6 rounded-xl text-sm transition">
+                            Futa Fomu
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <!-- COLUMN 3: SIDEBAR (FILTERS & LIVE FEED) -->
+        <div class="space-y-6">
+            
+            <!-- Beautiful Container 3: Filter System -->
+            <div class="card-container bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-1">
+                    🔍 Kuchuja Matokeo
+                </h4>
+                <div class="flex flex-col gap-2">
+                    <label class="text-[11px] font-medium text-slate-500">Chagua tarehe ya masomo:</label>
+                    <div class="flex gap-2">
+                        <input type="date" id="filterDate" onchange="filterData()" class="w-full p-2.5 text-sm border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                        <button onclick="resetFilter()" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2 rounded-xl text-xs font-bold transition">Zote</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Beautiful Container 4: Live Community Responses Board -->
+            <div class="card-container bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80">
+                <div class="border-b border-slate-100 pb-2 mb-4 flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-900 tracking-tight">Ubaoni</h3>
+                    <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></span>
+                </div>
+                
+                <!-- Container dynamically filled by Firebase -->
+                <div id="responsesContainer" class="space-y-4 max-h-[750px] overflow-y-auto pr-1">
+                    <div class="text-center py-6">
+                        <p class="text-xs text-slate-400">Inapakia taarifa kutoka Firebase...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-slate-950 text-slate-400 text-sm mt-16 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-slate-800 pb-8">
+                <!-- Footer Identity -->
+                <div class="space-y-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 bg-gradient-to-tr from-blue-600 to-orange-500 rounded-lg flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">CG</span>
+                        </div>
+                        <span class="text-base font-extrabold text-white tracking-tight">CGN Training Hub</span>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Kuinua, kulelea, na kuandaa kizazi chenye utambulisho imara wa kiroho kupitia malezi ya kibaba na uongozi thabiti wa kichungaji.
+                    </p>
+                </div>
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white text-xs font-bold uppercase tracking-wider mb-3">Kozi Zilizopo</h4>
+                    <ul class="space-y-2 text-xs">
+                        <li><a href="#" class="hover:text-orange-500 transition">Usimamizi wa Miradi Shuleni</a></li>
+                        <li><a href="#" class="hover:text-orange-500 transition text-orange-400 font-medium">Baba wa Kiroho (Hapa)</a></li>
+                        <li><a href="#" class="hover:text-orange-500 transition">Nidhamu na Maadili</a></li>
+                    </ul>
+                </div>
+                <!-- Developer / Contact -->
+                <div>
+                    <h4 class="text-white text-xs font-bold uppercase tracking-wider mb-3">Mawasiliano</h4>
+                    <p class="text-xs leading-relaxed">
+                        Kwa maswali au ushauri wa kichungaji, wasiliana na ofisi ya Mwezeshaji wa kozi au kiongozi wako wa kituo cha CGN.
+                    </p>
+                </div>
+            </div>
+            <!-- Copyright bar -->
+            <div class="pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2">
+                <p>&copy; 2026 BABA WA KIROHO Course. Haki zote zimehifadhiwa.</p>
+                <p>Designed for <span class="text-slate-300 font-semibold">Pastor Aloyce</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK Setup (v10.8.0) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Configuration uliyotoa
+        const firebaseConfig = {
+            apiKey: "AIzaSyCv01cdwWFqeDcvMAkILY3K4G8yKJWwL6k",
+            authDomain: "pastoraloyce-3530f.firebaseapp.com",
+            projectId: "pastoraloyce-3530f",
+            storageBucket: "pastoraloyce-3530f.firebasestorage.app",
+            messagingSenderId: "978341477941",
+            appId: "1:978341477941:web:289e3b0671f00e52907b7c",
+            measurementId: "G-XYK8ZL0JSJ"
+        };
+
+        // Initialize Firebase & Cloud Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const submissionsCol = collection(db, "baba_wa_kiroho_submissions");
+
+        let localData = [];
+
+        // Hifadhi / Sasisha Fomu (Save/Update)
+        document.getElementById('courseForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const docId = document.getElementById('docId').value;
+            const data = {
+                jina: document.getElementById('jina').value,
+                kituo: document.getElementById('kituo').value,
+                idara: document.getElementById('idara').value,
+                jinsi: document.getElementById('jinsi').value,
+                simu: document.getElementById('simu').value,
+                tarehe: document.getElementById('tarehe').value,
+                mwezeshaji: document.getElementById('mwezeshaji').value,
+                kimefurahisha: document.getElementById('kimefurahisha').value,
+                kimekasirisha: document.getElementById('kimekasirisha').value,
+                umejifunza: document.getElementById('umejifunza').value,
+                mabadiliko: document.getElementById('mabadiliko').value,
+                timestamp: new Date().getTime()
+            };
+
+            try {
+                if (docId) {
+                    await updateDoc(doc(db, "baba_wa_kiroho_submissions", docId), data);
+                    alert("Taarifa zako zimesasishwa (Updated) kikamilifu!");
+                } else {
+                    await addDoc(submissionsCol, data);
+                    alert("Taarifa zako zimehifadhiwa (Saved) kikamilifu!");
+                }
+                clearForm();
+            } catch (error) {
+                console.error("Error saving: ", error);
+                alert("Hitilafu imetokea wakati wa kuhifadhi.");
+            }
+        });
+
+        // Realtime Realtime Listener kutoka Firebase Firestore
+        const q = query(submissionsCol, orderBy("timestamp", "desc"));
+        onSnapshot(q, (snapshot) => {
+            localData = [];
+            snapshot.forEach(doc => {
+                localData.push({ id: doc.id, ...doc.data() });
+            });
+            renderResponses(localData);
+        });
+
+        // Kujaza kadi za maoni ya wanafunzi kwenye Ubao wa Jamii
+        window.renderResponses = function(data) {
+            const container = document.getElementById('responsesContainer');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">Hakuna taarifa zilizopatikana.</p>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                // Makontena madogo yenye rangi nzuri ya kingo za Bluu/Machungwa kulingana na jinsi
+                const borderAccent = item.jinsi === 'Kiume' ? 'border-l-4 border-l-blue-600' : 'border-l-4 border-l-orange-500';
+                
+                card.className = `p-4 border border-slate-200 bg-slate-50/50 rounded-xl space-y-3 relative text-xs shadow-xs ${borderAccent}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start border-b border-slate-200/60 pb-1.5">
+                        <div>
+                            <h5 class="font-extrabold text-sm text-slate-900">${item.jina}</h5>
+                            <p class="text-slate-500 font-semibold text-[11px] mt-0.5">${item.kituo} &bull; ${item.idara}</p>
+                        </div>
+                        <span class="text-[10px] bg-orange-100 text-orange-800 font-bold px-2 py-0.5 rounded-md">${item.tarehe}</span>
+                    </div>
+                    <div class="space-y-1.5 text-slate-700">
+                        <p><strong class="text-blue-600">🥰 Furaha:</strong> ${item.kimefurahisha}</p>
+                        <p><strong class="text-slate-800">⚡ Changamoto:</strong> ${item.kimekasirisha}</p>
+                        <p><strong class="text-slate-800">📖 Funzo:</strong> ${item.umejifunza}</p>
+                        <p class="bg-orange-500/5 p-2 rounded-lg border border-orange-500/10"><strong class="text-orange-600">🔥 Mabadiliko ya Kiungu:</strong> ${item.mabadiliko}</p>
+                    </div>
+                    <div class="text-[10px] text-slate-400 pt-1 border-t border-slate-100 flex justify-between items-center flex-wrap gap-1">
+                        <span><strong>Mwezeshaji:</strong> ${item.mwezeshaji}</span>
+                        <span><strong>Simu:</strong> ${item.simu}</span>
+                    </div>
+                    <div class="flex gap-3 justify-end pt-2 text-[11px] font-bold border-t border-slate-100">
+                        <button onclick="editSubmission('${item.id}')" class="text-blue-600 hover:text-blue-800">Hariri (Edit)</button>
+                        <button onclick="deleteSubmission('${item.id}')" class="text-red-500 hover:text-red-700">Futa (Delete)</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        // Kazi ya Kufuta (Delete Doc kutoka Firebase)
+        window.deleteSubmission = async function(id) {
+            if (confirm("Je, una uhakika unataka kufuta taarifa hizi ?")) {
+                await deleteDoc(doc(db, "baba_wa_kiroho_submissions", id));
+                alert("Taarifa zimefutwa kikamilifu.");
+            }
+        };
+
+        // Kazi ya Kuandaa Fomu kwa ajili ya Kurekebisha (Edit Preparation)
+        window.editSubmission = function(id) {
+            const item = localData.find(d => d.id === id);
+            if (item) {
+                document.getElementById('docId').value = item.id;
+                document.getElementById('jina').value = item.jina;
+                document.getElementById('kituo').value = item.kituo;
+                document.getElementById('idara').value = item.idara;
+                document.getElementById('jinsi').value = item.jinsi;
+                document.getElementById('simu').value = item.simu;
+                document.getElementById('tarehe').value = item.tarehe;
+                document.getElementById('mwezeshaji').value = item.mwezeshaji;
+                document.getElementById('kimefurahisha').value = item.kimefurahisha;
+                document.getElementById('kimekasirisha').value = item.kimekasirisha;
+                document.getElementById('umejifunza').value = item.umejifunza;
+                document.getElementById('mabadiliko').value = item.mabadiliko;
+
+                document.getElementById('submitBtn').innerText = "Sasisha Taarifa (Update)";
+                document.getElementById('courseForm').scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
+        // Kuchuja kwa Tarehe (Filter by Date)
+        window.filterData = function() {
+            const fDate = document.getElementById('filterDate').value;
+            if (fDate) {
+                const filtered = localData.filter(item => item.tarehe === fDate);
+                renderResponses(filtered);
+            }
+        };
+
+        window.resetFilter = function() {
+            document.getElementById('filterDate').value = '';
+            renderResponses(localData);
+        };
+    </script>
+
+    <!-- UI Interaction scripts -->
+    <script>
+        function clearForm() {
+            document.getElementById('courseForm').reset();
+            document.getElementById('docId').value = '';
+            document.getElementById('submitBtn').innerText = "Hifadhi Taarifa (Save)";
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.getElementById('themeBtn');
+            if (document.body.classList.contains('dark-mode')) {
+                btn.innerText = "☀️ Light Mode";
+                btn.className = "bg-white text-slate-900 px-3 py-2 rounded-xl text-xs font-semibold hover:bg-slate-100 transition shadow-xs";
+            } else {
+                btn.innerText = "🌙 Dark Mode";
+                btn.className = "bg-slate-900 text-white px-3 py-2 rounded-xl text-xs font-semibold hover:opacity-90 transition shadow-xs";
+            }
+        }
+
+        function changeFontSize(size) {
+            const content = document.getElementById('course-content');
+            if (size === 'small') {
+                content.style.fontSize = '14px';
+            } else if (size === 'normal') {
+                content.style.fontSize = '16px';
+            } else if (size === 'large') {
+                content.style.fontSize = '19px';
+            }
+        }
+    </script>
+</body>
+</html>
